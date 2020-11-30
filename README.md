@@ -39,6 +39,13 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+## Installation
+
+1. Install Node.js (see [Debian Installation Instructions](https://github.com/nodesource/distributions/blob/master/README.md#debinstall))
+2. Check for Node version >= 10.16.0: `node --version`
+3. Bootstrap the PWA using Facebooks [Create React App](https://github.com/facebook/create-react-app): `npx create-react-app dashboard-pwa`
+4. Install D3 using npm: `npm i d3`
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
