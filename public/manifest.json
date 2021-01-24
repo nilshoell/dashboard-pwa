@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Dashboard",
+  "name": "Mobile Dashboard for Business Data",
   "icons": [
     {
       "src": "favicon.ico",
