@@ -10,7 +10,9 @@ function App() {
     <div className="App">
       <meta name="viewport" content="initial-scale=1, width=device-width" />
       <Paperbase>
-        Testtext
+        <Dashboard>
+          
+        </Dashboard>
       </Paperbase>
     </div>
   );
