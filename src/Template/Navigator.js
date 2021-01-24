@@ -21,21 +21,19 @@ import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
 
 const categories = [
   {
-    id: 'Develop',
+    id: 'Application',
     children: [
-      { id: 'Authentication', icon: <PeopleIcon />, active: true },
-      { id: 'Database', icon: <DnsRoundedIcon /> },
-      { id: 'Storage', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Hosting', icon: <PublicIcon /> },
-      { id: 'Functions', icon: <SettingsEthernetIcon /> },
-      { id: 'ML Kit', icon: <SettingsInputComponentIcon /> },
+      { id: 'Dashboard', icon: <PeopleIcon />, active: true },
+      { id: 'KPI-Tree', icon: <DnsRoundedIcon /> },
+      { id: 'Favourites', icon: <PermMediaOutlinedIcon /> },
+      { id: 'Target Analysis', icon: <PublicIcon /> },
     ],
   },
   {
-    id: 'Quality',
+    id: 'Visualizations',
     children: [
-      { id: 'Analytics', icon: <SettingsIcon /> },
-      { id: 'Performance', icon: <TimerIcon /> },
+      { id: 'KPIBar', icon: <SettingsIcon /> },
+      { id: 'Timeline', icon: <TimerIcon /> },
       { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
     ],
   },
