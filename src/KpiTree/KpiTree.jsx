@@ -11,20 +11,8 @@ class KpiTree extends PureComponent {
     };
   }
 
-  componentWillMount = () => {
-    console.log('KpiTree will mount');
-  }
-
   componentDidMount = () => {
     console.log('KpiTree mounted');
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    console.log('KpiTree will receive props', nextProps);
-  }
-
-  componentWillUpdate = (nextProps, nextState) => {
-    console.log('KpiTree will update', nextProps, nextState);
   }
 
   componentDidUpdate = () => {

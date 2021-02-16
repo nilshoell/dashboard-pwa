@@ -11,20 +11,8 @@ class Dashboard extends PureComponent {
     };
   }
 
-  componentWillMount = () => {
-    console.log('Dashboard will mount');
-  }
-
   componentDidMount = () => {
     console.log('Dashboard mounted');
-  }
-
-  componentWillReceiveProps = (nextProps) => {
-    console.log('Dashboard will receive props', nextProps);
-  }
-
-  componentWillUpdate = (nextProps, nextState) => {
-    console.log('Dashboard will update', nextProps, nextState);
   }
 
   componentDidUpdate = () => {
