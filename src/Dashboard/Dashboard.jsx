@@ -41,7 +41,7 @@ class Dashboard extends PureComponent {
     }
     return (
       <div className="DashboardWrapper">
-        Test content
+        Dashboard
       </div>
     );
   }

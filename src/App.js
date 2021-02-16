@@ -4,15 +4,6 @@ import logo from './logo.svg';
 import './App.css';
 import './Template/Paperbase.js';
 import Paperbase from './Template/Paperbase.js';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
-// Pages
-import Dashboard from './Dashboard/index';
 
 function App() {
   return (

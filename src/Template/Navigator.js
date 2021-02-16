@@ -19,12 +19,8 @@ import TimerIcon from '@material-ui/icons/Timer';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
 
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+// Routing
+import {Link as RouterLink} from "react-router-dom";
 
 const categories = [
   {
@@ -91,7 +87,6 @@ function Navigator(props) {
   const { classes, ...other } = props;
 
   return (
-    <Router>
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
@@ -121,7 +116,7 @@ function Navigator(props) {
               </ListItemText>
             </ListItem>
             {children.map(({ id: childId, link, icon, active }) => (
-              <Link to={link}>
+              <RouterLink to={link}>
                 <ListItem
                   key={childId}
                   button
@@ -136,7 +131,7 @@ function Navigator(props) {
                     {childId}
                   </ListItemText>
                 </ListItem>
-              </Link>
+              </RouterLink>
             ))}
 
             <Divider className={classes.divider} />
@@ -144,7 +139,6 @@ function Navigator(props) {
         ))}
       </List>
     </Drawer>
-    </Router>
   );
 }
 

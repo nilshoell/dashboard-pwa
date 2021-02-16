@@ -9,6 +9,20 @@ import Navigator from './Navigator';
 import Content from './Content';
 import Header from './Header';
 
+// Routing
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link as RouterLink,
+  useLocation
+} from "react-router-dom";
+
+// Pages
+import Dashboard from '../Dashboard/index';
+import KpiTree from '../KpiTree/index';
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -19,6 +33,18 @@ function Copyright() {
       {new Date().getFullYear()}
       {'.'}
     </Typography>
+  );
+}
+
+function NoMatch() {
+  let location = useLocation();
+
+  return (
+    <div>
+      <h3>
+        No match for <code>{location.pathname}</code>
+      </h3>
+    </div>
   );
 }
 
@@ -170,6 +196,7 @@ function Paperbase(props) {
   };
 
   return (
+    <Router>
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
         <CssBaseline />
@@ -189,7 +216,17 @@ function Paperbase(props) {
         <div className={classes.app}>
           <Header onDrawerToggle={handleDrawerToggle} />
           <main className={classes.main}>
-            {/* <Content /> */}
+              <Switch>
+                <Route exact path="/">
+                  <Dashboard />
+                </Route>
+                <Route path="/kpi-tree">
+                  <KpiTree />
+                </Route>
+                <Route path="*">
+                  <NoMatch />
+                </Route>
+              </Switch>
           </main>
           <footer className={classes.footer}>
             {/* <Copyright /> */}
@@ -197,6 +234,7 @@ function Paperbase(props) {
         </div>
       </div>
     </ThemeProvider>
+    </Router>
   );
 }
 
