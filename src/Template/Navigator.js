@@ -19,22 +19,29 @@ import TimerIcon from '@material-ui/icons/Timer';
 import SettingsIcon from '@material-ui/icons/Settings';
 import PhonelinkSetupIcon from '@material-ui/icons/PhonelinkSetup';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 const categories = [
   {
     id: 'Application',
     children: [
-      { id: 'Dashboard', icon: <PeopleIcon />, active: true },
-      { id: 'KPI-Tree', icon: <DnsRoundedIcon /> },
-      { id: 'Favourites', icon: <PermMediaOutlinedIcon /> },
-      { id: 'Target Analysis', icon: <PublicIcon /> },
+      { id: 'Home', link: '.', icon: <HomeIcon />, active: true },
+      { id: 'KPI-Tree', link: 'kpi-tree', icon: <DnsRoundedIcon /> },
+      { id: 'Favourites', link: 'favourites', icon: <PermMediaOutlinedIcon /> },
+      { id: 'Target Analysis', link: 'target-analysis', icon: <PublicIcon /> },
     ],
   },
   {
     id: 'Visualizations',
     children: [
-      { id: 'KPIBar', icon: <SettingsIcon /> },
-      { id: 'Timeline', icon: <TimerIcon /> },
-      { id: 'Test Lab', icon: <PhonelinkSetupIcon /> },
+      { id: 'KPIBar', link: 'kpi-bar', icon: <SettingsIcon /> },
+      { id: 'Timeline', link: 'timeline', icon: <TimerIcon /> },
+      { id: 'Test Lab', link: 'test-lab', icon: <PhonelinkSetupIcon /> },
     ],
   },
 ];
@@ -84,6 +91,7 @@ function Navigator(props) {
   const { classes, ...other } = props;
 
   return (
+    <Router>
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
@@ -98,7 +106,7 @@ function Navigator(props) {
               primary: classes.itemPrimary,
             }}
           >
-            Project Overview
+            Dashboards
           </ListItemText>
         </ListItem>
         {categories.map(({ id, children }) => (
@@ -112,21 +120,23 @@ function Navigator(props) {
                 {id}
               </ListItemText>
             </ListItem>
-            {children.map(({ id: childId, icon, active }) => (
-              <ListItem
-                key={childId}
-                button
-                className={clsx(classes.item, active && classes.itemActiveItem)}
-              >
-                <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
-                <ListItemText
-                  classes={{
-                    primary: classes.itemPrimary,
-                  }}
+            {children.map(({ id: childId, link, icon, active }) => (
+              <Link to={link}>
+                <ListItem
+                  key={childId}
+                  button
+                  className={clsx(classes.item, active && classes.itemActiveItem)}
                 >
-                  {childId}
-                </ListItemText>
-              </ListItem>
+                  <ListItemIcon className={classes.itemIcon}>{icon}</ListItemIcon>
+                  <ListItemText
+                    classes={{
+                      primary: classes.itemPrimary,
+                    }}
+                  >
+                    {childId}
+                  </ListItemText>
+                </ListItem>
+              </Link>
             ))}
 
             <Divider className={classes.divider} />
@@ -134,6 +144,7 @@ function Navigator(props) {
         ))}
       </List>
     </Drawer>
+    </Router>
   );
 }
 
