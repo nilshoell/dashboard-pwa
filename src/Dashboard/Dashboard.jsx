@@ -1,30 +1,5 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
-import rd3 from 'react-d3-library';
-import node from './d3test';
-const RD3Component = rd3.Component;
-//import { Test } from './Dashboard.styles';
-
-class ReactD3Test extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {d3: ''}
-  }
-
-  componentDidMount() {
-    this.setState({d3: node});
-  }
-
-  render() {
-    return (
-      <div>
-        <RD3Component data={this.state.d3} />
-      </div>
-    )
-  }
-};
-
+import BarChart from './d3test';
 class Dashboard extends PureComponent { 
   constructor(props) {
     super(props);
@@ -53,7 +28,7 @@ class Dashboard extends PureComponent {
     return (
       <div className="DashboardWrapper">
         Dashboard:
-        <ReactD3Test />
+        <BarChart />
       </div>
     );
   }

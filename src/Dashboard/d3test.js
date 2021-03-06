@@ -1,31 +1,35 @@
-import React from 'react';
-import rd3 from 'react-d3-library';
+import React, {
+    Component
+} from 'react';
+import * as d3 from "d3";
 
-var node = document.createElement('div');
+class BarChart extends Component {
+    componentDidMount() {
+        this.drawChart();
+    }
 
-var diameter = 960,
-    format = d3.format(",d"),
-    color = d3.scale.category20c();
+    drawChart() {
+        const data = [12, 5, 6, 6, 9, 10];
+        const svg = d3.select("div.DashboardWrapper")
+            .append("svg")
+            .attr("width", 500)
+            .attr("height", 500)
+            .style("margin-left", 100);
+        
+        svg.selectAll("rect")
+            .data(data).enter()
+            .append("rect")
+            .attr("x", (d, i) => i * 70)
+            .attr("y", (d, i) => 500 - 10 * d)
+            .attr("width", 65)
+            .attr("height", (d, i) => d * 10)
+            .attr("fill", "green");
+    }
 
-var bubble = d3.layout.pack()
-    .sort(null)
-    .size([diameter, diameter])
-    .padding(1.5);
+    render(){
+        return <div id={"#chartWrapper"}></div>
+      }
 
-var svg = d3.select(node).append("svg")
-    .attr("width", diameter)
-    .attr("height", diameter)
-    .attr("class", "bubble");
+}
 
-d3.json("flare.json", function(error, root) {
-  if (error) throw error;
-});
-
-var bubbles = svg.selectAll(".node")
-    .data(bubble.nodes(classes(flare))
-    .filter(function(d) { return !d.children; }))
-    .enter().append("g")
-    .attr("class", "node")
-    .attr("transform", function(d) {
-        return "translate(" + d.x + "," + d.y + ")";
-    });
+export default BarChart;
