@@ -9,25 +9,34 @@ class BarChart extends Component {
     }
 
     drawChart() {
+        console.log('Draw chart');
+        let width = document.getElementById(this.props.parentID).offsetWidth
+        let height = document.getElementById(this.props.parentID).offsetHeight
         const data = [12, 5, 6, 6, 9, 10];
-        const svg = d3.select("div.DashboardWrapper")
+
+        let barWidth = 0.75 * (width / data.length)
+        let barSpace = 0.25 * (width / data.length)
+
+        // const svg = d3.select("#" + this.props.parentID)
+        const svg = d3.select("#" + this.props.parentID)
             .append("svg")
-            .attr("width", 500)
-            .attr("height", 500)
-            .style("margin-left", 100);
+            .attr("width", width)
+            .attr("height", height)
+            .style("margin-left", 10);
         
         svg.selectAll("rect")
             .data(data).enter()
             .append("rect")
-            .attr("x", (d, i) => i * 70)
-            .attr("y", (d, i) => 500 - 10 * d)
-            .attr("width", 65)
+            .attr("x", (d, i) => i * (barSpace + barWidth))
+            .attr("y", (d, i) => 100 - 10 * d)
+            .attr("width", barWidth)
             .attr("height", (d, i) => d * 10)
             .attr("fill", "green");
     }
 
     render(){
-        return <div id={"#chartWrapper"}></div>
+        console.log('Creating chart wrapper');
+        return <div className={"chartWrapper"}></div>
       }
 
 }

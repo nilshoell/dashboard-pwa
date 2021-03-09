@@ -26,7 +26,7 @@ const categories = [
   {
     id: 'Application',
     children: [
-      { id: 'Home', link: '.', icon: <HomeIcon />, active: true },
+      { id: 'Dashboard', link: '.', icon: <HomeIcon />, active: true },
       { id: 'KPI-Tree', link: 'kpi-tree', icon: <DnsRoundedIcon /> },
       { id: 'Favourites', link: 'favourites', icon: <PermMediaOutlinedIcon /> },
       { id: 'Target Analysis', link: 'target-analysis', icon: <PublicIcon /> },

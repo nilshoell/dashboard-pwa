@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import BarChart from './d3test';
+import BarChart from './../Charts/';
 class Dashboard extends PureComponent { 
   constructor(props) {
     super(props);
@@ -26,9 +26,9 @@ class Dashboard extends PureComponent {
       return <h1>Something went wrong.</h1>;
     }
     return (
-      <div className="DashboardWrapper">
+      <div id="DashboardWrapper" style={{height: "100%"}}>
         Dashboard:
-        <BarChart />
+        <BarChart parentID="DashboardWrapper"/>
       </div>
     );
   }
