@@ -84,13 +84,13 @@ const styles = (theme) => ({
 });
 
 function Navigator(props) {
-  const { classes, ...other } = props;
+  const { classes, onDrawerToggle, ...other } = props;
 
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem className={clsx(classes.firebase, classes.item, classes.itemCategory)}>
-          Paperbase
+          Mobile Dashboard
         </ListItem>
         <ListItem className={clsx(classes.item, classes.itemCategory)}>
           <ListItemIcon className={classes.itemIcon}>
@@ -101,6 +101,7 @@ function Navigator(props) {
               primary: classes.itemPrimary,
             }}
           >
+          {/* TODO: page title update */}
             Dashboards
           </ListItemText>
         </ListItem>
@@ -116,7 +117,8 @@ function Navigator(props) {
               </ListItemText>
             </ListItem>
             {children.map(({ id: childId, link, icon, active }) => (
-              <RouterLink to={link}>
+              <RouterLink to={link} style={{color: "#18202c"}}>
+              <div onClick={onDrawerToggle}>
                 <ListItem
                   key={childId}
                   button
@@ -131,6 +133,7 @@ function Navigator(props) {
                     {childId}
                   </ListItemText>
                 </ListItem>
+              </div>
               </RouterLink>
             ))}
 

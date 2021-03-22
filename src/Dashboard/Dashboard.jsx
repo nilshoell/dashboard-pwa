@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import BarChart from './../Charts/';
+// import BarChart from './../Charts/';
+import BarChart from './d3test';
 class Dashboard extends PureComponent { 
   constructor(props) {
     super(props);

@@ -6,7 +6,6 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Navigator from './Navigator';
-import Content from './Content';
 import Header from './Header';
 
 // Routing
@@ -14,7 +13,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link as RouterLink,
   useLocation
 } from "react-router-dom";
 
@@ -27,8 +25,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://github.com/nilshoell">
+        Nils Höll
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -166,7 +164,7 @@ const styles = {
     minHeight: '100vh',
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       flexShrink: 0,
     },
@@ -193,6 +191,7 @@ function Paperbase(props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+    console.log("DrawerToggle");
   };
 
   return (
@@ -201,16 +200,17 @@ function Paperbase(props) {
       <div className={classes.root}>
         <CssBaseline />
         <nav className={classes.drawer}>
-          <Hidden smUp implementation="js">
+          <Hidden lgUp implementation="js">
             <Navigator
               PaperProps={{ style: { width: drawerWidth } }}
               variant="temporary"
               open={mobileOpen}
               onClose={handleDrawerToggle}
+              onDrawerToggle={handleDrawerToggle}
             />
           </Hidden>
-          <Hidden xsDown implementation="css">
-            <Navigator PaperProps={{ style: { width: drawerWidth } }} />
+          <Hidden mdDown implementation="css">
+            <Navigator PaperProps={{ style: { width: drawerWidth } }} onDrawerToggle={handleDrawerToggle} />
           </Hidden>
         </nav>
         <div className={classes.app}>
@@ -229,7 +229,7 @@ function Paperbase(props) {
               </Switch>
           </main>
           <footer className={classes.footer}>
-            {/* <Copyright /> */}
+            <Copyright />
           </footer>
         </div>
       </div>
