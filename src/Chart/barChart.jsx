@@ -4,12 +4,15 @@ import BaseChart from "./baseChart";
 class BarChart extends BaseChart {
 
     drawChart() {
+        const width = this.ref.current.offsetWidth;
+        console.log("Draw BarChart");
+        console.log("Width: " + width);
         const data = [12, 5, 6, 6, 9, 10, 12, 15, 17, 23];
 
-        let barWidth = 0.75 * (this.width / data.length)
-        let barSpace = 0.25 * (this.width / data.length)
+        let barWidth = 0.75 * (width / data.length)
+        let barSpace = 0.25 * (width / data.length)
 
-        this.svg.selectAll("rect")
+        d3.select('#chartWrapper svg').selectAll("rect")
             .data(data).enter()
             .append("rect")
             .attr("x", (d, i) => i * (barSpace + barWidth))
