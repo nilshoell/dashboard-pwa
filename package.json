@@ -1,0 +1,24 @@
+{
+  "name": "dashboard-pwa",
+  "version": "0.1.0",
+  "description": "A Progressive Web App to create mobile dashboards using D3js.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abdulaz1z/nodejs-pug-starter.git"
+  },
+  "author": "Nils Höll",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nilshoell/dashboard-pwa/issues"
+  },
+  "homepage": "https://github.com/nilshoell/dashboard-pwa#readme",
+  "dependencies": {
+    "d3": "^6.6.1",
+    "express": "^4.17.1",
+    "pug": "^3.0.2"
+  }
+}
