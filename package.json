@@ -4,11 +4,14 @@
   "description": "A Progressive Web App to create mobile dashboards using D3js.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "concurrently -k -p \"[{name}]\" -n \"Node\" -c \"green.bold\" \"npm run watch-node\" \"npm run browser-sync\"",
+    "watch-node": "nodemon dist/server.js",
+    "browser-sync": "browser-sync start --proxy 'http://localhost:3000/' --port 1337 --files ./**/*"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abdulaz1z/nodejs-pug-starter.git"
+    "url": "git+https://github.com/nilshoell/dashboard-pwa.git"
   },
   "author": "Nils Höll",
   "license": "MIT",
@@ -20,5 +23,10 @@
     "d3": "^6.6.1",
     "express": "^4.17.1",
     "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.14",
+    "concurrently": "^6.0.0",
+    "nodemon": "^2.0.7"
   }
 }

@@ -2,3 +2,4 @@ node_modules/
 .eslintcache
 vs/
 .DS_Store
+*.Identifier

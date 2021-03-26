@@ -1,0 +1,9 @@
+extends ../layout.pug
+
+block chart-top
+  h1(class="mt-6") Dashboard-PWA
+    p(class= "text-light") A Progressive Web App to create mobile dashboards using D3js.
+
+block chart
+  svg(width="100%" height="100%")
+    rect(width="100%" height="100%" style="fill:rgb(128,128,128)")
