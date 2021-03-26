@@ -7,8 +7,8 @@ class BaseChart {
     prepareChart() {
         this.svg = d3.select('#chartCanvas')
             .append("svg")
-            .attr("width", this.props.width ?? "100%")
-            .attr("height", this.props.height ?? "100%")
+            .attr("width", null ?? "100%")
+            .attr("height", null ?? "100%")
             .style("margin-left", 10);
     }
 

@@ -4,7 +4,7 @@ import BaseChart from "./baseChart";
 class BarChart extends BaseChart {
 
     drawChart() {
-        const width = this.ref.current.offsetWidth;
+        const width = 300;
         console.log("Draw BarChart");
         console.log("Width: " + width);
         const data = [12, 5, 6, 6, 9, 10, 12, 15, 17, 23];

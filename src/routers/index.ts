@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+import Router from "express";
+
+var router = Router();
 
 router.get('/dashboard', function(req, res) {
   res.render('pages/dashboard', {
@@ -11,4 +12,4 @@ router.get('/', function(req, res) {
   })
 });
 
-module.exports = router;
+export default router;
