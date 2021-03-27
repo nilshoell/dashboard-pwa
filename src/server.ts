@@ -13,9 +13,7 @@ console.log(path.join(__dirname, "public"));
 
 app.use(router);
 
-app.use(
-  express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
-);
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 
 app.listen(process.env.PORT || 3000, function functionName() {

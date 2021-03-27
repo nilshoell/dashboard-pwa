@@ -1,5 +1,4 @@
-import * as d3 from "d3";
-import BaseChart from "./baseChart";
+import BaseChart from "./baseChart.js";
 
 class BarChart extends BaseChart {
 
