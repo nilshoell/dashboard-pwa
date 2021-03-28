@@ -5,3 +5,11 @@
 @import './components/base';
 @import './components/helper';
 @import './components/header';
+
+// Import Navigation styles
+@import './navigation.scss';
+@import './jquery.custom-scrollbar.scss';
+
+.chartCol {
+    height: 50vh;
+}
