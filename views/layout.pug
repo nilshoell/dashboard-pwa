@@ -22,20 +22,20 @@ html(lang="en")
             a.nav-link(href="/other") Other
 
       div.p-0(id="content")
-        nav(class="navbar navbar-expand-lg navbar-dark bg-dark")
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
           button.btn.btn-info(type="button" id="sidebarCollapse")
             i.fa.fas.fa-align-justify
           span.text-light TITLE
           button.btn.btn-info(type="button" id="helpButton")
             i.fa.fas.fa-question-circle.text-light
 
-        div(class="container")
-          div(class="row")
-            div(class="col")
+        div.container
+          div.row
+            div.col
               block chart-top
-          div(class="row")
-            div(class="col chartCol")
-              div(id="chartCanvas" class="container mx-1" height="100%")
+          div.row
+            div.col.chartCol
+              div.container.mx-1(id="chartCanvas")
                   block chart
 
           include includes/footer.pug
