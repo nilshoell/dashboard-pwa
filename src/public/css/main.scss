@@ -7,8 +7,7 @@
 @import './components/header';
 
 // Import Navigation styles
-@import './navigation.scss';
-@import './jquery.custom-scrollbar.scss';
+@import './components/navigation';
 
 .chartCol {
     height: 50vh;
