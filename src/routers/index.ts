@@ -1,15 +1,28 @@
 import Router from "express";
 
-var router = Router();
+const router = Router();
 
-router.get('/dashboard', function(req, res) {
-  res.render('pages/dashboard', {
-  })
+const routes = [
+  {id: "home", link:"/", title: "Home", icon: "fa-home"},
+  {id: "dashboard", link:"/dashboard", title: "Dashboard", icon: "fa-tachometer-alt"},
+  {id: "customers", link:"/customers", title: "Customers", icon: "fa-industry"},
+  {id: "projects", link:"/projects", title: "Projects", icon: "fa-project-diagram"}
+]
+
+routes.forEach(route => {
+  router.get(route.link, function(req, res) {
+    res.render('pages/' + route.id, {routes, route});
+  });
 });
 
-router.get('/', function(req, res) {
-  res.render('pages/home', {
-  })
-});
+// router.get('/dashboard', function(req, res) {
+//   res.render('pages/dashboard', {
+//   })
+// });
+
+// router.get('/', function(req, res) {
+//   res.render('pages/home', {
+//   })
+// });
 
 export default router;

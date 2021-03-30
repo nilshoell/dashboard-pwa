@@ -1,5 +1,11 @@
 extends ../layout.pug
 
 block chart-top
-  h3 DashboardTest
+  button.btn.btn-success#addButton Chart hinzufügen
+
+block chart
+  div.container.mx-1.chart-canvas(id="barChart1")
+  div.container.mx-1.chart-canvas(id="barChart2")
+
+block chart-bottom
   script(src="/public/js/pages/dashboard.js" type="module")

@@ -3,29 +3,27 @@ html(lang="en")
   include includes/head.pug
   body
 
-    //- Navigation
+    //- Wrapper for content and nav
     div.wrapper
       nav(id="sidebar")
         div(id="dismiss")
           i.fa.fas.fa-arrow-left
 
         div.sidebar-header
-          h3 HEAD
+          h3 #{route.title}
 
         ul.list-unstyled.components
-          p TITLE
-          li.active
-            a.nav-link(href=".") Home
-          li
-            a.nav-link(href="/dashboard") Dashboard
-          li
-            a.nav-link(href="/other") Other
+          each val in routes
+            li.nav-link.p-0(class={active: route.link === val.link})
+              a(href=val.link)
+                i.fa.fas(class=val.icon)
+                |  #{val.title}
 
       div.p-0(id="content")
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
           button.btn.btn-info(type="button" id="sidebarCollapse")
             i.fa.fas.fa-align-justify
-          span.text-light TITLE
+          span.text-light #{route.title}
           button.btn.btn-info(type="button" id="helpButton")
             i.fa.fas.fa-question-circle.text-light
 
@@ -35,8 +33,10 @@ html(lang="en")
               block chart-top
           div.row
             div.col.chartCol
-              div.container.mx-1(id="chartCanvas")
-                  block chart
+              block chart
+          div.row
+            div.col
+              block chart-bottom
 
           include includes/footer.pug
 
