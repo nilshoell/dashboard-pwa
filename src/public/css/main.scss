@@ -9,10 +9,5 @@
 // Import Navigation styles
 @import './components/navigation';
 
-.chartCol {
-    height: 50vh;
-}
-
-#chartCanvas {
-    height: 100%;
-}
+// Import chart specific styles
+@import './components/charts';
