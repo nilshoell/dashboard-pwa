@@ -1,46 +1,68 @@
 extends ../layout.pug
 
 block chart-top
-  h3 Dashboard-PWA
-    p(class= "text-light") A Progressive Web App to create mobile dashboards using D3js.
+  h4.text-light Welcome!
 
 block chart
-  div.row
-    div.col
-      div.carousel.slide#kpiCarousel
-        //- ol.carousel-indicators
-        //-   li.active(data-target="#kpiCarousel" data-slide-to="0")
-        //-   li(data-target="#kpiCarousel" data-slide-to="1")
-        //-   li(data-target="#kpiCarousel" data-slide-to="2")
+  div.container.p-0
+    div.carousel.slide#kpiCarousel(data-touch="true" data-interval="false")
+      ol.carousel-indicators
+        li.active(data-target="#kpiCarousel" data-slide-to="0")
+        li(data-target="#kpiCarousel" data-slide-to="1")
+        li(data-target="#kpiCarousel" data-slide-to="2")
       div.carousel-inner
         div.carousel-item.active
-            svg(width="100%" height="100%")
-                rect(width="100%" height="100%" style="fill:rgb(128,128,128)")
+          div.row.carousel-row
+            div.col-6
+              svg.mx-auto.d-block.carousel-svg
+                  rect(width="100%" height="100%" style="fill:rgb(255,255,255)")
+            div.col-6
+              svg.mx-auto.d-block.carousel-svg-r
+                  rect(width="100%" height="100%" style="fill:rgb(128,128,128)")
         div.carousel-item
-            svg(width="100%" height="100%")
-                rect(width="100%" height="100%" style="fill:rgb(128,128,255)")
+          div.row.carousel-row
+            div.col-6
+              svg.mx-auto.d-block.carousel-svg
+                  rect(width="100%" height="100%" style="fill:rgb(100,100,100)")
+            div.col-6
+              svg.mx-auto.d-block.carousel-svg-r
+                  rect(width="100%" height="100%" style="fill:rgb(200,200,200)")
         div.carousel-item
-            svg(width="100%" height="100%")
-                rect(width="100%" height="100%" style="fill:rgb(255,128,128)")
+          div.row.carousel-row
+            div.col-6
+              svg.mx-auto.d-block.carousel-svg
+                  rect(width="100%" height="100%" style="fill:rgb(50,50,50)")
+            div.col-6
+              svg.mx-auto.d-block.carousel-svg-r
+                  rect(width="100%" height="100%" style="fill:rgb(170,170,170)")
       a.carousel-control-prev(href="#kpiCarousel" role="button" data-slide="prev")
-        span.carousel-control-prev-icon(aria-hidden="true")
-        span.sr-only Previous
+        span.carousel-control-prev-icon
       a.carousel-control-next(href="#kpiCarousel" role="button" data-slide="next")
-        span.carousel-control-next-icon(aria-hidden="true")
-        span.sr-only Next
+        span.carousel-control-next-icon
 
   
-  div.row.mt-2
+  div.row.mt-4
     div.col-6
-      a.btn.btn.btn-success.btn-sq(role="button" href="/dashboard")
-        i.fa.fas.fa-tachometer-alt.fa-4x
+      a.btn.btn.btn-secondary.btn-sq(role="button" href="/dashboard")
+        i.fa.fas.fa-tachometer-alt.fa-3x
         br
-        | Text
+        span.font-weight-bold Dashboard
     div.col-6
-      a.btn.btn.btn-success.btn-sq(role="button" href="/dashboard")
-        i.fa.fas.fa-tachometer-alt.fa-4x
+      a.btn.btn.btn-secondary.btn-sq(role="button" href="/customers")
+        i.fa.fas.fa-industry.fa-3x
         br
-        | Text
+        span.font-weight-bold CPA
+  div.row.mt-4
+    div.col-6
+      a.btn.btn.btn-secondary.btn-sq(role="button" href="/projects")
+        i.fa.fas.fa-project-diagram.fa-3x
+        br
+        span.font-weight-bold Projects
+    div.col-6
+      a.btn.btn.btn-secondary.btn-sq(role="button" href="/personal")
+        i.fa.fas.fa-user.fa-3x
+        br
+        span.font-weight-bold Personal
 
 block chart-bottom
   script(src="/public/js/pages/home.js" type="module")
