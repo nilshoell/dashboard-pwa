@@ -5,5 +5,42 @@ block chart-top
     p(class= "text-light") A Progressive Web App to create mobile dashboards using D3js.
 
 block chart
-  svg(width="100%" height="100%")
-    rect(width="100%" height="100%" style="fill:rgb(128,128,128)")
+  div.row
+    div.col
+      div.carousel.slide#kpiCarousel
+        //- ol.carousel-indicators
+        //-   li.active(data-target="#kpiCarousel" data-slide-to="0")
+        //-   li(data-target="#kpiCarousel" data-slide-to="1")
+        //-   li(data-target="#kpiCarousel" data-slide-to="2")
+      div.carousel-inner
+        div.carousel-item.active
+            svg(width="100%" height="100%")
+                rect(width="100%" height="100%" style="fill:rgb(128,128,128)")
+        div.carousel-item
+            svg(width="100%" height="100%")
+                rect(width="100%" height="100%" style="fill:rgb(128,128,255)")
+        div.carousel-item
+            svg(width="100%" height="100%")
+                rect(width="100%" height="100%" style="fill:rgb(255,128,128)")
+      a.carousel-control-prev(href="#kpiCarousel" role="button" data-slide="prev")
+        span.carousel-control-prev-icon(aria-hidden="true")
+        span.sr-only Previous
+      a.carousel-control-next(href="#kpiCarousel" role="button" data-slide="next")
+        span.carousel-control-next-icon(aria-hidden="true")
+        span.sr-only Next
+
+  
+  div.row.mt-2
+    div.col-6
+      a.btn.btn.btn-success.btn-sq(role="button" href="/dashboard")
+        i.fa.fas.fa-tachometer-alt.fa-4x
+        br
+        | Text
+    div.col-6
+      a.btn.btn.btn-success.btn-sq(role="button" href="/dashboard")
+        i.fa.fas.fa-tachometer-alt.fa-4x
+        br
+        | Text
+
+block chart-bottom
+  script(src="/public/js/pages/home.js" type="module")
