@@ -1,4 +1,4 @@
-import BarChart from './../charts/barChart.js';
+import KPIBar from './../charts/kpiBar.js';
 
 $(function () {
     new Dashboard();
@@ -9,39 +9,34 @@ class Dashboard {
     charts = [];
 
     constructor() {
-        const chart = new BarChart('barChart1');
-        const chartData = {data: [12, 5, 6, 6, 9, 10, 12, 15, 17, 23]};
-        chart.drawChart(chartData);
 
-        console.log(chart);
+        const self = this;
 
-        this.charts.push(chart);
+        const kpis = [
+            {data: [3000,1500,3500]},
+            {data: [1500,6485,9800]},
+            {data: [1234,9487,3500]},
+            {data: [7123,7892,9644]},
+            {data: [4678,1500,4584]},
+            {data: [9728,6758,3884]}
+        ];
+        
+        kpis.forEach(function (kpi, index) {
+            self.renderKPI('kpiBar' + (+index + 1), kpi);
+        });
+
         this.configureEventListener();
     }
 
     configureEventListener() {
         const self = this;
-        $(document).on('click', '#addButton', () => self.addChart());
-        $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
+        // $(document).on('click', '#addButton', () => self.addChart());
+        // $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
     }
 
-    addChart() {
-        const chart = new BarChart('barChart2');
+    renderKPI(canvasID:string, chartData) {
+        const chart = new KPIBar(canvasID);
+        chart.drawChart(chartData);
         this.charts.push(chart);
-        this.updateData(chart);
     }
-
-    updateData(chart:BarChart) {
-        const length = d3.randomInt(5,10);
-        const int = d3.randomInt(5, 25);
-
-        let data = [];
-
-        for (let index = 0; index < length(); index++) {
-            data.push(int());
-        }
-
-        chart.drawChart({data: data});
-    }
-
 }

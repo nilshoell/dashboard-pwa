@@ -1,11 +1,15 @@
 extends ../layout.pug
 
 block chart-top
-  button.btn.btn-success#addButton Chart hinzufügen
+  p Important KPIs
 
 block chart
-  div.container.mx-1.chart-canvas(id="barChart1")
-  div.container.mx-1.chart-canvas(id="barChart2")
+  div.container.mx-1.chart-canvas.kpi-bar.mt-2(id="kpiBar1")
+  div.container.mx-1.chart-canvas.kpi-bar(id="kpiBar2")
+  div.container.mx-1.chart-canvas.kpi-bar(id="kpiBar3")
+  div.container.mx-1.chart-canvas.kpi-bar(id="kpiBar4")
+  div.container.mx-1.chart-canvas.kpi-bar(id="kpiBar5")
+  div.container.mx-1.chart-canvas.kpi-bar(id="kpiBar6")
 
 block chart-bottom
   script(src="/public/js/pages/dashboard.js" type="module")
