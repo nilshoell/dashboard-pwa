@@ -2,77 +2,77 @@ import BaseChart from "./baseChart.js";
 
 class BarChart extends BaseChart {
 
-    svg;
-
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
     }
 
     drawChart(chartData) {
-        console.log("Drawing BarChart with data: ");
-        console.log(chartData.data);
-
         let self = this;
+        this.chartData = chartData;
+        const data = chartData.data;
+        console.log("Drawing BarChart with data: ", data);
 
-        let data = chartData.data;
+        this.setScales();
 
-        const width = 300;
-        console.log("Width: " + width);
-
-        let barWidth = 0.75 * (width / data.length)
-        let barSpace = 0.25 * (width / data.length)
-
-        this.svg = d3.select('#' + this.canvasID + ' svg');
+        let barWidth = 0.75 * (this.baseData.width / data.length)
+        let barSpace = 0.25 * (this.baseData.width / data.length)
 
         const bars = this.svg
             .selectAll("rect")
             .data(data);
 
         bars.join("rect")
-            .attr("x", (d, i) => i * (barSpace + barWidth))
-            .attr("y", (d:number, i) => 300 - 10 * d)
+            .attr("x", (d:number, i:number) => i * (barSpace + barWidth))
+            .attr("y", (d:number) => this.baseData.height - this.yScale(d))
             .attr("width", barWidth)
-            .attr("height", (d:number, i) => d * 10)
+            .attr("height", (d:number) => this.yScale(d))
             .attr("data-value", (d:number) => d)
-            .attr("data-label", "false")
             .attr("fill", "green")
-            .on("touchstart", function(e, i:number) {
+            .on("touchstart", function(e:Event, i:number) {
                 self.toggleLabel(e.target);
             });
 
         // bars.exit().remove();
     }
 
+    /**
+     * Configure scales
+     */
+    setScales() {
+        this.xScale = d3.scaleLinear()
+            .domain(d3.extent(this.chartData.data, (d:number, i:number) => i))
+            .range([0, this.baseData.width]);
+
+        this.yScale = d3.scaleLinear()
+            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .range([0, this.baseData.height]);
+    }
+
+    /**
+     * Draws a label with the value of the target on top of it
+     * @param target The SVG rect element (bar) to render the label for
+     */
     toggleLabel(target) {
 
+        // Set constants
         const attributes = target.attributes
-
-        const parent = target.parentElement
-
         const val = +attributes['data-value'].value;
         const x = +attributes['x'].value;
         const y = +attributes['y'].value;
         const barWidth = +attributes['width'].value;
-        const barHeight = +attributes['height'].value;
 
-        const labelExists = attributes['data-label'].value;
+        // Remove all present labels
+        d3.selectAll('text.numeric_label').remove();
+        d3.selectAll('rect.numeric_label').remove();
 
-        if (labelExists == "true") {
-            d3.selectAll('text.numeric_label').remove();
-            d3.selectAll('rect.numeric_label').remove();
-            d3.select(target).attr("data-label", "false");
-            return;
-        }
-
-        d3.select(target).attr("data-label", "true");
-
+        // Configure label size
         const height = 20;
         let width = 45;
-
         if (barWidth > width) {
             width = barWidth;
         }
 
+        // Append label & text
         this.svg.append('rect')
             .attr("x", x - (width - barWidth) / 2)
             .attr("y", y - 25)

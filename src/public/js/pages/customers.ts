@@ -22,7 +22,7 @@ class CustomerDashboard {
     configureEventListener() {
         const self = this;
         // $(document).on('click', '#addButton', () => self.addChart());
-        $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
+        // $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
     }
 
     addChart() {

@@ -3,6 +3,10 @@ class BaseChart {
     svg;
     canvasID: string;
     baseData;
+    chartData;
+
+    xScale;
+    yScale;
 
     /**
      * Initialise a new chart
@@ -25,6 +29,25 @@ class BaseChart {
             .attr("width", this.baseData.width ?? "100%")
             .attr("height", this.baseData.height ?? "100%")
             .style("margin-left", 10);
+
+        // Read the actual width in pixels
+        const svg = $('#' + this.canvasID + ' svg')[0];
+        this.baseData.width = svg.clientWidth
+        this.baseData.height = svg.clientHeight
+        console.log(this.baseData);
+    }
+
+    /**
+     * Create default scales using the data
+     */
+    setScales() {
+        this.xScale = d3.scaleLinear()
+            .domain(d3.extent(this.chartData.data, (d:number, i:number) => i))
+            .range([0, this.baseData.width]);
+
+        this.yScale = d3.scaleLinear()
+            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .range([this.baseData.height, 0]);
     }
 
     /**

@@ -9,24 +9,21 @@ class KPIBar extends BaseChart {
     }
 
     drawChart(chartData) {
-        console.log("Drawing KPIBar with data: ", chartData.data);
         let self = this;
-        let data = chartData.data;
+        this.chartData = chartData;
+        const data = chartData.data;
+        console.log("Drawing KPIBar with data: ", data);
 
-        const width = 300;
-        const height = 50;
+        // Reduce height
+        this.baseData.height -= 10;
 
-        var scale = d3.scaleLinear()
-            .domain([0, 10000])
-            .range([0, width]);
+        this.setScales();
 
         var color = d3.scaleSequential()
             .domain([0, 2])
             .interpolator(d3.interpolateRdYlGn);
 
-        let barHeight = 0.5 * height;
-
-        this.svg = d3.select('#' + this.canvasID + ' svg');
+        let barHeight = 0.5 * this.baseData.height;
 
         const bars = this.svg
             .selectAll("rect")
@@ -35,22 +32,36 @@ class KPIBar extends BaseChart {
         bars.join("rect")
             .attr("x", 0)
             .attr("y", (d:number, i:number) => i * 0.5 * barHeight)
-            .attr("width", (d:number, i:number) => scale(d))
+            .attr("width", (d:number, i:number) => this.xScale(d))
             .attr("height", barHeight)
             .attr("data-value", (d:number) => d)
             .attr("data-label", "false")
             .attr("fill", (d:number, i:number) => color(i));
 
+        // Manually redraw the second bar to be on top
         this.svg.append("rect")
             .attr("x", 0)
             .attr("y", 0.5 * barHeight)
-            .attr("width", scale(data[1]))
+            .attr("width", this.xScale(data[1]))
             .attr("height", barHeight)
             .attr("data-value", data[1])
-            .attr("data-label", "false")
             .attr("fill", color(1));
 
     }
+
+    /**
+     * Configure scales
+     */
+    setScales() {
+        this.xScale = d3.scaleLinear()
+            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .range([0, this.baseData.width]);
+
+        this.yScale = d3.scaleLinear()
+            .domain([0, 3])
+            .range([0, this.baseData.height]);
+    }
+
 
 }
 

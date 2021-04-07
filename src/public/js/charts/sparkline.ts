@@ -2,55 +2,35 @@ import BaseChart from "./baseChart.js";
 
 class Sparkline extends BaseChart {
 
-    svg;
-
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
     }
 
     drawChart(chartData) {
-        console.log("Drawing Sparkline with data: ", chartData.data);
+
         let self = this;
-        let data = chartData.data;
+        this.chartData = chartData;
+        const data = chartData.data;
+        console.log("Drawing Sparkline with data: ", data);
 
-        const width = 300;
-        const height = 50;
+        // Create scales with default function
+        this.setScales();
 
-        const xScale = d3.scaleLinear()
-            .domain(d3.extent(data, (d:number, i:number) => i))
-            .range([0, width]);
+        // Draw axes
+        // this.drawAxes();
 
-        const yScale = d3.scaleLinear()
-            // .domain(d3.extent(data, (d:number) => d))
-            .domain([0, d3.max(data, (d:number) => d)]).nice()
-            .range([height, 0]);
-
-        const color = d3.scaleSequential()
-            .domain([0, 2])
-            .interpolator(d3.interpolateRdYlGn);
-
-        const xAxis = g => g
-            .attr("transform", "translate(0," + (height) + ")")
-            .call(d3.axisBottom(xScale).ticks(4));
-
-        const yAxis = g => g
-            .attr("transform", "translate(" + (width) + ", 0)")
-            .call(d3.axisRight(yScale).ticks(0));
-
-        this.svg = d3.select('#' + this.canvasID + ' svg');
-
-        // this.svg.append("g").call(xAxis);
-        // this.svg.append("g").call(yAxis);
-
+        // Create line generator
         let line = d3.line()
-            .x((d:any, i:any) => xScale(i))
-            .y((d:any) => yScale(d))
+            .x((d:any, i:any) => this.xScale(i))
+            .y((d:any) => this.yScale(d))
             .curve(d3.curveCardinal);
 
+        // Setup path object
         const path = this.svg
             .selectAll("path")
             .data(data);
 
+        // Update data
         path.join("path")
             .attr("fill", "none")
             .attr("stroke", "steelblue")
@@ -61,6 +41,19 @@ class Sparkline extends BaseChart {
 
         path.exit().remove();
 
+    }
+
+    drawAxes(axisData = {}) {
+        const xAxis = g => g
+            .attr("transform", "translate(0," + (this.baseData.height) + ")")
+            .call(d3.axisBottom(this.xScale).ticks(4));
+
+        const yAxis = g => g
+            .attr("transform", "translate(" + (this.baseData.width) + ", 0)")
+            .call(d3.axisRight(this.yScale).ticks(0));
+
+        this.svg.append("g").call(xAxis);
+        this.svg.append("g").call(yAxis);
     }
 
 }

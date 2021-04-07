@@ -25,7 +25,7 @@ class Dashboard {
             self.renderKPI('kpiBar' + (+index + 1), kpi);
         });
 
-        this.configureEventListener();
+        // this.configureEventListener();
     }
 
     configureEventListener() {
