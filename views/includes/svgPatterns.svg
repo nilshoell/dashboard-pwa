@@ -1,0 +1,11 @@
+<!-- Based on https://github.com/iros/patternfills by Irene Ros -->
+
+<!-- #diagonal-stripe-1 -->
+<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10'>
+  <rect width='10' height='10' fill='lightgrey' fill-opacity="0.5"/>
+  <path d='M-1,1 l2,-2
+           M0,10 l10,-10
+           M9,11 l2,-2' stroke='black' stroke-width='1'/>
+</svg>
+
+<!-- PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScxMCcgaGVpZ2h0PScxMCc+DQogIDxyZWN0IHdpZHRoPScxMCcgaGVpZ2h0PScxMCcgZmlsbD0nbGlnaHRncmV5JyBmaWxsLW9wYWNpdHk9IjAuNSIvPg0KICA8cGF0aCBkPSdNLTEsMSBsMiwtMg0KICAgICAgICAgICBNMCwxMCBsMTAsLTEwDQogICAgICAgICAgIE05LDExIGwyLC0yJyBzdHJva2U9J2JsYWNrJyBzdHJva2Utd2lkdGg9JzEnLz4NCjwvc3ZnPg== -->

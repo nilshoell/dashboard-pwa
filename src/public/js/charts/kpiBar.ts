@@ -19,33 +19,53 @@ class KPIBar extends BaseChart {
 
         this.setScales();
 
-        var color = d3.scaleSequential()
-            .domain([0, 2])
-            .interpolator(d3.interpolateRdYlGn);
-
         let barHeight = 0.5 * this.baseData.height;
 
         const bars = this.svg
             .selectAll("rect")
             .data(data);
 
-        bars.join("rect")
+        // Previous year (PY)
+        this.svg.append("rect")
             .attr("x", 0)
-            .attr("y", (d:number, i:number) => i * 0.5 * barHeight)
-            .attr("width", (d:number, i:number) => this.xScale(d))
+            .attr("y", 0)
+            .attr("width", this.xScale(data[0]))
             .attr("height", barHeight)
-            .attr("data-value", (d:number) => d)
-            .attr("data-label", "false")
-            .attr("fill", (d:number, i:number) => color(i));
+            .attr("data-value", data[0])
+            .attr("fill", "grey");
 
-        // Manually redraw the second bar to be on top
+        // Budget/Target (BUD)
+        this.svg.append("rect")
+            .attr("x", 0)
+            .attr("y", barHeight)
+            .attr("width", this.xScale(data[2]))
+            .attr("height", barHeight)
+            .attr("data-value", data[2])
+            .attr("fill", "none")
+            .attr("stroke", "black")
+            .attr("stroke-width", 3);
+
+        // Current value (ACT)
         this.svg.append("rect")
             .attr("x", 0)
             .attr("y", 0.5 * barHeight)
             .attr("width", this.xScale(data[1]))
             .attr("height", barHeight)
             .attr("data-value", data[1])
-            .attr("fill", color(1));
+            .attr("fill", "black");
+
+        // Forecast if Available
+        if (!isNaN(data[3])) {
+            this.svg.append("rect")
+                .attr("x", this.xScale(data[1]))
+                .attr("y", 0.5 * barHeight)
+                .attr("width", this.xScale(data[3]) - this.xScale(data[1]))
+                .attr("height", barHeight)
+                .attr("data-value", data[3])
+                .attr("fill", "url(#diagonal-stripe-1) none")
+                .attr("stroke", "black")
+                .attr("stroke-width", 1);
+        }
 
     }
 
