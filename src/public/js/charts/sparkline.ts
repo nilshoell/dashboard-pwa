@@ -56,8 +56,15 @@ class Sparkline extends BaseChart {
 
         path.exit().remove();
 
+        // Draw annotations
+        this.drawAnnotations();
+
     }
 
+
+    /**
+     * Overrides the default scales
+     */
     setScales() {
         const margin = this.baseData.margin
         const width = this.baseData.width
@@ -72,6 +79,11 @@ class Sparkline extends BaseChart {
             .range([height - margin.bottom, margin.top]);
     }
 
+
+    /**
+     * Draw axes and labels
+     * @param axisData unused
+     */
     drawAxes(axisData = {}) {
         const margin = this.baseData.margin
         const xAxis = g => g
@@ -93,6 +105,47 @@ class Sparkline extends BaseChart {
 
         this.svg.append("g").call(xAxis);
         this.svg.append("g").call(yAxis);
+    }
+
+
+    /**
+     * Draws three additional annotations for min, max and current value
+     */
+    drawAnnotations() {
+        const data = this.chartData.data;
+        const max = {
+            x: this.xScale(data.findIndex(d => d == d3.max(data))),
+            y: this.yScale(d3.max(data))
+        };
+        const min = {
+            x: this.xScale(data.findIndex(d => d == d3.min(data))),
+            y: this.yScale(d3.min(data))
+        };
+        const current = {
+            x: this.xScale(data.length - 1),
+            y: this.yScale(data[data.length - 1])
+        };
+
+        // Draw max marker
+        this.svg.append("circle")
+            .attr("cx", max.x)
+            .attr("cy", max.y)
+            .attr("r", 3)
+            .attr("fill", "green");
+
+        // Draw min marker
+        this.svg.append("circle")
+            .attr("cx", min.x)
+            .attr("cy", min.y)
+            .attr("r", 3)
+            .attr("fill", "#e10000");
+
+        // Draw current marker
+        this.svg.append("circle")
+            .attr("cx", current.x)
+            .attr("cy", current.y)
+            .attr("r", 3)
+            .attr("fill", "steelblue");
     }
 
 }
