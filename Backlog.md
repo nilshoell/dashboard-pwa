@@ -68,8 +68,8 @@
 
 ### Usability
 
-- [ ] Color scheme
-- [ ] Intuitive navigation
+- [ ] Color scheme: [Color Wheel](https://color.adobe.com/de/create/color-wheel)
+- [ ] Intuitive navigation: [Cognitive Dimensions](https://www.uxbooth.com/articles/a-usable-guide-to-cognitive-dimensions/)
 - [ ] Few interaction steps
 
 ### Platform-Independent Use
