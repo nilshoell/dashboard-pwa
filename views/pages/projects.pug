@@ -1,14 +1,15 @@
 extends ../layout.pug
+include ../includes/chartContainers.pug
 
 block chart-top
   p Project-Related KPIs
 
 block chart
-  div.container.mr-1.px-0.chart-canvas.sparkline.mt-2(id="sparkline1")
-  div.container.mr-1.px-0.chart-canvas.sparkline.mt-2(id="sparkline2")
-  div.container.mr-1.px-0.chart-canvas.sparkline.mt-2(id="sparkline3")
-  div.container.mr-1.px-0.chart-canvas.sparkline.mt-2(id="sparkline4")
-  div.container.mr-1.px-0.chart-canvas.sparkline.mt-2(id="sparkline5")
+  +sparkline("sparkline1")
+  +sparkline("sparkline2")
+  +sparkline("sparkline3")
+  +sparkline("sparkline4")
+  +sparkline("sparkline5")
 
 block chart-bottom
   script(src="/public/js/pages/projects.js" type="module")
