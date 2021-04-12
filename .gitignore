@@ -1,6 +1,7 @@
 node_modules/
 .eslintcache
 vs/
+.vscode
 .DS_Store
 *.Identifier
 dist/
