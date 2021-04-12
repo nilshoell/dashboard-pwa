@@ -35,7 +35,7 @@ class Dashboard {
     }
 
     renderKPI(canvasID:string, chartData) {
-        const chart = new KPIBar(canvasID);
+        const chart = new KPIBar(canvasID, {width: "80%"});
         chart.drawChart(chartData);
         this.charts.push(chart);
     }

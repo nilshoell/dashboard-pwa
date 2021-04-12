@@ -16,6 +16,20 @@ class BaseChart {
     constructor(canvasID: string, baseData = {}) {
         this.canvasID = canvasID;
         this.baseData = baseData;
+
+        // Set margins
+        if (baseData['margin'] === undefined) {
+            this.baseData.margin = {
+                top: 5,
+                bottom: 5,
+                left: 10,
+                right: 25
+            }
+        }
+        this.baseData.margin['y'] = this.baseData.margin.top + this.baseData.margin.bottom
+        this.baseData.margin['x'] = this.baseData.margin.left + this.baseData.margin.right
+
+        // Create base SVG element
         this.prepareChart();
     }
 
@@ -27,8 +41,7 @@ class BaseChart {
         this.svg = d3.select('#' + this.canvasID)
             .append("svg")
             .attr("width", this.baseData.width ?? "100%")
-            .attr("height", this.baseData.height ?? "100%")
-            .style("margin-left", 10);
+            .attr("height", this.baseData.height ?? "100%");
 
         // Read the actual width in pixels
         const svg = $('#' + this.canvasID + ' svg')[0];
