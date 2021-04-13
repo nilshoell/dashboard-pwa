@@ -25,17 +25,23 @@ class Dashboard {
             self.renderKPI('kpiBar' + (+index + 1), kpi);
         });
 
-        // this.configureEventListener();
+        this.configureEventListener();
     }
 
     configureEventListener() {
         const self = this;
-        // $(document).on('click', '#addButton', () => self.addChart());
+        // $(document).on('longTouch', '.kpi-bar', () => self.longTouch(this));
         // $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
     }
 
     renderKPI(canvasID:string, chartData) {
-        const chart = new KPIBar(canvasID, {width: "80%"});
+        const margin = {
+            top: 5,
+            bottom: 5,
+            left: 10,
+            right: 100
+        }
+        const chart = new KPIBar(canvasID, {margin: margin});
         chart.drawChart(chartData);
         this.charts.push(chart);
     }
