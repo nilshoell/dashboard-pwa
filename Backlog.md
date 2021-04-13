@@ -27,6 +27,8 @@
     - [Bar/Column Chart](#barcolumn-chart)
     - [Line Chart](#line-chart)
 
+https://www.d3indepth.com/shapes/
+
 ## Functional Requirements
 
 ### Push Notifications
@@ -106,13 +108,13 @@
 
 ### KPIBar
 
-- [ ] Choose IBCS colors
-- [ ] Add forecast option
+- [X] Choose IBCS colors
+- [X] Add forecast option
 
 ### Sparkline
 
-- [ ] Bounding box
-- [ ] Labels
+- [X] Bounding box
+- [X] Labels
 
 ### Bar/Column Chart
 
