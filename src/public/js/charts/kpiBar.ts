@@ -51,7 +51,9 @@ class KPIBar extends BaseChart {
             .attr("width", this.xScale(data[1]))
             .attr("height", this.barHeight)
             .attr("data-value", data[1])
-            .attr("fill", "black");
+            .attr("fill", "black")
+            .attr("stroke", "black")
+            .attr("stroke-width", 1);
 
         // Forecast if Available
         if (!isNaN(data[3])) {
@@ -76,29 +78,38 @@ class KPIBar extends BaseChart {
 
         const labelData = data;
 
-        this.svg.append("text")
-            .attr("x", this.xScale(data[0]))
-            .attr("y", 0.5 * this.barHeight + margin.top)
-            .attr("class", "numeric_label")
-            .text(d3.format(".2s")(labelData[0]))
-            .attr("fill", "LightGrey")
-            .attr("style", "transform: translate(-20px,0)");
+        const textPos = (val) => {
+            // const xVal = this.xScale(val);
+            // if (xVal < 30) {
+            //     return 15;
+            // } else {
+            //     return xVal - 20;
+            // }
+            return this.baseData.width - 50;
+        }
 
         this.svg.append("text")
-            .attr("x", this.xScale(data[1]))
+            .attr("x", textPos(data[0]))
+            .attr("y", margin.y)
+            .attr("class", "numeric_label")
+            .text(d3.format(".2s")(labelData[0]))
+            .attr("fill", "black")
+            .attr("style", "font-size: small");
+
+        this.svg.append("text")
+            .attr("x", textPos(data[1]))
             .attr("y", this.barHeight + margin.top)
             .attr("class", "numeric_label")
             .text(d3.format(".2s")(labelData[1]))
-            .attr("fill", "LightGrey")
-            .attr("style", "transform: translate(-20px,0)");
+            .attr("fill", "black");
 
         this.svg.append("text")
-            .attr("x", this.xScale(data[2]))
-            .attr("y", 1.5 * this.barHeight + margin.top)
+            .attr("x", textPos(data[2]))
+            .attr("y", this.baseData.height - margin.y)
             .attr("class", "numeric_label")
             .text(d3.format(".2s")(labelData[2]))
-            .attr("fill", "DimGrey")
-            .attr("style", "transform: translate(-20px,0)");
+            .attr("fill", "black")
+            .attr("style", "font-size: small");
     }
 
     /**

@@ -26,6 +26,7 @@ class BaseChart {
                 right: 25
             }
         }
+
         this.baseData.margin['y'] = this.baseData.margin.top + this.baseData.margin.bottom
         this.baseData.margin['x'] = this.baseData.margin.left + this.baseData.margin.right
 
