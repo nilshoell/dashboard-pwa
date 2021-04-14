@@ -17,18 +17,7 @@ class BaseChart {
         this.canvasID = canvasID;
         this.baseData = baseData;
 
-        // Set margins
-        if (baseData['margin'] === undefined) {
-            this.baseData.margin = {
-                top: 5,
-                bottom: 5,
-                left: 10,
-                right: 25
-            }
-        }
-
-        this.baseData.margin['y'] = this.baseData.margin.top + this.baseData.margin.bottom
-        this.baseData.margin['x'] = this.baseData.margin.left + this.baseData.margin.right
+        this.setMargins();
 
         // Create base SVG element
         this.prepareChart();
@@ -91,6 +80,39 @@ class BaseChart {
         const svg = $('#' + this.canvasID + ' svg')[0];
         this.baseData.width = svg.clientWidth
         this.baseData.height = svg.clientHeight
+    }
+
+    /**
+     * Sets new margins by overwriting only given keys; set default if 
+     * @param newMargin Object containing keys to update
+     */
+    setMargins(newMargin = {}) {
+
+        console.log("old", this.baseData.margin);
+
+        let margin:Object;
+        let defaultMargin = {
+            top: 5,
+            bottom: 5,
+            left: 10,
+            right: 25
+        }
+
+        // Set margins
+        if (this.baseData['margin'] === undefined || newMargin == {}) {
+            margin = defaultMargin;
+        } else {
+            // Merge objects
+            margin = Object.assign(defaultMargin, newMargin);
+        }
+
+        this.baseData.margin = margin;
+
+        this.baseData.margin['y'] = margin['top'] + margin['bottom'];
+        this.baseData.margin['x'] = margin['left'] + margin['right'];
+
+        console.log("new", this.baseData.margin);
+
     }
 
 }
