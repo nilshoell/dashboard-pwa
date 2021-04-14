@@ -35,13 +35,7 @@ class Dashboard {
     }
 
     renderKPI(canvasID:string, chartData) {
-        const margin = {
-            top: 5,
-            bottom: 5,
-            left: 10,
-            right: 100
-        }
-        const chart = new KPIBar(canvasID, {margin: margin});
+        const chart = new KPIBar(canvasID);
         chart.drawChart(chartData);
         this.charts.push(chart);
     }
