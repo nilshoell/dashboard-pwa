@@ -44,11 +44,7 @@ class BaseChart {
             .attr("width", this.baseData.width ?? "100%")
             .attr("height", this.baseData.height ?? "100%");
 
-        // Read the actual width in pixels
-        const svg = $('#' + this.canvasID + ' svg')[0];
-        this.baseData.width = svg.clientWidth
-        this.baseData.height = svg.clientHeight
-        console.log(this.baseData);
+        this.setSizes();
     }
 
     /**
@@ -73,11 +69,28 @@ class BaseChart {
     }
 
     /**
+     * Handles display resizes, e.g. orientation changes
+     */
+    resizeChart() {
+        this.setSizes();
+        this.drawChart(this.chartData);
+    }
+
+    /**
      * Draw axes for the chart
      * @param data Information for all axes
      */
     drawAxes(data) {
         throw "drawAxes() not implemented in base class.";
+    }
+
+    /**
+     * Set the actual SVG width in pixels
+     */
+    setSizes() {
+        const svg = $('#' + this.canvasID + ' svg')[0];
+        this.baseData.width = svg.clientWidth
+        this.baseData.height = svg.clientHeight
     }
 
 }

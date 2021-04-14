@@ -24,12 +24,7 @@ class Sparkline extends BaseChart {
         this.setScales();
 
         // Add background bounding box
-        this.svg.append("rect")
-            .attr("x", margin.left)
-            .attr("y", margin.top)
-            .attr("width", this.baseData.width - margin.left - margin.right)
-            .attr("height", this.baseData.height - margin.top - margin.bottom)
-            .attr("fill", "#b0b0b0");
+        this.setBackground();
 
         // Draw axes
         this.drawAxes();
@@ -45,6 +40,8 @@ class Sparkline extends BaseChart {
             .selectAll("path")
             .data(data);
 
+        path.exit().remove();
+
         // Update data
         path.join("path")
             .attr("fill", "none")
@@ -53,8 +50,6 @@ class Sparkline extends BaseChart {
             // .attr("stroke-linejoin", "round")
             // .attr("stroke-linecap", "round")
             .attr("d", line(data));
-
-        path.exit().remove();
 
         // Draw annotations
         this.drawAnnotations();
@@ -103,8 +98,10 @@ class Sparkline extends BaseChart {
             .attr("stroke", "green")
             .attr("y2", 10);
 
-        this.svg.append("g").call(xAxis);
-        this.svg.append("g").call(yAxis);
+        d3.selectAll("#" + this.canvasID + " svg g.x-axis").remove();
+        d3.selectAll("#" + this.canvasID + " svg g.y-axis").remove();
+        this.svg.append("g").call(xAxis).attr("class", "x-axis");
+        this.svg.append("g").call(yAxis).attr("class", "y-axis");
     }
 
 
@@ -112,7 +109,11 @@ class Sparkline extends BaseChart {
      * Draws three additional annotations for min, max and current value
      */
     drawAnnotations() {
+        const r = 3;
+
         const data = this.chartData.data;
+        const margin = this.baseData.margin;
+
         const max = {
             x: this.xScale(data.findIndex(d => d == d3.max(data))),
             y: this.yScale(d3.max(data))
@@ -126,26 +127,61 @@ class Sparkline extends BaseChart {
             y: this.yScale(data[data.length - 1])
         };
 
+        d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
+
         // Draw max marker
         this.svg.append("circle")
             .attr("cx", max.x)
             .attr("cy", max.y)
-            .attr("r", 3)
-            .attr("fill", "green");
+            .attr("r", r)
+            .attr("fill", "green")
+            .attr("class", "sparkline-annotation");
 
         // Draw min marker
         this.svg.append("circle")
             .attr("cx", min.x)
             .attr("cy", min.y)
-            .attr("r", 3)
-            .attr("fill", "#e10000");
+            .attr("r", r)
+            .attr("fill", "#e10000")
+            .attr("class", "sparkline-annotation");
 
         // Draw current marker
         this.svg.append("circle")
             .attr("cx", current.x)
             .attr("cy", current.y)
-            .attr("r", 3)
-            .attr("fill", "steelblue");
+            .attr("r", r)
+            .attr("fill", "steelblue")
+            .attr("class", "sparkline-annotation");
+    }
+
+
+    /**
+     * Draw or resize the bounding box
+     */
+    setBackground(draw = true) {
+
+        if (!draw) {
+            return;
+        }
+
+        const margin = this.baseData.margin;
+        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg")
+        const backgroundExists = Boolean(backgrounds.size());
+
+        if (backgroundExists) {
+            backgrounds
+                .attr("width", this.baseData.width - margin.left - margin.right)
+                .attr("height", this.baseData.height - margin.top - margin.bottom)
+
+        } else {
+            this.svg.append("rect")
+                .attr("x", margin.left)
+                .attr("y", margin.top)
+                .attr("width", this.baseData.width - margin.left - margin.right)
+                .attr("height", this.baseData.height - margin.top - margin.bottom)
+                .attr("fill", "#b0b0b0")
+                .attr("class", "sparkline-bg");
+        }
     }
 
 }

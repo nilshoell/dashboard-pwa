@@ -23,6 +23,7 @@ class KPIBar extends BaseChart {
         const bars = this.svg
             .selectAll("rect")
             .data(data);
+        bars.remove();
 
         // Previous year (PY)
         this.svg.append("rect")
@@ -69,7 +70,6 @@ class KPIBar extends BaseChart {
         }
 
         this.drawLabels();
-
     }
 
     drawLabels() {
@@ -78,7 +78,11 @@ class KPIBar extends BaseChart {
 
         const labelData = data;
 
-        const textPos = (val) => {
+        // Remove any existing labels (e.g. after resize)
+        // $('.numeric-label').each((index, label) => label.remove());
+        d3.selectAll("#" + this.canvasID + " svg text.numeric-label").remove();
+
+        const textPos = (val:number) => {
             // const xVal = this.xScale(val);
             // if (xVal < 30) {
             //     return 15;
@@ -91,7 +95,7 @@ class KPIBar extends BaseChart {
         this.svg.append("text")
             .attr("x", textPos(data[0]))
             .attr("y", margin.y)
-            .attr("class", "numeric_label")
+            .attr("class", "numeric-label")
             .text(d3.format(".2s")(labelData[0]))
             .attr("fill", "black")
             .attr("style", "font-size: small");
@@ -99,14 +103,14 @@ class KPIBar extends BaseChart {
         this.svg.append("text")
             .attr("x", textPos(data[1]))
             .attr("y", this.barHeight + margin.top)
-            .attr("class", "numeric_label")
+            .attr("class", "numeric-label")
             .text(d3.format(".2s")(labelData[1]))
             .attr("fill", "black");
 
         this.svg.append("text")
             .attr("x", textPos(data[2]))
             .attr("y", this.baseData.height - margin.y)
-            .attr("class", "numeric_label")
+            .attr("class", "numeric-label")
             .text(d3.format(".2s")(labelData[2]))
             .attr("fill", "black")
             .attr("style", "font-size: small");

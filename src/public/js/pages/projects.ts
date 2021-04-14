@@ -30,13 +30,18 @@ class Projects {
 
     configureEventListener() {
         const self = this;
-        // $(document).on('click', '#addButton', () => self.addChart());
-        // $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
+        window.addEventListener('resize', () => self.resizeHandler());
     }
 
     renderKPI(canvasID:string, chartData) {
         const chart = new Sparkline(canvasID);
         chart.drawChart(chartData);
         this.charts.push(chart);
+    }
+
+    resizeHandler() {
+        this.charts.forEach((chart:Sparkline) => {
+            chart.resizeChart();
+        });
     }
 }

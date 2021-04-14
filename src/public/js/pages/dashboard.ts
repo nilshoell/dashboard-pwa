@@ -31,7 +31,7 @@ class Dashboard {
     configureEventListener() {
         const self = this;
         // $(document).on('longTouch', '.kpi-bar', () => self.longTouch(this));
-        // $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
+        window.addEventListener('resize', () => self.resizeHandler());
     }
 
     renderKPI(canvasID:string, chartData) {
@@ -44,5 +44,11 @@ class Dashboard {
         const chart = new KPIBar(canvasID, {margin: margin});
         chart.drawChart(chartData);
         this.charts.push(chart);
+    }
+
+    resizeHandler() {
+        this.charts.forEach((chart:KPIBar) => {
+            chart.resizeChart();
+        });
     }
 }

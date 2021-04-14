@@ -1,5 +1,3 @@
-import BarChart from "./charts/barChart.js";
-
 console.log("index.js linked");
 
 $(function () {
@@ -24,11 +22,26 @@ $(function () {
         $('a[aria-expanded=true]').attr('aria-expanded', 'false');
     });
 
-    new App();
+    window.addEventListener("orientationchange", function() {
+        switch (screen.orientation.angle) {
+            case 0:
+                console.log("Switched to portrait mode");
+                break;
+            case 90:
+                console.log("Switched to landscape mode");
+                break;
+            default:
+                console.log("Switched to undefined orientation", screen.orientation.angle);
+                break;
+        }
+    });
+
+    const app:App = new App();
+
 });
 
 class App {
     constructor() {
-        // new BarChart();
+        // console.log("App Object Initialised");
     }
 }

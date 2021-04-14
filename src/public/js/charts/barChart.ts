@@ -62,8 +62,8 @@ class BarChart extends BaseChart {
         const barWidth = +attributes['width'].value;
 
         // Remove all present labels
-        d3.selectAll('text.numeric_label').remove();
-        d3.selectAll('rect.numeric_label').remove();
+        d3.selectAll('text.numeric-label').remove();
+        d3.selectAll('rect.numeric-label').remove();
 
         // Configure label size
         const height = 20;
@@ -79,12 +79,12 @@ class BarChart extends BaseChart {
             .attr("width", width)
             .attr("height", height)
             .attr("rx", 3)
-            .attr("class", "numeric_label")
+            .attr("class", "numeric-label")
             .attr("fill", "#40bf91");
         this.svg.append('text')
             .attr("x", x - (width - barWidth) / 2 + width / 2)
             .attr("y", y - height / 2)
-            .attr("class", "numeric_label")
+            .attr("class", "numeric-label")
             .text(val)
             .attr("fill", "DimGrey");
     }

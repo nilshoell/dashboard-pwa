@@ -23,12 +23,19 @@ class CustomerDashboard {
         const self = this;
         // $(document).on('click', '#addButton', () => self.addChart());
         // $(document).on('click', '#barChart1', () => self.updateData(this.charts[0]));
+        window.addEventListener('resize', () => self.resizeHandler());
     }
 
     addChart() {
         const chart = new BarChart('barChart2');
         this.charts.push(chart);
         this.updateData(chart);
+    }
+
+    resizeHandler() {
+        this.charts.forEach((chart:BarChart) => {
+            chart.resizeChart();
+        });
     }
 
     updateData(chart:BarChart) {

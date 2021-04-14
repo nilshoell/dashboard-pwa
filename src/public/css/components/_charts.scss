@@ -1,3 +1,4 @@
+// General
 .chartCol {
     height: 200vh;
 }
@@ -6,19 +7,29 @@
     height: 50vh;
 }
 
+.numeric-label {
+    text-anchor: middle;
+    font-weight: bold;
+}
+
+// KPIBar
 .chart-canvas.kpi-bar {
     height: 10vh;
 }
 
+@media screen and (orientation: landscape) {
+    .chart-canvas.kpi-bar {
+        height: 15vh;
+    }
+}
+
+// Sparkline
 .chart-canvas.sparkline {
     height: 10vh;
 }
 
-.sparkline-svg {
-    background-color: #b0b0b0;
-}
-
-.numeric_label {
-    text-anchor: middle;
-    font-weight: bold;
+@media screen and (orientation: landscape) {
+    .chart-canvas.sparkline {
+        height: 15vh;
+    }
 }

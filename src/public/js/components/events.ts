@@ -34,7 +34,7 @@ longTouch = function(target:EventTarget) {
 };
 
 $(function () {
-    window.addEventListener("touchstart", touchstart, false);
-    window.addEventListener("touchend", touchend, false);
-    window.addEventListener("touchmove", touchmove, false);
+    // window.addEventListener("touchstart", touchstart, false);
+    // window.addEventListener("touchend", touchend, false);
+    // window.addEventListener("touchmove", touchmove, false);
 });
