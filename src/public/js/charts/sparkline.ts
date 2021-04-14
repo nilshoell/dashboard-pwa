@@ -4,12 +4,13 @@ class Sparkline extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
-        this.baseData.margin = {
+        const margin = {
             top: 5,
             bottom: 15,
             left: 5,
             right: 25
         }
+        this.setMargins(margin);
     }
 
     drawChart(chartData) {
