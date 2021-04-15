@@ -88,8 +88,6 @@ class BaseChart {
      */
     setMargins(newMargin = {}) {
 
-        console.log("old", this.baseData.margin);
-
         let margin:Object;
         let defaultMargin = {
             top: 5,
@@ -110,9 +108,6 @@ class BaseChart {
 
         this.baseData.margin['y'] = margin['top'] + margin['bottom'];
         this.baseData.margin['x'] = margin['left'] + margin['right'];
-
-        console.log("new", this.baseData.margin);
-
     }
 
 }

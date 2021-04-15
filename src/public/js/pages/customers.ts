@@ -1,4 +1,5 @@
 import BarChart from '../charts/barChart.js';
+import ColumnChart from '../charts/columnChart.js';
 
 $(function () {
     new CustomerDashboard();
@@ -9,13 +10,16 @@ class CustomerDashboard {
     charts = [];
 
     constructor() {
-        const chart = new BarChart('barChart1');
-        const chartData = {data: [12, 5, 6, 6, 9, 10, 12, 15, 17, 23]};
-        chart.drawChart(chartData);
+        const barChart = new BarChart('barChart1');
+        const barChartData = {data: [12, 5, 6, 6, 9, 10, 12, 15, 17, 23]};
+        barChart.drawChart(barChartData);
 
-        console.log(chart);
+        const columnChart = new ColumnChart('columnChart1');
+        const columnChartData = {data: [1234567,1567890,5678901,3456789,8901234,10123456,9500000,8300000,7400000,6700000,3254700]};
+        columnChart.drawChart(columnChartData);
 
-        this.charts.push(chart);
+        this.charts.push(barChart);
+        this.charts.push(columnChart);
         this.configureEventListener();
     }
 

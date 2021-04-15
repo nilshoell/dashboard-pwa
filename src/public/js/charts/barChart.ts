@@ -23,8 +23,6 @@ class BarChart extends BaseChart {
 
         this.setScales();
 
-        console.log(this.xScale);
-        
         const bars = this.svg
             .selectAll("rect")
             .data(data);
