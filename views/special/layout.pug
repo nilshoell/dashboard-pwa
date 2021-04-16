@@ -1,0 +1,23 @@
+doctype html
+html(lang="en")
+  include ../includes/head.pug
+  body(oncontextmenu="return false;")
+
+    //- Wrapper for content and nav
+    div.wrapper
+      div.p-0(id="content")
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+          button.btn.btn-info(type="button" id="sidebarCollapse" disabled)
+            i.fa.fas.fa-align-justify
+          h4.text-light ERROR
+          button.btn.btn-info(type="button" id="helpButton" disabled)
+            i.fa.fas.fa-question-circle.text-light
+
+        div.container
+          div.row
+            div.col
+              block content
+
+        //- include includes/footer.pug
+
+    //- div.overlay

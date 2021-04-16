@@ -1,0 +1,8 @@
+extends layout.pug
+
+block content
+  h4 Bad Request (400)
+  p Error Message: 
+    span.text-danger #{msg}
+  div.mx-auto(style="width: 50vw;")
+    a.btn.btn-info(href="." role="button" style="width: 100%;") Return to Home
