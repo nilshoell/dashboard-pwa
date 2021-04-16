@@ -1,0 +1,11 @@
+extends ../layout.pug
+include ../includes/chartContainers.pug
+
+block chart-top
+  p KPI Oerview
+
+block chart
+  p #{JSON.stringify(params)}
+
+block chart-bottom
+  script(src="/public/js/pages/kpi.js" type="module")
