@@ -38,7 +38,8 @@
         "d3": "^6.6.0",
         "express": "^4.17.1",
         "jquery": "^3.6.0",
-        "pug": "^3.0.2"
+        "pug": "^3.0.2",
+        "sqlite3": "^5.0.2"
     },
     "devDependencies": {
         "@types/bootstrap": "^4.6.0",
@@ -47,6 +48,7 @@
         "@types/jquery": "^3.5.5",
         "@types/node": "^14.14.36",
         "@types/shelljs": "^0.8.8",
+        "@types/sqlite3": "^3.1.7",
         "browser-sync": "^2.26.14",
         "concurrently": "^6.0.0",
         "node-sass": "^5.0.0",

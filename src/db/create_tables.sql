@@ -1,0 +1,34 @@
+CREATE TABLE IF NOT EXISTS `kpis` (
+  `id` VARCHAR(12) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `shortname` VARCHAR(45) NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `parent` VARCHAR(12) NULL DEFAULT NULL,
+  `help` LONGTEXT NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
+
+CREATE TABLE IF NOT EXISTS `measures` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `timestamp` DATETIME NOT NULL DEFAULT NOW(),
+  `kpi` VARCHAR(12) NOT NULL,
+  `value` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `kpi_id_idx` (`kpi` ASC),
+  CONSTRAINT `kpi_id`
+    FOREIGN KEY (`kpi`)
+    REFERENCES `kpis` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+CREATE TABLE IF NOT EXISTS `targets` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `kpi` VARCHAR(12) NOT NULL,
+  `type` VARCHAR(45) NOT NULL,
+  `value` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `kpi_id_idx` (`kpi` ASC),
+  CONSTRAINT `kpi_id`
+    FOREIGN KEY (`kpi`)
+    REFERENCES `kpis` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);

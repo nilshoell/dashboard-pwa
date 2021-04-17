@@ -1,6 +1,18 @@
 import Router from "express";
+import sqlite from "sqlite3";
 
 const router = Router();
+
+const db = new sqlite.Database('./dist/db/dashboard.db', (err:Error) => {
+    if (err) {
+        console.error("Error opening database " + err.message);
+    }
+});
+
+const defaultReturn = {
+    success: false,
+    errMsg: ""
+}
 
 /**
  * Endpoint to test whether the API is available
@@ -8,11 +20,26 @@ const router = Router();
  * @returns Object
  */
 const testFunction = (params) => {
-    return {
-        success: true,
-        function: params.function,
-        id: params.id
-    }
+
+    let returnObj = defaultReturn;
+
+    returnObj['params'] = params;
+
+    db.all(`SELECT * FROM kpis;`, (err, rows) => {
+        if (err) {
+            returnObj.errMsg = err.message;
+            return returnObj;
+        }
+        returnObj['kpis'] = rows;
+        returnObj.success = true;
+      });
+
+    return returnObj;
+}
+
+
+const getDaily = (params) => {
+
 }
 
 /**
@@ -25,8 +52,9 @@ const functions = {
 /**
  * API Router
  */
-router.get('/api/kpi/:function/:id', function(req, res) {
-    const params = req.params;
+router.get('/api/kpi/:function/:id/:filter', function(req, res) {
+    let params = req.params;
+    params['filter'] = JSON.parse(decodeURIComponent(params['filter']));
     if (params.function in functions) {
         res.json(functions[params.function](params));
     }
