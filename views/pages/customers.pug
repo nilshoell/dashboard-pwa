@@ -1,11 +1,12 @@
 extends ../layout.pug
+include ../includes/chartContainers.pug
 
 block chart-top
   p Customer KPIs
 
 block chart
-  div.container.mx-1.pl-0.chart-canvas(id="barChart1")
-  div.container.mx-1.mt-3.pl-0.chart-canvas(id="columnChart1")
+  +barChart("barChart1")
+  +barChart("columnChart1")
 
 block chart-bottom
   script(src="/public/js/pages/customers.js" type="module")

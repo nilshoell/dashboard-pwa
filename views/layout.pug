@@ -28,14 +28,14 @@ html(lang="en")
           button.btn.btn-info(type="button" id="helpButton")
             i.fa.fas.fa-question-circle.text-light
 
-        div.container
-          div.row
+        div.container.content-container
+          div.row.chart-top
             div.col
               block chart-top
-          div.row
+          div.row.chart
             div.col.chartCol
               block chart
-          div.row
+          div.row.chart-bottom
             div.col
               block chart-bottom
 

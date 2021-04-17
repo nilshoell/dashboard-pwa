@@ -2,11 +2,16 @@ extends ../layout.pug
 include ../includes/chartContainers.pug
 
 block chart-top
-  p KPI Overview
+  button.btn.btn-light.d-sm-none.ml-2.mb-2#toggleView Toggle View
 
 block chart
-  p Params: #{JSON.stringify(params)}
-  p Body: #{JSON.stringify(body)}
+  //- Timeline view
+  //- +timeline("timeline1")
+  //- Components view
+  +quickKPI("1")
+  +quickKPI("2")
+  +quickKPI("3")
+
 
 block chart-bottom
   script(src="/public/js/pages/kpi.js" type="module")

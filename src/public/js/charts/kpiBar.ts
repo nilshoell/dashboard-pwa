@@ -8,7 +8,7 @@ class KPIBar extends BaseChart {
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
         // Set default margins
-        this.setMargins({bottom: 25, right:100});
+        this.setMargins({bottom: 25, top: 5, right:100});
     }
 
     drawChart(chartData) {
@@ -96,9 +96,9 @@ class KPIBar extends BaseChart {
 
         const textPos = (val:number, pos = 0) => {
             if (pos == 0) {
-                return this.baseData.width * 0.9;
+                return this.baseData.width * 0.99;
             } else {
-                return this.baseData.width * 0.8;
+                return this.baseData.width * 0.90;
             }
         }
 
@@ -108,14 +108,15 @@ class KPIBar extends BaseChart {
             .attr("class", "numeric-label")
             .text(d3.format(".1%")(labelData[0]))
             .attr("fill", "grey")
-            .attr("style", "font-size: small;");
+            .attr("style", "font-size: small; text-anchor: end");
 
         this.svg.append("text")
             .attr("x", textPos(data[1]))
             .attr("y", this.barHeight + margin.top)
             .attr("class", "numeric-label")
             .text(d3.format(".2s")(labelData[1]))
-            .attr("fill", "black");
+            .attr("fill", "black")
+            .attr("style","text-anchor: end");
 
         this.svg.append("text")
             .attr("x", textPos(data[2], 1))
@@ -123,7 +124,7 @@ class KPIBar extends BaseChart {
             .attr("class", "numeric-label")
             .text(d3.format(".1%")(labelData[2]))
             .attr("fill", "grey")
-            .attr("style", "font-size: small;");
+            .attr("style", "font-size: small; text-anchor: end;");
     }
 
     /**
