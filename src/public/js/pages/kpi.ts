@@ -31,20 +31,23 @@ class KPIDashboard {
             }
         ];
 
+        // Returns a date based on the length and current index of an array
+        const date = (x:number, c:number) => {
+            const diff = (c - (x + 1)) * 86400000;
+            const newDate = new Date(new Date().getTime() - diff);
+            return d3.timeFormat("%Y-%m-%d")(newDate);
+        }
+
         // Render the timeline for the main KPI
-        this.renderTimeline('timeline1', {data: kpi});
+        this.renderTimeline('timeline1', {data: kpi.map((d, i) => {return {date: date(i, kpi.length), val: d}})});
         
         // Render KPIBar & Sparklines for the components
         components.forEach(function (kpi, index) {
+
             // Enrich spark data with dates
             let sparkData = {};
             const count = kpi.data_spark.length;
-            const date = (x:number) => {
-                const diff = (count - (x + 1)) * 86400000;
-                const newDate = new Date(new Date().getTime() - diff);
-                return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate();
-            }
-            sparkData = kpi.data_spark.map((d, i) => {return {date: date(i), val: d}});
+            sparkData = kpi.data_spark.map((d, i) => {return {date: date(i, count), val: d}});
 
             // Render the visualizations
             self.renderBar('kpibar_' + (+index + 1), {data: kpi.data_bars});

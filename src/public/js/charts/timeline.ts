@@ -6,8 +6,8 @@ class Timeline extends BaseChart {
         super(canvasID, baseData);
         const margin = {
             top: 5,
-            bottom: 15,
-            left: 5,
+            bottom: 30,
+            left: 10,
             right: 25
         }
         this.setMargins(margin);
@@ -27,13 +27,10 @@ class Timeline extends BaseChart {
         // Add background bounding box
         this.setBackground();
 
-        // Draw axes
-        this.drawAxes();
-
         // Create line generator
         let line = d3.line()
-            .x((d:any, i:any) => this.xScale(i))
-            .y((d:any) => this.yScale(d))
+            .x((d:any) => this.xScale(new Date(d.date)))
+            .y((d:any) => this.yScale(d.val))
             .curve(d3.curveCardinal);
 
         // Setup path object
@@ -53,6 +50,9 @@ class Timeline extends BaseChart {
         // Draw annotations
         this.drawAnnotations();
 
+        // Draw axes
+        this.drawAxes();
+
     }
 
 
@@ -63,13 +63,18 @@ class Timeline extends BaseChart {
         const margin = this.baseData.margin
         const width = this.baseData.width
         const height = this.baseData.height
+        const data = this.chartData.data;
+        const minDate = new Date(d3.min(data, (d:any) => d.date));
+        const maxDate = new Date(d3.max(data, (d:any) => d.date));
+        const minVal = Number(d3.min(data, (d:any) => d.val));
+        const maxVal = Number(d3.max(data, (d:any) => d.val));
 
-        this.xScale = d3.scaleLinear()
-            .domain(d3.extent(this.chartData.data, (d:number, i:number) => i))
+        this.xScale = d3.scaleTime()
+            .domain([minDate, maxDate])
             .range([margin.left, width - margin.right]);
 
         this.yScale = d3.scaleLinear()
-            .domain([0, d3.max(this.chartData.data, (d:number) => d) + 5]).nice()
+            .domain([0, maxVal]).nice()
             .range([height - margin.bottom, margin.top]);
     }
 
@@ -81,12 +86,13 @@ class Timeline extends BaseChart {
     drawAxes(axisData = {}) {
         const margin = this.baseData.margin
         const xAxis = g => g
-            .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 5) + ")")
-            .call(d3.axisBottom(this.xScale).ticks(5))
-            .call(g => g.select(".domain").remove());
+            .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
+            .call(d3.axisBottom(this.xScale).ticks(5, "%b-%d").tickSizeOuter(0))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.selectAll(".tick text").style("text-anchor", "end").attr("transform", "rotate(-20)"));
 
         const yAxis = g => g
-            .attr("transform", "translate(" + (this.baseData.width - margin.right - 5) + ", 0)")
+            .attr("transform", "translate(" + (this.baseData.width - margin.right - 3) + ", 0)")
             .call(d3.axisRight(this.yScale).ticks(5, "~s"))
             .call(g => g.select(".domain").remove());
 
@@ -105,18 +111,20 @@ class Timeline extends BaseChart {
 
         const data = this.chartData.data;
         const margin = this.baseData.margin;
+        const maxVal = d3.max(data, (d:any) => d.val);
+        const minVal = d3.min(data, (d:any) => d.val);
 
         const max = {
-            x: this.xScale(data.findIndex(d => d == d3.max(data))),
-            y: this.yScale(d3.max(data))
+            x: this.xScale(new Date(data[data.findIndex(d => d.val == maxVal)].date)),
+            y: this.yScale(maxVal)
         };
         const min = {
-            x: this.xScale(data.findIndex(d => d == d3.min(data))),
-            y: this.yScale(d3.min(data))
+            x: this.xScale(new Date(data[data.findIndex(d => d.val == minVal)].date)),
+            y: this.yScale(minVal)
         };
         const current = {
-            x: this.xScale(data.length - 1),
-            y: this.yScale(data[data.length - 1])
+            x: this.xScale(new Date(data[data.length - 1].date)),
+            y: this.yScale(data[data.length - 1].val)
         };
 
         d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
