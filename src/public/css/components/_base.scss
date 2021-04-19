@@ -1,32 +1,27 @@
-body {
-    background-color: lightgrey;
+/* Base CSS Setup */
+html {
+    position: relative;
+    min-height: 100%;
 }
 
+body {
+    background-color: $background;
+}
+
+.content-container {
+    max-width: 100%;
+    z-index: 10;
+    margin-bottom: 50px;
+}
+
+/* Square buttons for homepage */
 .btn-sq {
     width: 100% !important;
     height: 100% !important;
 }
 
-.carousel-indicators {
-    bottom: -35px !important;
-}
-
-.carousel-row {
-    height: 200px;
-}
-
-.carousel-svg {
-    height: 100%;
-    width: 130%;
-}
-
-.carousel-svg-r {
-    height: 100%;
-    width: 130%;
-    position: absolute;
-    left: 30%;
-}
-
-.content-container {
-    max-width: 100%;
+.btn-main {
+    color: #fff;
+    background-color: $nav-elem;
+    border-color: $nav-elem;
 }

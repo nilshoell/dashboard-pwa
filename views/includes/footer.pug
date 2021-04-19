@@ -1,2 +1,8 @@
-footer(class="container" id="footer")
-  p Copyright (c) Nils Höll
+footer.footer#footer
+  div.container.d-flex.mt-2.justify-content-around
+    button.btn.btn-main(type="button" id="help")
+      i.fa.fas.fa-question-circle
+    a.btn.btn-main(href="/" role="button" id="home")
+      i.fa.fas.fa-home
+    button.btn.btn-main(type="button" id="back" onclick="window.history.back();")
+      i.fa.fas.fa-arrow-left

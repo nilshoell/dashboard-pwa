@@ -1,6 +1,4 @@
-/*
-    DEMO STYLE
-*/
+/* Navigation Header and Sidebar */
 a,
 a:hover,
 a:focus {
@@ -31,9 +29,7 @@ a:focus {
     margin: 40px 0;
 }
 
-/* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
+/* Sidebar */
 
 #sidebar {
     width: 250px;
@@ -42,8 +38,8 @@ a:focus {
     left: -250px;
     height: 100vh;
     z-index: 999;
-    background: #202020;
-    color: rgb(223, 223, 223);
+    background: $bg-dark;
+    color: $text-dark;
     transition: all 0.3s;
     overflow-y: scroll;
     box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
@@ -58,7 +54,7 @@ a:focus {
     height: 35px;
     line-height: 35px;
     text-align: center;
-    background: #202020;
+    background: $bg-dark;
     position: absolute;
     top: 10px;
     right: 10px;
@@ -66,11 +62,6 @@ a:focus {
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
-}
-
-#dismiss:hover {
-    background: #fff;
-    color: #a1a1a1;
 }
 
 .overlay {
@@ -91,12 +82,12 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #202020;
+    background: $bg-dark;
 }
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #202020;
+    border-bottom: 1px solid $bg-dark;
 }
 
 #sidebar ul p {
@@ -110,15 +101,11 @@ a:focus {
     display: block;
 }
 
-#sidebar ul li a:hover {
-    color: #a1a1a1;
-    background: #fff;
-}
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
     color: #fff;
-    background: #00463c;
+    background: $active;
 }
 
 a[data-toggle="collapse"] {
@@ -133,38 +120,7 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
-
-ul.CTAs {
-    padding: 20px;
-}
-
-ul.CTAs a {
-    text-align: center;
-    font-size: 0.9em !important;
-    display: block;
-    border-radius: 5px;
-    margin-bottom: 5px;
-}
-
-a.download {
-    background: #fff;
-    color: #7386D5;
-}
-
-a.article,
-a.article:hover {
-    background: #6d7fcc !important;
-    color: #fff !important;
-}
-
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
+/* Page Content */
 
 #content {
     width: 100%;

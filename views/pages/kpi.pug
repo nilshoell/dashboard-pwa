@@ -2,12 +2,13 @@ extends ../layout.pug
 include ../includes/chartContainers.pug
 
 block chart-top
-  button.btn.btn-light.d-sm-none.ml-2.mb-2#toggleView Toggle View
+  p KPI Overview
 
 block chart
   //- Timeline view
   +timeline("timeline1")
   //- Components view
+  button.btn.btn-light.d-sm-none.ml-2.mb-2#toggleView Toggle View
   +quickKPI("1")
   +quickKPI("2")
   +quickKPI("3")

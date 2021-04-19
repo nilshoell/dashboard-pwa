@@ -22,11 +22,11 @@ html(lang="en")
 
       div.p-0(id="content")
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-          button.btn.btn-info(type="button" id="sidebarCollapse")
-            i.fa.fas.fa-align-justify
+          button.btn.btn-main(type="button" id="sidebarCollapse")
+            i.fa.faw.fas.fa-align-justify
           h4.text-light #{route.title}
-          button.btn.btn-info(type="button" id="helpButton")
-            i.fa.fas.fa-question-circle.text-light
+          button.btn.btn-main(type="button" id="menuToggle")
+            i.fa.faw.fas.fa-ellipsis-v.text-light
 
         div.container.content-container
           div.row.chart-top
@@ -39,6 +39,6 @@ html(lang="en")
             div.col
               block chart-bottom
 
-          include includes/footer.pug
+        include includes/footer.pug
 
     div.overlay
