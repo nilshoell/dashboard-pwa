@@ -18,24 +18,37 @@ class KPIDashboard {
 
         const components = [
             {
-                data_bars: [3000,1500,3500],
+                data_bars: [3000,3500,1500],
                 data_spark: [3087,3062,3118,3098,3107,3105,3116,3073,3089,3124,3119,3111,3151,3204,3172,3188,3167,3173,3279,3237,3248,3310,3318,3278,3332,3322,3346,3319,3290,3500]
             },
             {
-                data_bars: [7500,9800,6485,10000],
+                data_bars: [7500,6485,9800,10000],
                 data_spark: [5769,5748,5924,5934,5960,5817,5998,6056,5980,5855,5911,5939,6153,6025,6156,5964,5900,6224,6234,6215,6052,6286,5983,6022,6149,6138,6231,6210,6104,6485]
             },
             {
-                data_bars: [1234,9487,7532],
+                data_bars: [1234,7532,9487],
                 data_spark: [10509,10264,10170,10115,10145,10151,9783,9759,9907,9784,9437,9246,9419,9242,9155,8839,8930,8637,8698,8411,8473,8235,8107,8042,7959,7843,7756,7640,7523,7532]
             }
         ];
 
+        // Render the timeline for the main KPI
         this.renderTimeline('timeline1', {data: kpi});
         
+        // Render KPIBar & Sparklines for the components
         components.forEach(function (kpi, index) {
+            // Enrich spark data with dates
+            let sparkData = {};
+            const count = kpi.data_spark.length;
+            const date = (x:number) => {
+                const diff = (count - (x + 1)) * 86400000;
+                const newDate = new Date(new Date().getTime() - diff);
+                return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate();
+            }
+            sparkData = kpi.data_spark.map((d, i) => {return {date: date(i), val: d}});
+
+            // Render the visualizations
             self.renderBar('kpibar_' + (+index + 1), {data: kpi.data_bars});
-            self.renderSpark('sparkline_' + (+index + 1), {data: kpi.data_spark});
+            self.renderSpark('sparkline_' + (+index + 1), {data: sparkData});
         });
 
         this.configureEventListener();

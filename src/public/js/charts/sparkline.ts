@@ -17,24 +17,28 @@ class Sparkline extends BaseChart {
 
         let self = this;
         this.chartData = chartData;
-        const data = chartData.data;
         const margin = this.baseData.margin;
-        console.log("Drawing Sparkline with data: ", data);
+        console.log("Drawing Sparkline with data: ", chartData.data);
 
-        // Create scales with default function
+        // Convert dates to negative day diffs
+        if (!this.chartData.datesConverted) {
+            this.convertDates();
+            this.chartData.datesConverted = true;
+        }
+
+        const data = this.chartData.data;
+
+        // Create scales
         this.setScales();
 
         // Add background bounding box
         this.setBackground();
 
-        // Draw axes
-        this.drawAxes();
-
         // Create line generator
         let line = d3.line()
-            .x((d:any, i:any) => this.xScale(i))
-            .y((d:any) => this.yScale(d))
-            .curve(d3.curveCardinal);
+            .x((d:any) => this.xScale(d.date))
+            .y((d:any) => this.yScale(d.val))
+            .curve(d3.curveMonotoneX);
 
         // Setup path object
         const path = this.svg
@@ -55,6 +59,9 @@ class Sparkline extends BaseChart {
         // Draw annotations
         this.drawAnnotations();
 
+        // Draw axes
+        this.drawAxes();
+
     }
 
 
@@ -65,13 +72,18 @@ class Sparkline extends BaseChart {
         const margin = this.baseData.margin
         const width = this.baseData.width
         const height = this.baseData.height
+        const data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val}});
+        const minDate = Number(d3.min(data, (d:any) => d.date));
+        const maxDate = Number(d3.max(data, (d:any) => d.date));
+        const minVal = Number(d3.min(data, (d:any) => d.val));
+        const maxVal = Number(d3.max(data, (d:any) => d.val));
 
         this.xScale = d3.scaleLinear()
-            .domain(d3.extent(this.chartData.data, (d:number, i:number) => i))
+            .domain([minDate, maxDate])
             .range([margin.left, width - margin.right]);
 
         this.yScale = d3.scaleLinear()
-            .domain([d3.min(this.chartData.data, (d:number) => d) - 5, d3.max(this.chartData.data, (d:number) => d) + 5]).nice()
+            .domain([minVal, maxVal]).nice()
             .range([height - margin.bottom, margin.top]);
     }
 
@@ -83,21 +95,19 @@ class Sparkline extends BaseChart {
     drawAxes(axisData = {}) {
         const margin = this.baseData.margin
         const xAxis = g => g
-            .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 5) + ")")
-            .call(d3.axisBottom(this.xScale).ticks(4))
-            .call(g => g.select(".domain").remove());
+            .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
+            .call(d3.axisBottom(this.xScale).ticks(2, ".1"))
+            .call(g => g.select(".domain").remove())
+            .call(g => g.select(".tick:first-of-type text").clone()
+                .attr("x", 7)
+                .attr("text-anchor", "start")
+                .attr("font-weight", "bold")
+                .text(this.chartData.suffix));
 
         const yAxis = g => g
             .attr("transform", "translate(" + (this.baseData.width - margin.right - 5) + ", 0)")
-            .call(d3.axisRight(this.yScale).ticks(1, "~s"))
+            .call(d3.axisRight(this.yScale).ticks(2, "~s"))
             .call(g => g.select(".domain").remove());
-
-        const xBound = g => g
-            .append("line")
-            .attr("transform", "translate(0," + (this.baseData.height - 10) + ")")
-            .attr("fill", "none")
-            .attr("stroke", "green")
-            .attr("y2", 10);
 
         d3.selectAll("#" + this.canvasID + " svg g.x-axis").remove();
         d3.selectAll("#" + this.canvasID + " svg g.y-axis").remove();
@@ -114,18 +124,20 @@ class Sparkline extends BaseChart {
 
         const data = this.chartData.data;
         const margin = this.baseData.margin;
+        const maxVal = d3.max(data, (d:any) => d.val);
+        const minVal = d3.min(data, (d:any) => d.val);
 
         const max = {
-            x: this.xScale(data.findIndex(d => d == d3.max(data))),
-            y: this.yScale(d3.max(data))
+            x: this.xScale(data[data.findIndex(d => d.val == maxVal)].date),
+            y: this.yScale(maxVal)
         };
         const min = {
-            x: this.xScale(data.findIndex(d => d == d3.min(data))),
-            y: this.yScale(d3.min(data))
+            x: this.xScale(data[data.findIndex(d => d.val == minVal)].date),
+            y: this.yScale(minVal)
         };
         const current = {
-            x: this.xScale(data.length - 1),
-            y: this.yScale(data[data.length - 1])
+            x: this.xScale(0),
+            y: this.yScale(data[data.length - 1].val)
         };
 
         d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
@@ -183,6 +195,42 @@ class Sparkline extends BaseChart {
                 .attr("fill", "#b0b0b0")
                 .attr("class", "sparkline-bg");
         }
+    }
+
+    convertDates() {
+        const data = this.chartData.data;
+        const now = new Date();
+        const today = new Date(now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate());
+        
+        let dayDiffArr:object[] = data.map((d:any) => {
+            const date = new Date(d.date);
+            const dayDiff = (today.getTime() - date.getTime()) / 86400000;
+            return {date: dayDiff, val: d.val};
+        });
+
+        const maxDays = d3.max(dayDiffArr, (d:object) => d['date']);
+        let divisor = 365;
+        let suffix = "Y";
+
+        switch (true) {
+            case maxDays < 14:
+                divisor = 1;
+                suffix = "D";
+                break;
+        
+            case maxDays < 30:
+                divisor = 7;
+                suffix = "W";
+                break;
+
+            case maxDays < 365:
+                divisor = 30;
+                suffix = "M";
+                break;
+        }
+
+        this.chartData['suffix'] = suffix;
+        this.chartData['data'] = dayDiffArr.map(d => {return {date: d['date']/divisor * -1, val: d['val']}});
     }
 
 }
