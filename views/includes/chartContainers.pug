@@ -10,9 +10,12 @@ mixin timeline(id)
 mixin barChart(id)
   div.container.mx-1.pl-0.mb-4.chart-canvas.bar-chart(id=id)
 
-mixin quickKPI(id)
+mixin sparkbar(id)
   div.row
     div.col-sm-6.kpi-col
       +kpiBar("kpibar_" + id)
     div.col-sm-6.kpi-col.d-none.d-sm-block
       +sparkline("sparkline_" + id)
+
+mixin kpiTile(id)
+  div.container.px-0.chart-canvas.kpi-tile(id=id)

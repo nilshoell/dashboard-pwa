@@ -1,4 +1,5 @@
 extends ../layout.pug
+include ../includes/chartContainers.pug
 
 block chart-top
   h4.text-light Welcome!
@@ -12,29 +13,11 @@ block chart
         li(data-target="#kpiCarousel" data-slide-to="2")
       div.carousel-inner
         div.carousel-item.active
-          div.row.carousel-row
-            div.col-6
-              svg.mx-auto.d-block.carousel-svg
-                  rect(width="100%" height="100%" style="fill:rgb(255,255,255)")
-            div.col-6
-              svg.mx-auto.d-block.carousel-svg-r
-                  rect(width="100%" height="100%" style="fill:rgb(128,128,128)")
+          +kpiTile('tile1')
         div.carousel-item
-          div.row.carousel-row
-            div.col-6
-              svg.mx-auto.d-block.carousel-svg
-                  rect(width="100%" height="100%" style="fill:rgb(100,100,100)")
-            div.col-6
-              svg.mx-auto.d-block.carousel-svg-r
-                  rect(width="100%" height="100%" style="fill:rgb(200,200,200)")
+          +kpiTile('tile2')
         div.carousel-item
-          div.row.carousel-row
-            div.col-6
-              svg.mx-auto.d-block.carousel-svg
-                  rect(width="100%" height="100%" style="fill:rgb(50,50,50)")
-            div.col-6
-              svg.mx-auto.d-block.carousel-svg-r
-                  rect(width="100%" height="100%" style="fill:rgb(170,170,170)")
+          +kpiTile('tile3')
       a.carousel-control-prev(href="#kpiCarousel" role="button" data-slide="prev")
         span.carousel-control-prev-icon
       a.carousel-control-next(href="#kpiCarousel" role="button" data-slide="next")
