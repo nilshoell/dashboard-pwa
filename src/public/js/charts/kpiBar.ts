@@ -108,7 +108,8 @@ class KPIBar extends BaseChart {
             .attr("class", "numeric-label")
             .text(d3.format(".1%")(labelData[0]))
             .attr("fill", "grey")
-            .attr("style", "font-size: small; text-anchor: end");
+            .style("font-size", "small")
+            .style("text-anchor", "end");
 
         this.svg.append("text")
             .attr("x", textPos(data[1]))
@@ -116,7 +117,7 @@ class KPIBar extends BaseChart {
             .attr("class", "numeric-label")
             .text(d3.format(".2s")(labelData[1]))
             .attr("fill", "black")
-            .attr("style","text-anchor: end");
+            .style("text-anchor", "end");
 
         this.svg.append("text")
             .attr("x", textPos(data[2], 1))
@@ -124,7 +125,8 @@ class KPIBar extends BaseChart {
             .attr("class", "numeric-label")
             .text(d3.format(".1%")(labelData[2]))
             .attr("fill", "grey")
-            .attr("style", "font-size: small; text-anchor: end;");
+            .style("font-size", "small")
+            .style("text-anchor", "end");
     }
 
     /**
