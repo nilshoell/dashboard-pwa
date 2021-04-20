@@ -64,3 +64,40 @@ function valMinify(value: number) {
     return String(outputValue) + suffix.symbol;
 
 }
+
+
+/**
+ * Generates an array of random integers
+ * @param min Lower bound
+ * @param max Upper bound
+ * @param count Number of elements
+ * @param end Last value
+ * @returns Array
+ */
+function randomSpark (min:number, max:number, count:number, end:number) {
+    let data = [];
+    for (let i = 0; i < count; i++) {
+        data.push(d3.randomInt(min,max)());
+    }
+    data.push(end);
+    return data;
+}
+
+
+/**
+ * Returns the calling function or class from the backtrace stack
+ * @param depth The backtrace depth, defaults to 1 (=> direct caller)
+ * @returns Function or class name and file of the caller
+ */
+function getCaller(depth:number = 1, filename = true) {
+    const stack = new Error().stack.split("\n");
+    const caller = stack[depth + 1];
+    const iStart = caller.search("/public/js/");
+    const iEnd = caller.search(":[0-9]+:[0-9]+");
+    const name = caller.split("@")[0];
+    const file = caller.substr(iStart, iEnd);
+    if (filename) {
+        return name + "@" + file;
+    }
+    return name;
+}

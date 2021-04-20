@@ -39,7 +39,7 @@ class BaseChart {
      * Creates a D3 SVG element as specified
      */
     prepareChart() {
-        console.log("Preparing chart canvas on #" + this.canvasID);
+        console.log("Preparing chart canvas on #" + this.canvasID + " for " + getCaller(2, false));
         this.svg = d3.select('#' + this.canvasID)
             .append("svg")
             .attr("width", this.baseData.width ?? "100%")
