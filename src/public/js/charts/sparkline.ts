@@ -1,5 +1,8 @@
 import BaseChart from "./baseChart.js";
 
+/**
+ * A simple, small line graph with minimal labels
+ */
 class Sparkline extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
@@ -13,11 +16,13 @@ class Sparkline extends BaseChart {
         this.setMargins(margin);
     }
 
+    /**
+     * Draws the sparkline and everything else
+     * @param chartData Object containing data to draw
+     */
     drawChart(chartData) {
 
-        let self = this;
         this.chartData = chartData;
-        const margin = this.baseData.margin;
         console.log("Drawing Sparkline with data: ", chartData.data);
 
         // Convert dates to negative day diffs
@@ -162,6 +167,7 @@ class Sparkline extends BaseChart {
 
     /**
      * Draw or resize the bounding box
+     * @param draw Boolean: Whether to draw the background; defaults to yes
      */
     setBackground(draw = true) {
 
@@ -175,31 +181,41 @@ class Sparkline extends BaseChart {
 
         if (backgroundExists) {
             backgrounds
-                .attr("width", this.baseData.width - margin.left - margin.right)
-                .attr("height", this.baseData.height - margin.top - margin.bottom)
+                .attr("width", this.baseData.width - margin.x + 4)
+                .attr("height", this.baseData.height - margin.y + 4);
 
         } else {
             this.svg.append("rect")
-                .attr("x", margin.left)
-                .attr("y", margin.top)
-                .attr("width", this.baseData.width - margin.left - margin.right)
-                .attr("height", this.baseData.height - margin.top - margin.bottom)
+                .attr("x", margin.left - 2)
+                .attr("y", margin.top - 2)
+                .attr("rx", 2)
+                .attr("width", this.baseData.width - margin.x + 4)
+                .attr("height", this.baseData.height - margin.y + 4)
                 .attr("fill", "#b0b0b0")
                 .attr("class", "sparkline-bg");
         }
     }
 
+    /**
+     * Converts ISO-Dates into number of days from today
+     * i.e. '2021-06-01' becomes '-10' on '2021-06-10'
+     * Additionally, a new timescale is set based on the number of days (30D -> 1M; 365D -> 1Y)
+     * @return Changes this.chartData.data with new numerical time scale and sets this.chartData.suffix
+     */
     convertDates() {
         const data = this.chartData.data;
         const now = new Date();
         const today = new Date(now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate());
+        const secondsInDay = 86400000;
         
+        // Calculate day differences
         let dayDiffArr:object[] = data.map((d:any) => {
             const date = new Date(d.date);
-            const dayDiff = (today.getTime() - date.getTime()) / 86400000;
+            const dayDiff = (today.getTime() - date.getTime()) / secondsInDay;
             return {date: dayDiff, val: d.val};
         });
 
+        // Convert from days to weeks, months or years
         const maxDays = d3.max(dayDiffArr, (d:object) => d['date']);
         let divisor = 365;
         let suffix = "Y";
@@ -221,6 +237,7 @@ class Sparkline extends BaseChart {
                 break;
         }
 
+        // Set suffix and new time scale
         this.chartData['suffix'] = suffix;
         this.chartData['data'] = dayDiffArr.map(d => {return {date: d['date']/divisor * -1, val: d['val']}});
     }

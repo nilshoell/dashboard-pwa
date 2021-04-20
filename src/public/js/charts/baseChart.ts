@@ -1,12 +1,23 @@
+/**
+ * Abstract base class for all charts
+ */
 class BaseChart {
 
-    svg;
-    canvasID: string;
-    baseData;
-    chartData;
+    // D3 selection of the base SVG
+    svg:any;
 
-    xScale;
-    yScale;
+    // HTML ID of the wrapping element
+    canvasID: string;
+
+    // Object containing base information like sizes and margins
+    baseData:any;
+
+    // Object containing chart information like name and data
+    chartData:any;
+
+    // Scales
+    xScale:any;
+    yScale:any;
 
     /**
      * Initialise a new chart
@@ -17,6 +28,7 @@ class BaseChart {
         this.canvasID = canvasID;
         this.baseData = baseData;
 
+        // Update margins
         this.setMargins();
 
         // Create base SVG element

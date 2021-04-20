@@ -1,5 +1,8 @@
 import BaseChart from "./baseChart.js";
 
+/**
+ * A simple and clean column chart
+ */
 class ColumnChart extends BaseChart {
 
     barHeight;
@@ -10,6 +13,10 @@ class ColumnChart extends BaseChart {
         this.setMargins({left: 30, right:5, top: 20});
     }
 
+    /**
+     * Draws the column chart and axes
+     * @param chartData The data to draw
+     */
     drawChart(chartData) {
         let self = this;
         this.chartData = chartData;
@@ -58,7 +65,7 @@ class ColumnChart extends BaseChart {
     }
 
     /**
-     * Draw axes (only y-axis now)
+     * Draw axes (only x-axis now)
      */
     drawAxes() {
         const margin = this.baseData.margin;

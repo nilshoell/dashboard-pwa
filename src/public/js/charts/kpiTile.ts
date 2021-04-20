@@ -1,17 +1,20 @@
 import BaseChart from "./baseChart.js";
-import Sparkline from "./sparkline.js"
 
+/**
+ * A tile containing actual, previous and target values along a sparkline
+ */
 class KPITile extends BaseChart {
-
-    svg;
-    barHeight;
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
-        // Set default margins
+        // Set margins (only needed for sparkline)
         this.setMargins({bottom: 10, top: (this.baseData.height / 2) + 40, right: 10, left: 10});
     }
 
+    /**
+     * Data setup and drawing function calls
+     * @param chartData The data to draw, with {data: {sparkData: [], barData:[]}}
+     */
     drawChart(chartData) {
         let self = this;
         this.chartData = chartData;
@@ -29,6 +32,9 @@ class KPITile extends BaseChart {
 
     }
 
+    /**
+     * Draws the text labels for the most important numbers
+     */
     drawAggregates() {
         const data = this.chartData.data.barData
 
@@ -54,6 +60,7 @@ class KPITile extends BaseChart {
             .attr("height", this.baseData.height)
             .attr("fill", "white");
 
+        // Format any input value for textLabel
         const textFormat = (value:number|string, format:string = ".2s") => {
             if (typeof(value) == "number") {
                 return d3.format(format)(value);
@@ -62,51 +69,39 @@ class KPITile extends BaseChart {
             }
         }
 
-        const textSmall = (x:number, y:number, value:number, format:string=".2s", anchor:string="start") => {
-            this.svg.append("text")
+        // Draws an easily configurable text label
+        const textLabel = (x:number, y:number, value:number, format:string = ".2s", attrs:any[] = []) => {
+            let text = this.svg.append("text")
                 .attr("x", x)
                 .attr("y", y)
                 .text(textFormat(value,format))
                 .attr("fill", "grey")
-                .style("font-size", "large")
-                .style("text-anchor", anchor);
-        }
+                .attr("font-size", "large")
+                .attr("text-anchor", "start");
 
-        const textLarge = (x:number, y:number, value:number|string, format:string=".3s") => {
-            this.svg.append("text")
-                .attr("x", x)
-                .attr("y", y)
-                .text(textFormat(value,format))
-                .attr("fill", "black")
-                .style("font-size", "xx-large")
-                .style("text-anchor", "middle");
-        }
-
-        const textTitle = (x:number, y:number, value:string) => {
-            this.svg.append("text")
-                .attr("x", x)
-                .attr("y", y)
-                .text(value)
-                .attr("fill", "dimgrey")
-                .style("font-size", "x-large")
-                .style("text-anchor", "middle");
+            attrs.forEach(attr => {
+                text.attr(attr[0], attr[1]);
+            });
         }
 
         // Title on Top
-        textTitle(this.baseData.width / 2, 20,this.chartData.name);
+        textLabel(this.baseData.width / 2, 20, this.chartData.name, undefined, [["fill", "dimgrey"], ["font-size", "x-large"], ["text-anchor", "middle"]]);
 
         // PY top left; deviation below
-        textSmall(10,45,d.py);
-        textSmall(10,65,d.py_dev,"+.1%");
+        textLabel(10, 45, d.py);
+        textLabel(10, 65, d.py_dev, "+.1%");
 
         // BUD top right; deviation below
-        textSmall(this.baseData.width - 10,45,d.bud,".2s","end");
-        textSmall(this.baseData.width - 10,65,d.bud_dev,"+.1%","end");
+        textLabel(this.baseData.width - 10, 45, d.bud, undefined, [["text-anchor", "end"]]);
+        textLabel(this.baseData.width - 10, 65, d.bud_dev, "+.1%", [["text-anchor", "end"]]);
 
         // ACT in center
-        textLarge(this.baseData.width / 2, (this.baseData.height / 2) + 5, d.act);
+        textLabel(this.baseData.width / 2, (this.baseData.height / 2) + 5, d.act, ".3s", [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
     }
 
+    /**
+     * Draws the sparkline below the numbers
+     */
     drawSparkline() {
 
         const data = this.chartData.data.sparkData
@@ -134,6 +129,9 @@ class KPITile extends BaseChart {
             .attr("d", line(data));
     }
 
+    /**
+     * Draws the sparkline background
+     */
     setBackground() {
 
         const margin = this.baseData.margin;
@@ -143,12 +141,13 @@ class KPITile extends BaseChart {
         if (backgroundExists) {
             backgrounds
                 .attr("width", this.baseData.width - margin.y + 4)
-                .attr("height", this.baseData.height - margin.x + 4)
+                .attr("height", this.baseData.height - margin.x + 4);
 
         } else {
             this.svg.append("rect")
                 .attr("x", margin.left - 2)
                 .attr("y", margin.top - 2)
+                .attr("rx", 2)
                 .attr("width", this.baseData.width - margin.x + 4)
                 .attr("height", this.baseData.height - margin.y + 4)
                 .attr("fill", "#b0b0b0")
@@ -196,6 +195,9 @@ class KPITile extends BaseChart {
         drawCircle(current, "steelblue");
     }
 
+    /**
+     * Configures the scales for the sparkline
+     */
     setScales() {
         const data = this.chartData.data.sparkData;
         const margin = this.baseData.margin;

@@ -1,5 +1,8 @@
 import BaseChart from "./baseChart.js";
 
+/**
+ * A simple, standard bar chart
+ */
 class BarChart extends BaseChart {
 
     barWidth;
@@ -10,6 +13,10 @@ class BarChart extends BaseChart {
         this.setMargins({left: 30, right:5});
     }
 
+    /**
+     * Draws the bar chart and axes
+     * @param chartData The data to draw
+     */
     drawChart(chartData) {
         let self = this;
         this.chartData = chartData;
@@ -56,7 +63,7 @@ class BarChart extends BaseChart {
         //     .range([margin.left, width - margin.x]);
 
         this.xScale = (i) => {return (i * (this.barWidth + this.barSpace)) + margin.left};
-        this.xScale.bandwidth = () => {return this.barWidth}
+        this.xScale.bandwidth = () => {return this.barWidth};
 
         this.yScale = d3.scaleLinear()
             .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()

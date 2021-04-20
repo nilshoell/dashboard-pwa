@@ -1,5 +1,8 @@
 import BaseChart from "./baseChart.js";
 
+/**
+ * A standard line graph with a time-based x-axis
+ */
 class Timeline extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
@@ -13,6 +16,10 @@ class Timeline extends BaseChart {
         this.setMargins(margin);
     }
 
+    /**
+     * Draws the line chart
+     * @param chartData The data to draw
+     */
     drawChart(chartData) {
 
         let self = this;
@@ -129,29 +136,23 @@ class Timeline extends BaseChart {
 
         d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
 
+        const drawCircle = (coords:any, color:string) => {
+            this.svg.append("circle")
+                .attr("cx", coords.x)
+                .attr("cy", coords.y)
+                .attr("r", 3)
+                .attr("fill", color)
+                .attr("class", "sparkline-annotation");
+        }
+
         // Draw max marker
-        this.svg.append("circle")
-            .attr("cx", max.x)
-            .attr("cy", max.y)
-            .attr("r", r)
-            .attr("fill", "green")
-            .attr("class", "sparkline-annotation");
+        drawCircle(max, "green");
 
         // Draw min marker
-        this.svg.append("circle")
-            .attr("cx", min.x)
-            .attr("cy", min.y)
-            .attr("r", r)
-            .attr("fill", "#e10000")
-            .attr("class", "sparkline-annotation");
+        drawCircle(min, "#e10000");
 
         // Draw current marker
-        this.svg.append("circle")
-            .attr("cx", current.x)
-            .attr("cy", current.y)
-            .attr("r", r)
-            .attr("fill", "steelblue")
-            .attr("class", "sparkline-annotation");
+        drawCircle(current, "steelblue");
     }
 
 
@@ -170,15 +171,16 @@ class Timeline extends BaseChart {
 
         if (backgroundExists) {
             backgrounds
-                .attr("width", this.baseData.width - margin.left - margin.right)
-                .attr("height", this.baseData.height - margin.top - margin.bottom)
+                .attr("width", this.baseData.width - margin.x)
+                .attr("height", this.baseData.height - margin.y);
 
         } else {
             this.svg.append("rect")
                 .attr("x", margin.left)
                 .attr("y", margin.top)
-                .attr("width", this.baseData.width - margin.left - margin.right)
-                .attr("height", this.baseData.height - margin.top - margin.bottom)
+                .attr("rx", 2)
+                .attr("width", this.baseData.width - margin.x)
+                .attr("height", this.baseData.height - margin.y)
                 .attr("fill", "#b0b0b0")
                 .attr("class", "sparkline-bg");
         }

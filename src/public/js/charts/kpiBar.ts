@@ -1,8 +1,10 @@
 import BaseChart from "./baseChart.js";
 
+/**
+ * A special visualization for displaying KPI deviations
+ */
 class KPIBar extends BaseChart {
 
-    svg;
     barHeight;
 
     constructor(canvasID:string, baseData = {}) {
@@ -11,6 +13,10 @@ class KPIBar extends BaseChart {
         this.setMargins({bottom: 25, top: 5, right:100});
     }
 
+    /**
+     * Draws the bars
+     * @param chartData The data to draw, with {data: [py,act,bud,fc]}
+     */
     drawChart(chartData) {
         let self = this;
         this.chartData = chartData;
@@ -27,56 +33,42 @@ class KPIBar extends BaseChart {
             .data(data);
         bars.remove();
 
+        const drawBar = (x:number, y:number, val:number, attrs:any) => {
+            let bar = this.svg.append("rect")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", this.xScale(val))
+                .attr("height", this.barHeight)
+                .attr("stroke", "black")
+                .attr("stroke-width", 1)
+                .attr("data-value", val);
+
+                attrs.forEach(attr => {
+                    bar.attr(attr[0], attr[1]);
+                });
+        }
+
         // Previous year (PY)
-        this.svg.append("rect")
-            .attr("x", margin.left)
-            .attr("y", 0)
-            .attr("width", this.xScale(data[0]))
-            .attr("height", this.barHeight)
-            .attr("data-value", data[0])
-            .attr("fill", "grey")
-            .attr("stroke", "grey")
-            .attr("stroke-width", 1);
+        drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
 
         // Budget/Target (BUD)
-        this.svg.append("rect")
-            .attr("x", margin.left + 1)
-            .attr("y", this.barHeight)
-            .attr("width", this.xScale(data[2]))
-            .attr("height", this.barHeight)
-            .attr("data-value", data[2])
-            .attr("fill", "none")
-            .attr("stroke", "black")
-            .attr("stroke-width", 2);
+        drawBar(margin.left + 1, this.barHeight, data[2], [["fill", "none"], ["stroke-width", 2]]);
 
         // Current value (ACT)
-        this.svg.append("rect")
-            .attr("x", margin.left)
-            .attr("y", 0.5 * this.barHeight)
-            .attr("width", this.xScale(data[1]))
-            .attr("height", this.barHeight)
-            .attr("data-value", data[1])
-            .attr("fill", "black")
-            .attr("stroke", "black")
-            .attr("stroke-width", 1);
+        drawBar(margin.left, this.barHeight/2, data[1], [["fill", "black"]]);
 
         // Forecast if Available
         if (!isNaN(data[3])) {
-            this.svg.append("rect")
-                .attr("x", this.xScale(data[1]) + margin.left)
-                .attr("y", 0.5 * this.barHeight)
-                .attr("width", this.xScale(data[3]) - this.xScale(data[1]))
-                .attr("height", this.barHeight)
-                .attr("data-value", data[3])
-                .attr("fill", "url(#diagonal-stripe-1) none")
-                .attr("stroke", "black")
-                .attr("stroke-width", 1);
+            drawBar(this.xScale(data[1]) + margin.left, this.barHeight/2, data[3], [["fill", "url(#diagonal-stripe-1) none"], ["width", this.xScale(data[3]) - this.xScale(data[1])]]);
         }
 
         this.drawLabels();
         this.drawAxes();
     }
 
+    /**
+     * Draws text labels for the three main bars
+     */
     drawLabels() {
         const data = this.chartData.data;
         const margin = this.baseData.margin;
@@ -86,9 +78,9 @@ class KPIBar extends BaseChart {
         const bud = data[2];
 
         let labelData = [];
-        labelData[0] = (act/py) - 1
-        labelData[1] = act
-        labelData[2] = (act/bud) - 1
+        labelData[0] = (act - py) / py;
+        labelData[1] = act;
+        labelData[2] = (act - bud) / bud;
 
         // Remove any existing labels (e.g. after resize)
         // $('.numeric-label').each((index, label) => label.remove());
@@ -102,31 +94,28 @@ class KPIBar extends BaseChart {
             }
         }
 
-        this.svg.append("text")
-            .attr("x", textPos(data[0], 1))
-            .attr("y", margin.top + 5)
-            .attr("class", "numeric-label")
-            .text(d3.format(".1%")(labelData[0]))
-            .attr("fill", "grey")
-            .style("font-size", "small")
-            .style("text-anchor", "end");
+        // Wrapper to draw labels
+        const textLabel = (x:number, y:number, val:number, color:string="black", format:string=".2s", attrs=[]) => {
+            let text = this.svg.append("text")
+                .attr("x", x)
+                .attr("y", y)
+                .text(d3.format(format)(val))
+                .attr("class", "numeric-label")
+                .attr("fill", color)
+                .style("text-anchor", "end");
 
-        this.svg.append("text")
-            .attr("x", textPos(data[1]))
-            .attr("y", this.barHeight + margin.top)
-            .attr("class", "numeric-label")
-            .text(d3.format(".2s")(labelData[1]))
-            .attr("fill", "black")
-            .style("text-anchor", "end");
+            attrs.forEach(attr => {
+                text.attr(attr[0], attr[1]);
+            });
+        }
 
-        this.svg.append("text")
-            .attr("x", textPos(data[2], 1))
-            .attr("y", this.baseData.height - margin.y)
-            .attr("class", "numeric-label")
-            .text(d3.format(".1%")(labelData[2]))
-            .attr("fill", "grey")
-            .style("font-size", "small")
-            .style("text-anchor", "end");
+        // PY deviation in %
+        textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], "grey", "+.1%", [["font-size", "small"]]);
+        // Actual value
+        textLabel(this.baseData.width * 0.99, this.barHeight + margin.top, labelData[1]);
+        // BUD deviation in %
+        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], "grey", "+.1%", [["font-size", "small"]]);
+
     }
 
     /**
@@ -144,6 +133,9 @@ class KPIBar extends BaseChart {
             .range([0, this.baseData.height - margin.y]);
     }
 
+    /**
+     * Draws a simple x-axis
+     */
     drawAxes() {
         const margin = this.baseData.margin
         const xAxis = g => g
