@@ -1,9 +1,7 @@
 import KPITile from './../charts/kpiTile.js';
 
 $(function () {
-    $('.carousel').carousel({
-        interval: 5000
-    });
+    // Setup Object
     new Home();
 });
 
@@ -16,14 +14,10 @@ class Home {
 
         const self = this;
 
-        const randomSpark = (min:number, max:number, count:number, end:number) => {
-            let data = [];
-            for (let i = 0; i < count; i++) {
-                data.push(d3.randomInt(min,max)());
-            }
-            data.push(end);
-            return data;
-        }
+        // Initialize carousel
+        $('.carousel').carousel({
+            interval: 5000
+        });
 
         this.kpis = [
             {data: {
@@ -40,6 +34,7 @@ class Home {
             }, name: "Test-KPI 3", rendered: false}
         ];
 
+        // Render the first KPI
         self.renderKPI('tile1', this.kpis[0]);
 
         this.configureEventListener();
@@ -58,6 +53,7 @@ class Home {
                 self.charts[e.to].resizeChart();
             }
         });
+
     }
 
     // Render the KPIs
