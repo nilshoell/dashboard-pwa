@@ -120,8 +120,6 @@ class Sparkline extends BaseChart {
      * Draws three additional annotations for min, max and current value
      */
     drawAnnotations() {
-        const r = 3;
-
         const data = this.chartData.data;
         const margin = this.baseData.margin;
         const maxVal = d3.max(data, (d:any) => d.val);
@@ -142,29 +140,23 @@ class Sparkline extends BaseChart {
 
         d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
 
+        const drawCircle = (coords:any, color:string) => {
+            this.svg.append("circle")
+                .attr("cx", coords.x)
+                .attr("cy", coords.y)
+                .attr("r", 3)
+                .attr("fill", color)
+                .attr("class", "sparkline-annotation");
+        }
+
         // Draw max marker
-        this.svg.append("circle")
-            .attr("cx", max.x)
-            .attr("cy", max.y)
-            .attr("r", r)
-            .attr("fill", "green")
-            .attr("class", "sparkline-annotation");
+        drawCircle(max, "green");
 
         // Draw min marker
-        this.svg.append("circle")
-            .attr("cx", min.x)
-            .attr("cy", min.y)
-            .attr("r", r)
-            .attr("fill", "#e10000")
-            .attr("class", "sparkline-annotation");
+        drawCircle(min, "#e10000");
 
         // Draw current marker
-        this.svg.append("circle")
-            .attr("cx", current.x)
-            .attr("cy", current.y)
-            .attr("r", r)
-            .attr("fill", "steelblue")
-            .attr("class", "sparkline-annotation");
+        drawCircle(current, "steelblue");
     }
 
 

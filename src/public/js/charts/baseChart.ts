@@ -78,8 +78,8 @@ class BaseChart {
      */
     setSizes() {
         const svg = $('#' + this.canvasID + ' svg')[0];
-        this.baseData.width = svg.clientWidth
-        this.baseData.height = svg.clientHeight
+        this.baseData.width = svg.clientWidth;
+        this.baseData.height = svg.clientHeight;
     }
 
     /**
