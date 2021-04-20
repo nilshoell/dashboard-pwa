@@ -1,6 +1,7 @@
+- var help = page.help
 footer.footer#footer
   div.container.d-flex.mt-2.justify-content-around
-    button.btn.btn-main(type="button" id="help")
+    button.btn.btn-main(type="button" id="help" data-toggle="popover" title=help.title data-placement="top" data-content=help.content)
       i.fa.fas.fa-question-circle
     a.btn.btn-main(href="/" role="button" id="home")
       i.fa.fas.fa-home

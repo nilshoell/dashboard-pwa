@@ -2,6 +2,7 @@ doctype html
 html(lang="en")
   include includes/head.pug
   include includes/svgPatterns.pug
+  //- Deactivate right click
   body(oncontextmenu="return false;")
 
     //- Wrapper for content and nav
@@ -11,23 +12,25 @@ html(lang="en")
           i.fa.fas.fa-arrow-left
 
         div.sidebar-header
-          h3 #{route.title}
+          h3 #{page.title}
 
         ul.list-unstyled.components
-          each val in routes
-            li.nav-link.p-0(class={active: route.link === val.link})
-              a(href=val.link)
-                i.fa.fas(class=val.icon)
-                |  #{val.title}
+          each route in routes
+            li.nav-link.p-0(class={active: page.link === route.link})
+              a(href=route.link)
+                i.fa.fas(class=route.icon)
+                |  #{route.title}
 
       div.p-0(id="content")
+        //- Header navbar
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
           button.btn.btn-main(type="button" id="sidebarCollapse")
             i.fa.faw.fas.fa-align-justify
-          h4.text-light #{route.title}
+          h4.text-light #{page.title}
           button.btn.btn-main(type="button" id="menuToggle")
             i.fa.faw.fas.fa-ellipsis-v.text-light
 
+        //- Chart content
         div.container.content-container
           div.row.chart-top
             div.col
@@ -39,6 +42,8 @@ html(lang="en")
             div.col
               block chart-bottom
 
+        //- Footer navbar
         include includes/footer.pug
 
+    //- Sidebar overlay
     div.overlay

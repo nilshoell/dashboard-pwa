@@ -1,47 +1,48 @@
-console.log("index.js linked");
+import { Callbacks } from "jquery";
+
+console.debug("index.js linked");
 
 $(function () {
-    console.log("Document Ready");
-
-    $('#dismiss, .overlay').on('click', function () {
-        $('#sidebar').removeClass('active');
-        $('.overlay').removeClass('active');
-    });
-
-    $('.nav-link').on('click', function () {
-        $('#sidebar').removeClass('active');
-        $('.overlay').removeClass('active');
-        $($('li.active > .nav-link')[0].parentElement).removeClass("active");
-        $(this.parentElement).addClass('active');
-    });
-
-    $('#sidebarCollapse').on('click', function () {
-        $('#sidebar').addClass('active');
-        $('.overlay').addClass('active');
-        $('.collapse.in').toggleClass('in');
-        $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-    });
-
-    window.addEventListener("orientationchange", function() {
-        switch (screen.orientation.angle) {
-            case 0:
-                console.log("Switched to portrait mode");
-                break;
-            case 90:
-                console.log("Switched to landscape mode");
-                break;
-            default:
-                console.log("Switched to undefined orientation", screen.orientation.angle);
-                break;
-        }
-    });
-
-    const app:App = new App();
-
+    console.info("Document Ready");
+    const app = new App();
 });
 
 class App {
+
     constructor() {
-        // console.log("App Object Initialised");
+        console.info("Initializing App");
+        this.navigationHandlers();
+
+        // Initialize popovers
+        $('[data-toggle="popover"]').popover();
     }
+
+    /**
+     * Setup event listeners to toggle the navigation sidebar
+     */
+    navigationHandlers () {
+
+        // Remove sidebar on click on overlay or the dismiss-button
+        $('#dismiss, .overlay').on('click', function () {
+            $('#sidebar').removeClass('active');
+            $('.overlay').removeClass('active');
+        });
+
+        // Remove sidebar on click on a nav-link
+        $('.nav-link').on('click', function () {
+            $('#sidebar').removeClass('active');
+            $('.overlay').removeClass('active');
+            $($('li.active > .nav-link')[0].parentElement).removeClass("active");
+            $(this.parentElement).addClass('active');
+        });
+
+        // Show sidebar on menu button click
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').addClass('active');
+            $('.overlay').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+    }
+
 }
