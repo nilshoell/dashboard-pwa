@@ -15,6 +15,8 @@ class App {
 
         // Initialize popovers
         $('[data-toggle="popover"]').popover();
+
+        // this.registerSW();
     }
 
     /**
@@ -43,6 +45,17 @@ class App {
             $('.collapse.in').toggleClass('in');
             $('a[aria-expanded=true]').attr('aria-expanded', 'false');
         });
+    }
+
+    registerSW() {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js')
+              .then((reg) => {
+                console.log('Service worker registered:', reg);
+              }, (err) => {
+                console.error('Service worker not registered:', err);
+            });
+        }
     }
 
 }

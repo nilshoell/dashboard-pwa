@@ -8,4 +8,4 @@ shell.cp("-R", "src/public/images", "dist/public/");
 shell.cp("node_modules/jquery/dist/jquery.min.js", "dist/public/js/vendor/");
 shell.cp("node_modules/bootstrap/dist/js/bootstrap.bundle.min.js", "dist/public/js/vendor/");
 shell.cp("node_modules/d3/dist/d3.min.js", "dist/public/js/vendor/");
-// shell.cp("src/db/*", "dist/db/");
+shell.cp("src/public/manifest.json", "dist/public/");
