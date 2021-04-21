@@ -40,7 +40,7 @@ class BarChart extends BaseChart {
             .attr("width", this.xScale.bandwidth())
             .attr("height", (d:number) => this.yScale(0) - this.yScale(d))
             .attr("data-value", (d:number) => d)
-            .attr("fill", "green")
+            .attr("fill", "dimgrey")
             .on("touchstart", function(e:Event) {
                 self.toggleLabel(e.target);
             });

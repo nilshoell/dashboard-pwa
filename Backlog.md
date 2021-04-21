@@ -84,11 +84,11 @@ https://www.d3indepth.com/shapes/
 
 ### Landing Page
 
-- [ ] Slideshow
+- [X] Slideshow
 
 ### Dashboard
 
-- [ ] KPIBar/Sparkline toggle
+- [X] KPIBar/Sparkline toggle
 
 ### CPA
 
@@ -104,7 +104,7 @@ https://www.d3indepth.com/shapes/
 
 ## Visualizations
 
-- [ ] Redraw on orientation change
+- [X] Redraw on orientation change
 
 ### KPIBar
 

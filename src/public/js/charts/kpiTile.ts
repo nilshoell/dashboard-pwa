@@ -69,8 +69,17 @@ class KPITile extends BaseChart {
             }
         }
 
+        // Returns a shade of red for negative and a shade of green for positive numbers
+        const textColor = (value:number) => {
+            if (value >= 0) {
+                return "#055b0a ";
+            } else {
+                return "#750c0c";
+            }
+        }
+
         // Draws an easily configurable text label
-        const textLabel = (x:number, y:number, value:number, format:string = ".2s", attrs:any[] = []) => {
+        const textLabel = (x:number, y:number, value:number|string, format:string = ".2s", attrs:any[] = []) => {
             let text = this.svg.append("text")
                 .attr("x", x)
                 .attr("y", y)
@@ -84,19 +93,24 @@ class KPITile extends BaseChart {
             });
         }
 
+        const halfHeight = this.baseData.height / 2;
+
         // Title on Top
         textLabel(this.baseData.width / 2, 20, this.chartData.name, undefined, [["fill", "dimgrey"], ["font-size", "x-large"], ["text-anchor", "middle"]]);
 
+        // ACT in center
+        textLabel(this.baseData.width / 2, 60, d.act, ".3s", [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
+
         // PY top left; deviation below
-        textLabel(10, 45, d.py);
-        textLabel(10, 65, d.py_dev, "+.1%");
+        textLabel(10, halfHeight - 20, "PY", undefined, [["font-size", "small"]]);
+        textLabel(10, halfHeight , d.py);
+        textLabel(10, halfHeight + 20, d.py_dev, "+.1%",[["fill", textColor(d.py_dev)]]);
 
         // BUD top right; deviation below
-        textLabel(this.baseData.width - 10, 45, d.bud, undefined, [["text-anchor", "end"]]);
-        textLabel(this.baseData.width - 10, 65, d.bud_dev, "+.1%", [["text-anchor", "end"]]);
+        textLabel(this.baseData.width - 10, halfHeight - 20, "BUD", undefined, [["text-anchor", "end"], ["font-size", "small"]]);
+        textLabel(this.baseData.width - 10, halfHeight , d.bud, undefined, [["text-anchor", "end"]]);
+        textLabel(this.baseData.width - 10, halfHeight + 20, d.bud_dev, "+.1%", [["fill", textColor(d.bud_dev)], ["text-anchor", "end"]]);
 
-        // ACT in center
-        textLabel(this.baseData.width / 2, (this.baseData.height / 2) + 5, d.act, ".3s", [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
     }
 
     /**
