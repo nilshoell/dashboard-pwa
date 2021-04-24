@@ -2,6 +2,7 @@
     "compilerOptions": {
         "allowUmdGlobalAccess": true,
         "module": "es6",
+        "moduleResolution": "Node",
         "esModuleInterop": true,
         "target": "es6",
         "noImplicitAny": false,
