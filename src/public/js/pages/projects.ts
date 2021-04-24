@@ -8,7 +8,6 @@ $(function () {
 class Projects {
 
     charts = [];
-
     constructor() {
 
         const self = this;

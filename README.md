@@ -13,6 +13,7 @@ A Progressive Web App that explores the possibilities of mobile dashboards utili
 Make sure you have current versions of [`nodejs`](https://nodejs.org/en/) (`^14.16.0 LTS` or `^15.13.0` recommended) and `npm` (`^7.6.0`) installed.
 
 Then, clone the repository from `git@github.com:nilshoell/dashboard-pwa.git` onto your machine (or download and unpack the [zip-file](https://github.com/nilshoell/dashboard-pwa/archive/refs/heads/main.zip)), change into the directory and execute `npm install` to download the dependencies.
+
 ### Development
 
 Simply run `npm run watch` inside the projects folder, which in turn starts the TypeScript compilation, the node server and watchers, and will launch the application in your browser on [`localhost:1337`](http://localhost:1337).\
@@ -20,6 +21,10 @@ Since we have `browser-sync` set up, any changes you make to the templates, Type
 
 ### Production
 
+We recommend deleting any existing `dist` folder before starting the build process for a clean setup, then run `npm run build` from the project directory.
+Afterwards you can copy the new `dist` folder to wherever your web root should be, and run `node dist/server.js` to start the server.
+
+For a **Docker Installation** create a new docker image using `docker build -t dashboard-pwa .` from the projects root directory. Afterwards run `docker run -it -p 32001:3000 dashboard-pwa` to make the PWA available on `localhost:32001`, or use any other tool like docker-compose.
 
 ## Dependencies
 

@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "start": "npm run serve",
-        "build": "npm run build-ts && npm run tslint && npm run build-sass && npm run copy-static-assets",
+        "build": "npm run build-ts && npm run build-sass && npm run copy-static-assets",
         "serve": "node dist/server.js",
         "watch-node": "nodemon dist/server.js",
         "watch": "npm run copy-static-assets && npm run build-sass && concurrently -k -p \"[{name}]\" -n \"Sass,TypeScriptClient,TypeScriptServer,Node\" -c \"yellow.bold,cyan.bold,orange.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts-client\" \"npm run watch-ts-server\" \"npm run watch-node\" \"npm run browser-sync\"",
@@ -50,7 +50,6 @@
         "@types/sqlite3": "^3.1.7",
         "browser-sync": "^2.26.14",
         "concurrently": "^6.0.0",
-        "eslint": "^7.25.0",
         "node-sass": "^5.0.0",
         "nodemon": "^2.0.7",
         "shelljs": "^0.8.4",
