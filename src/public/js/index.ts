@@ -1,4 +1,4 @@
-import { Callbacks } from "jquery";
+import fs from "fs";
 
 console.debug("index.js linked");
 
@@ -16,7 +16,10 @@ class App {
         // Initialize popovers
         $('[data-toggle="popover"]').popover();
 
-        // this.registerSW();
+        // Register Service Workers in Prod
+        if (window.location.protocol == "https:") {
+            this.registerSW();
+        }
     }
 
     /**
