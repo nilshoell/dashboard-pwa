@@ -1,0 +1,5 @@
+*.md
+*.json
+src/public/images
+src/public/css
+src/db

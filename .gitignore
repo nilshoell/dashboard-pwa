@@ -1,6 +1,5 @@
 node_modules/
 .eslintcache
-.eslintrc.json
 vs/
 .vscode
 .DS_Store
