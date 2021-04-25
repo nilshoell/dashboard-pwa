@@ -12,7 +12,7 @@ class Timeline extends BaseChart {
             bottom: 30,
             left: 10,
             right: 25
-        }
+        };
         this.setMargins(margin);
     }
 
@@ -22,10 +22,8 @@ class Timeline extends BaseChart {
      */
     drawChart(chartData) {
 
-        let self = this;
         this.chartData = chartData;
         const data = chartData.data;
-        const margin = this.baseData.margin;
         console.log("Drawing Timeline with data: ", data);
 
         // Create scales with default function
@@ -35,7 +33,7 @@ class Timeline extends BaseChart {
         this.setBackground();
 
         // Create line generator
-        let line = d3.line()
+        const line = d3.line()
             .x((d:any) => this.xScale(new Date(d.date)))
             .y((d:any) => this.yScale(d.val))
             .curve(d3.curveCardinal);
@@ -67,13 +65,12 @@ class Timeline extends BaseChart {
      * Overrides the default scales
      */
     setScales() {
-        const margin = this.baseData.margin
-        const width = this.baseData.width
-        const height = this.baseData.height
+        const margin = this.baseData.margin;
+        const width = this.baseData.width;
+        const height = this.baseData.height;
         const data = this.chartData.data;
         const minDate = new Date(d3.min(data, (d:any) => d.date));
         const maxDate = new Date(d3.max(data, (d:any) => d.date));
-        const minVal = Number(d3.min(data, (d:any) => d.val));
         const maxVal = Number(d3.max(data, (d:any) => d.val));
 
         this.xScale = d3.scaleTime()
@@ -88,10 +85,9 @@ class Timeline extends BaseChart {
 
     /**
      * Draw axes and labels
-     * @param axisData unused
      */
-    drawAxes(axisData = {}) {
-        const margin = this.baseData.margin
+    drawAxes() {
+        const margin = this.baseData.margin;
         const xAxis = g => g
             .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
             .call(d3.axisBottom(this.xScale).ticks(5, "%b-%d").tickSizeOuter(0))
@@ -114,10 +110,7 @@ class Timeline extends BaseChart {
      * Draws three additional annotations for min, max and current value
      */
     drawAnnotations() {
-        const r = 3;
-
         const data = this.chartData.data;
-        const margin = this.baseData.margin;
         const maxVal = d3.max(data, (d:any) => d.val);
         const minVal = d3.min(data, (d:any) => d.val);
 
@@ -143,7 +136,7 @@ class Timeline extends BaseChart {
                 .attr("r", 3)
                 .attr("fill", color)
                 .attr("class", "sparkline-annotation");
-        }
+        };
 
         // Draw max marker
         drawCircle(max, "green");
@@ -166,7 +159,7 @@ class Timeline extends BaseChart {
         }
 
         const margin = this.baseData.margin;
-        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg")
+        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
         const backgroundExists = Boolean(backgrounds.size());
 
         if (backgroundExists) {

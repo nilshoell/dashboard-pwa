@@ -24,33 +24,33 @@ const routes = [
     id: "personal", link:"/personal", title: "Personal", icon: "fa-user",
     help: {title: "Personal Dashboard", content:"This page collects your personal performance KPIs."
   }}
-]
+];
 
 // Setup standard routes
 routes.forEach(page => {
   router.get(page.link, function(req, res) {
-    res.render('pages/' + page.id, {routes, page});
+    res.render("pages/" + page.id, {routes, page});
   });
 });
 
 // Additional KPI page
-router.get('/kpi/:id', function(req, res) {
+router.get("/kpi/:id", function(req, res) {
   const params = req.params;
   const page = {
     id: "kpi", link:"/kpi", title: "KPI", icon: "fa-home",
     help: {title: "Help", content:"This is helpful help!"}
   };
-  res.render('pages/kpi', {routes, page, params});
+  res.render("pages/kpi", {routes, page, params});
 });
 
-router.get('/kpi', function(req, res) {
+router.get("/kpi", function(req, res) {
   res.status(400);
-  res.render('special/400', {msg: "Please provide a valid KPI ID"});
+  res.render("special/400", {msg: "Please provide a valid KPI ID"});
 });
 
 // router.use(function(req, res) {
 //   res.status(404);
-//   res.render('special/404');
+//   res.render("special/404");
 // });
 
 

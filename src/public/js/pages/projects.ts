@@ -1,5 +1,4 @@
-import KPIBar from '../charts/kpiBar.js';
-import Sparkline from '../charts/sparkline.js';
+import Sparkline from "../charts/sparkline.js";
 
 $(function () {
     new Projects();
@@ -20,19 +19,16 @@ class Projects {
             {data: [116,109,114,120,101,112,100,102,107,105,110,128,123,145,147,124,140,134,129,138,124,175,172,147,146,142,156,153,198,173,184]}
         ];
 
-        const now = new Date();
-        const today = new Date(now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate());
-        
         kpis.forEach(function (kpi, index) {
-            let kpiData = {};
+            const kpiData = {};
             const count = kpi.data.length;
             const date = (x:number) => {
                 const diff = (count - (x + 1)) * 86400000;
                 const newDate = new Date(new Date().getTime() - diff);
-                return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate();
-            }
-            kpiData['data'] = kpi.data.map((d, i) => {return {date: date(i), val: d}});
-            self.renderKPI('sparkline' + (+index + 1), kpiData);
+                return newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
+            };
+            kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i), val: d};});
+            self.renderKPI("sparkline" + (+index + 1), kpiData);
         });
 
         this.configureEventListener();
@@ -40,7 +36,7 @@ class Projects {
 
     configureEventListener() {
         const self = this;
-        window.addEventListener('resize', () => self.resizeHandler());
+        window.addEventListener("resize", () => self.resizeHandler());
     }
 
     renderKPI(canvasID:string, chartData) {

@@ -1,6 +1,6 @@
-import KPIBar from './../charts/kpiBar.js';
-import Sparkline from './../charts/sparkline.js';
-import Timeline from './../charts/timeline.js';
+import KPIBar from "./../charts/kpiBar.js";
+import Sparkline from "./../charts/sparkline.js";
+import Timeline from "./../charts/timeline.js";
 
 $(function () {
     new KPIDashboard();
@@ -36,10 +36,10 @@ class KPIDashboard {
             const diff = (c - (x + 1)) * 86400000;
             const newDate = new Date(new Date().getTime() - diff);
             return d3.timeFormat("%Y-%m-%d")(newDate);
-        }
+        };
 
         // Render the timeline for the main KPI
-        this.renderTimeline('timeline1', {data: kpi.map((d, i) => {return {date: date(i, kpi.length), val: d}})});
+        this.renderTimeline("timeline1", {data: kpi.map((d, i) => {return {date: date(i, kpi.length), val: d};})});
         
         // Render KPIBar & Sparklines for the components
         components.forEach(function (kpi, index) {
@@ -47,11 +47,11 @@ class KPIDashboard {
             // Enrich spark data with dates
             let sparkData = {};
             const count = kpi.data_spark.length;
-            sparkData = kpi.data_spark.map((d, i) => {return {date: date(i, count), val: d}});
+            sparkData = kpi.data_spark.map((d, i) => {return {date: date(i, count), val: d};});
 
             // Render the visualizations
-            self.renderBar('kpibar_' + (+index + 1), {data: kpi.data_bars});
-            self.renderSpark('sparkline_' + (+index + 1), {data: sparkData});
+            self.renderBar("kpibar_" + (+index + 1), {data: kpi.data_bars});
+            self.renderSpark("sparkline_" + (+index + 1), {data: sparkData});
         });
 
         this.configureEventListener();
@@ -62,14 +62,14 @@ class KPIDashboard {
         const self = this;
 
         // Resize handler
-        window.addEventListener('resize', () => self.resizeHandler());
+        window.addEventListener("resize", () => self.resizeHandler());
 
         // Toggle view button
-        $(document).on('click', '#toggleView', () => {
-            const invisible = $('.kpi-col.d-none');
-            const visible = $('.kpi-col').not('d-none');
-            visible.addClass('d-none d-sm-block');
-            invisible.removeClass('d-none d-sm-block');
+        $(document).on("click", "#toggleView", () => {
+            const invisible = $(".kpi-col.d-none");
+            const visible = $(".kpi-col").not("d-none");
+            visible.addClass("d-none d-sm-block");
+            invisible.removeClass("d-none d-sm-block");
             this.resizeHandler();
         });
     }

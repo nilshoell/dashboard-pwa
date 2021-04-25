@@ -17,8 +17,8 @@ class BarChart extends BaseChart {
      * Draws the bar chart and axes
      * @param chartData The data to draw
      */
-    drawChart(chartData) {
-        let self = this;
+    drawChart(chartData):void {
+        const self = this;
         this.chartData = chartData;
         const data = chartData.data;
         console.log("Drawing BarChart with data: ", data);
@@ -52,18 +52,16 @@ class BarChart extends BaseChart {
     /**
      * Configure scales
      */
-    setScales() {
+    setScales():void {
         const margin = this.baseData.margin;
-        const width = this.baseData.width;
         const height = this.baseData.height;
-        const data = this.chartData.data;
 
         // this.xScale = d3.scaleBand()
         //     .domain(d3.range(data.length).map((x) => String(x)))
         //     .range([margin.left, width - margin.x]);
 
-        this.xScale = (i) => {return (i * (this.barWidth + this.barSpace)) + margin.left};
-        this.xScale.bandwidth = () => {return this.barWidth};
+        this.xScale = (i) => {return (i * (this.barWidth + this.barSpace)) + margin.left;};
+        this.xScale.bandwidth = () => {return this.barWidth;};
 
         this.yScale = d3.scaleLinear()
             .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
@@ -73,7 +71,7 @@ class BarChart extends BaseChart {
     /**
      * Draw axes (only y-axis now)
      */
-    drawAxes() {
+    drawAxes():void {
         const margin = this.baseData.margin;
         const yAxis = g => g
             .attr("transform", "translate(" + (margin.left - 2) + ",0)")
@@ -88,18 +86,18 @@ class BarChart extends BaseChart {
      * Draws a label with the value of the target on top of it
      * @param target The SVG rect element (bar) to render the label for
      */
-    toggleLabel(target) {
+    toggleLabel(target:EventTarget):void {
 
         // Set constants
-        const attributes = target.attributes
-        const val = +attributes['data-value'].value;
-        const x = +attributes['x'].value;
-        const y = +attributes['y'].value;
-        const barWidth = +attributes['width'].value;
+        const attributes = target["attributes"];
+        const val = +attributes["data-value"].value;
+        const x = +attributes["x"].value;
+        const y = +attributes["y"].value;
+        const barWidth = +attributes["width"].value;
 
         // Remove all present labels
-        d3.selectAll('text.numeric-label').remove();
-        d3.selectAll('rect.numeric-label').remove();
+        d3.selectAll("text.numeric-label").remove();
+        d3.selectAll("rect.numeric-label").remove();
 
         // Configure label size
         const height = 20;
@@ -109,7 +107,7 @@ class BarChart extends BaseChart {
         }
 
         // Append label & text
-        this.svg.append('rect')
+        this.svg.append("rect")
             .attr("x", x - (width - barWidth) / 2)
             .attr("y", y - 25)
             .attr("width", width)
@@ -117,7 +115,7 @@ class BarChart extends BaseChart {
             .attr("rx", 3)
             .attr("class", "numeric-label")
             .attr("fill", "#40bf91");
-        this.svg.append('text')
+        this.svg.append("text")
             .attr("x", x - (width - barWidth) / 2 + width / 2)
             .attr("y", y - height / 2)
             .attr("class", "numeric-label")

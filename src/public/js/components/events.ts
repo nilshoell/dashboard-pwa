@@ -1,6 +1,12 @@
-let longTouch:Function; 
 let timer;
 const touchDuration = 500;
+
+function longTouch(target:EventTarget):TimerHandler {
+    console.log("Long Touch Detected", target);
+    // clearTimeout(timer);
+    // Do something
+    return "false";
+}
 
 function touchstart(event:Event) {
     console.log("Touch Start");
@@ -26,12 +32,6 @@ function touchmove(event:Event) {
         clearTimeout(timer);
     }
 }
-
-longTouch = function(target:EventTarget) {
-    console.log("Long Touch Detected", target);
-    // clearTimeout(timer);
-    // Do something
-};
 
 $(function () {
     // window.addEventListener("touchstart", touchstart, false);

@@ -18,7 +18,6 @@ class ColumnChart extends BaseChart {
      * @param chartData The data to draw
      */
     drawChart(chartData) {
-        let self = this;
         this.chartData = chartData;
         const data = chartData.data;
         console.log("Drawing ColumnChart with data: ", data);
@@ -53,11 +52,9 @@ class ColumnChart extends BaseChart {
     setScales() {
         const margin = this.baseData.margin;
         const width = this.baseData.width;
-        const height = this.baseData.height;
-        const data = this.chartData.data;
 
-        this.yScale = (i) => {return (i * (this.barHeight + this.barSpace)) + margin.top};
-        this.yScale.bandwidth = () => {return this.barHeight}
+        this.yScale = (i) => {return (i * (this.barHeight + this.barSpace)) + margin.top;};
+        this.yScale.bandwidth = () => {return this.barHeight;};
 
         this.xScale = d3.scaleLinear()
             .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
@@ -85,7 +82,7 @@ class ColumnChart extends BaseChart {
         const data = this.chartData.data;
         const margin= this.baseData.margin;
 
-        const labelFilter = (d:number) => this.xScale(d) - this.xScale(0) < 20
+        const labelFilter = (d:number) => this.xScale(d) - this.xScale(0) < 20;
 
         this.svg.append("g")
             .attr("fill", "white")
