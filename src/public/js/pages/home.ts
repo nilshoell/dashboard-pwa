@@ -1,4 +1,4 @@
-import KPITile from './../charts/kpiTile.js';
+import KPITile from "./../charts/kpiTile.js";
 
 $(function () {
     // Setup Object
@@ -15,7 +15,7 @@ class Home {
         const self = this;
 
         // Initialize carousel
-        $('.carousel').carousel({
+        $(".carousel").carousel({
             interval: 5000
         });
 
@@ -35,19 +35,19 @@ class Home {
         ];
 
         // Render the first KPI
-        self.renderKPI('tile1', this.kpis[0]);
+        self.renderKPI("tile1", this.kpis[0]);
 
         this.configureEventListener();
     }
 
     configureEventListener() {
         const self = this;
-        window.addEventListener('resize', () => self.resizeHandler());
+        window.addEventListener("resize", () => self.resizeHandler());
 
         // Render other charts on first carousel slide
-        $('#kpiCarousel').on('slid.bs.carousel', function (e) {
+        $("#kpiCarousel").on("slid.bs.carousel", function (e) {
             if (!self.kpis[e.to].rendered) {
-                self.renderKPI('tile' + (e.to +1), self.kpis[e.to]);
+                self.renderKPI("tile" + (e.to +1), self.kpis[e.to]);
                 self.kpis[e.to].rendered = true;
             } else {
                 self.charts[e.to].resizeChart();

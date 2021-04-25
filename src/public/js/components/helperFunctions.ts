@@ -5,7 +5,7 @@
  * @returns Rounded number
  */
 function round(value: number, decimals: number) {
-    return Number(Math.round(Number(value + 'e' + decimals)) + 'e-' + decimals);
+    return Number(Math.round(Number(value + "e" + decimals)) + "e-" + decimals);
 }
 
 
@@ -40,13 +40,13 @@ function valMinify(value: number) {
 
     // Get correct suffix object 
     if (value >= 1000000000) {
-        suffix = suffixes.B
+        suffix = suffixes.B;
     } else if (value >= 1000000) {
-        suffix = suffixes.M
+        suffix = suffixes.M;
     } else if (value >= 1000) {
-        suffix = suffixes.k
+        suffix = suffixes.k;
     } else {
-        suffix = suffixes[0]
+        suffix = suffixes[0];
     }
 
     // Move decimal point according to suffix
@@ -75,7 +75,7 @@ function valMinify(value: number) {
  * @returns Array
  */
 function randomSpark (min:number, max:number, count:number, end:number) {
-    let data = [];
+    const data = [];
     for (let i = 0; i < count; i++) {
         data.push(d3.randomInt(min,max)());
     }
@@ -89,7 +89,7 @@ function randomSpark (min:number, max:number, count:number, end:number) {
  * @param depth The backtrace depth, defaults to 1 (=> direct caller)
  * @returns Function or class name and file of the caller
  */
-function getCaller(depth:number = 1, filename = true) {
+function getCaller(depth = 1, filename = true) {
     const stack = new Error().stack.split("\n");
     const caller = stack[depth + 1];
     const iStart = caller.search("/public/js/");

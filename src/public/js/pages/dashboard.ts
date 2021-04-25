@@ -1,4 +1,4 @@
-import KPIBar from './../charts/kpiBar.js';
+import KPIBar from "./../charts/kpiBar.js";
 
 $(function () {
     new Dashboard();
@@ -22,7 +22,7 @@ class Dashboard {
         ];
         
         kpis.forEach(function (kpi, index) {
-            self.renderKPI('kpiBar' + (+index + 1), kpi);
+            self.renderKPI("kpiBar" + (+index + 1), kpi);
         });
 
         this.configureEventListener();
@@ -30,8 +30,8 @@ class Dashboard {
 
     configureEventListener() {
         const self = this;
-        // $(document).on('longTouch', '.kpi-bar', () => self.longTouch(this));
-        window.addEventListener('resize', () => self.resizeHandler());
+        // $(document).on("longTouch", ".kpi-bar", () => self.longTouch(this));
+        window.addEventListener("resize", () => self.resizeHandler());
     }
 
     renderKPI(canvasID:string, chartData) {

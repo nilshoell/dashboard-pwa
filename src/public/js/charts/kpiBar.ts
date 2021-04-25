@@ -18,7 +18,6 @@ class KPIBar extends BaseChart {
      * @param chartData The data to draw, with {data: [py,act,bud,fc]}
      */
     drawChart(chartData) {
-        let self = this;
         this.chartData = chartData;
         const data = chartData.data;
         const margin = this.baseData.margin;
@@ -31,10 +30,11 @@ class KPIBar extends BaseChart {
         const bars = this.svg
             .selectAll("rect")
             .data(data);
+
         bars.remove();
 
         const drawBar = (x:number, y:number, val:number, attrs:any) => {
-            let bar = this.svg.append("rect")
+            const bar = this.svg.append("rect")
                 .attr("x", x)
                 .attr("y", y)
                 .attr("width", this.xScale(val))
@@ -46,7 +46,7 @@ class KPIBar extends BaseChart {
                 attrs.forEach(attr => {
                     bar.attr(attr[0], attr[1]);
                 });
-        }
+        };
 
         // Previous year (PY)
         drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
@@ -77,7 +77,7 @@ class KPIBar extends BaseChart {
         const act = data[1];
         const bud = data[2];
 
-        let labelData = [];
+        const labelData = [];
         labelData[0] = (act - py) / py;
         labelData[1] = act;
         labelData[2] = (act - bud) / bud;
@@ -86,17 +86,9 @@ class KPIBar extends BaseChart {
         // $('.numeric-label').each((index, label) => label.remove());
         d3.selectAll("#" + this.canvasID + " svg text.numeric-label").remove();
 
-        const textPos = (val:number, pos = 0) => {
-            if (pos == 0) {
-                return this.baseData.width * 0.99;
-            } else {
-                return this.baseData.width * 0.90;
-            }
-        }
-
         // Wrapper to draw labels
-        const textLabel = (x:number, y:number, val:number, color:string="black", format:string=".2s", attrs=[]) => {
-            let text = this.svg.append("text")
+        const textLabel = (x:number, y:number, val:number, color = "black", format = ".2s", attrs=[]) => {
+            const text = this.svg.append("text")
                 .attr("x", x)
                 .attr("y", y)
                 .text(d3.format(format)(val))
@@ -107,7 +99,7 @@ class KPIBar extends BaseChart {
             attrs.forEach(attr => {
                 text.attr(attr[0], attr[1]);
             });
-        }
+        };
 
         // PY deviation in %
         textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], "grey", "+.1%", [["font-size", "small"]]);
@@ -137,7 +129,7 @@ class KPIBar extends BaseChart {
      * Draws a simple x-axis
      */
     drawAxes() {
-        const margin = this.baseData.margin
+        const margin = this.baseData.margin;
         const xAxis = g => g
             .attr("transform", "translate(" + margin.left + "," + (this.baseData.height - margin.bottom - 3) + ")")
             .call(d3.axisBottom(this.xScale).ticks(2, "~s"))

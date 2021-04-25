@@ -2,7 +2,7 @@ console.debug("index.js linked");
 
 $(function () {
     console.info("Document Ready");
-    const app = new App();
+    new App();
 });
 
 class App {
@@ -12,7 +12,7 @@ class App {
         this.navigationHandlers();
 
         // Initialize popovers
-        $('[data-toggle="popover"]').popover();
+        $("[data-toggle='popover']").popover();
 
         // Register Service Workers in Prod
         if (window.location.protocol == "https:") {
@@ -26,25 +26,25 @@ class App {
     navigationHandlers () {
 
         // Remove sidebar on click on overlay or the dismiss-button
-        $('#dismiss, .overlay').on('click', function () {
-            $('#sidebar').removeClass('active');
-            $('.overlay').removeClass('active');
+        $("#dismiss, .overlay").on("click", function () {
+            $("#sidebar").removeClass("active");
+            $(".overlay").removeClass("active");
         });
 
         // Remove sidebar on click on a nav-link
-        $('.nav-link').on('click', function () {
-            $('#sidebar').removeClass('active');
-            $('.overlay').removeClass('active');
-            $($('li.active > .nav-link')[0].parentElement).removeClass("active");
-            $(this.parentElement).addClass('active');
+        $(".nav-link").on("click", function () {
+            $("#sidebar").removeClass("active");
+            $(".overlay").removeClass("active");
+            $($("li.active > .nav-link")[0].parentElement).removeClass("active");
+            $(this.parentElement).addClass("active");
         });
 
         // Show sidebar on menu button click
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').addClass('active');
-            $('.overlay').addClass('active');
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        $("#sidebarCollapse").on("click", function () {
+            $("#sidebar").addClass("active");
+            $(".overlay").addClass("active");
+            $(".collapse.in").toggleClass("in");
+            $("a[aria-expanded=true]").attr("aria-expanded", "false");
         });
     }
 
@@ -52,12 +52,12 @@ class App {
      * Registers the service workers for PWA completeness
      */
     registerSW() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./service-worker.js')
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("./service-worker.js")
               .then((reg) => {
-                console.log('Service worker registered:', reg);
+                console.log("Service worker registered:", reg);
               }, (err) => {
-                console.error('Service worker not registered:', err);
+                console.error("Service worker not registered:", err);
             });
         }
     }

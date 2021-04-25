@@ -40,7 +40,7 @@ class BaseChart {
      */
     prepareChart() {
         console.log("Preparing chart canvas on #" + this.canvasID + " for " + getCaller(2, false));
-        this.svg = d3.select('#' + this.canvasID)
+        this.svg = d3.select("#" + this.canvasID)
             .append("svg")
             .attr("width", this.baseData.width ?? "100%")
             .attr("height", this.baseData.height ?? "100%");
@@ -89,7 +89,7 @@ class BaseChart {
      * Set the actual SVG width in pixels
      */
     setSizes() {
-        const svg = $('#' + this.canvasID + ' svg')[0];
+        const svg = $("#" + this.canvasID + " svg")[0];
         this.baseData.width = svg.clientWidth;
         this.baseData.height = svg.clientHeight;
     }
@@ -100,16 +100,16 @@ class BaseChart {
      */
     setMargins(newMargin = {}) {
 
-        let margin:Object;
-        let defaultMargin = {
+        let margin;
+        const defaultMargin = {
             top: 5,
             bottom: 5,
             left: 10,
             right: 25
-        }
+        };
 
         // Set margins
-        if (this.baseData['margin'] === undefined || newMargin == {}) {
+        if (this.baseData["margin"] === undefined || newMargin == {}) {
             margin = defaultMargin;
         } else {
             // Merge objects
@@ -118,8 +118,8 @@ class BaseChart {
 
         this.baseData.margin = margin;
 
-        this.baseData.margin['y'] = margin['top'] + margin['bottom'];
-        this.baseData.margin['x'] = margin['left'] + margin['right'];
+        this.baseData.margin["y"] = margin["top"] + margin["bottom"];
+        this.baseData.margin["x"] = margin["left"] + margin["right"];
     }
 
 }

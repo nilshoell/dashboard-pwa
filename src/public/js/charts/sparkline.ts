@@ -12,7 +12,7 @@ class Sparkline extends BaseChart {
             bottom: 15,
             left: 5,
             right: 25
-        }
+        };
         this.setMargins(margin);
     }
 
@@ -40,7 +40,7 @@ class Sparkline extends BaseChart {
         this.setBackground();
 
         // Create line generator
-        let line = d3.line()
+        const line = d3.line()
             .x((d:any) => this.xScale(d.date))
             .y((d:any) => this.yScale(d.val))
             .curve(d3.curveMonotoneX);
@@ -57,8 +57,6 @@ class Sparkline extends BaseChart {
             .attr("fill", "none")
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            // .attr("stroke-linejoin", "round")
-            // .attr("stroke-linecap", "round")
             .attr("d", line(data));
 
         // Draw annotations
@@ -74,10 +72,10 @@ class Sparkline extends BaseChart {
      * Overrides the default scales
      */
     setScales() {
-        const margin = this.baseData.margin
-        const width = this.baseData.width
-        const height = this.baseData.height
-        const data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val}});
+        const margin = this.baseData.margin;
+        const width = this.baseData.width;
+        const height = this.baseData.height;
+        const data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val};});
         const minDate = Number(d3.min(data, (d:any) => d.date));
         const maxDate = Number(d3.max(data, (d:any) => d.date));
         const minVal = Number(d3.min(data, (d:any) => d.val));
@@ -95,10 +93,9 @@ class Sparkline extends BaseChart {
 
     /**
      * Draw axes and labels
-     * @param axisData unused
      */
-    drawAxes(axisData = {}) {
-        const margin = this.baseData.margin
+    drawAxes() {
+        const margin = this.baseData.margin;
         const xAxis = g => g
             .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
             .call(d3.axisBottom(this.xScale).ticks(2, ".1"))
@@ -126,7 +123,6 @@ class Sparkline extends BaseChart {
      */
     drawAnnotations() {
         const data = this.chartData.data;
-        const margin = this.baseData.margin;
         const maxVal = d3.max(data, (d:any) => d.val);
         const minVal = d3.min(data, (d:any) => d.val);
 
@@ -152,7 +148,7 @@ class Sparkline extends BaseChart {
                 .attr("r", 3)
                 .attr("fill", color)
                 .attr("class", "sparkline-annotation");
-        }
+        };
 
         // Draw max marker
         drawCircle(max, "green");
@@ -176,7 +172,7 @@ class Sparkline extends BaseChart {
         }
 
         const margin = this.baseData.margin;
-        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg")
+        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
         const backgroundExists = Boolean(backgrounds.size());
 
         if (backgroundExists) {
@@ -198,25 +194,25 @@ class Sparkline extends BaseChart {
 
     /**
      * Converts ISO-Dates into number of days from today
-     * i.e. '2021-06-01' becomes '-10' on '2021-06-10'
+     * i.e. "2021-06-01" becomes "-10" on "2021-06-10"
      * Additionally, a new timescale is set based on the number of days (30D -> 1M; 365D -> 1Y)
      * @return Changes this.chartData.data with new numerical time scale and sets this.chartData.suffix
      */
     convertDates() {
         const data = this.chartData.data;
         const now = new Date();
-        const today = new Date(now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate());
+        const today = new Date(now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate());
         const secondsInDay = 86400000;
         
         // Calculate day differences
-        let dayDiffArr:object[] = data.map((d:any) => {
+        const dayDiffArr = data.map((d:any) => {
             const date = new Date(d.date);
             const dayDiff = (today.getTime() - date.getTime()) / secondsInDay;
             return {date: dayDiff, val: d.val};
         });
 
         // Convert from days to weeks, months or years
-        const maxDays = d3.max(dayDiffArr, (d:object) => d['date']);
+        const maxDays = Number(d3.max(dayDiffArr, (d) => d["date"]));
         let divisor = 365;
         let suffix = "Y";
 
@@ -238,8 +234,8 @@ class Sparkline extends BaseChart {
         }
 
         // Set suffix and new time scale
-        this.chartData['suffix'] = suffix;
-        this.chartData['data'] = dayDiffArr.map(d => {return {date: d['date']/divisor * -1, val: d['val']}});
+        this.chartData["suffix"] = suffix;
+        this.chartData["data"] = dayDiffArr.map(d => {return {date: d["date"]/divisor * -1, val: d["val"]};});
     }
 
 }
