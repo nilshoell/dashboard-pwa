@@ -13,7 +13,7 @@
         "watch-ts-client": "tsc -w --project ./tsconfig-client.json",
         "watch-ts-server": "tsc -w --project ./tsconfig-server.json",
         "build-ts": "tsc --project ./tsconfig-server.json && tsc --project ./tsconfig-client.json",
-        "build-sass": "node-sass src/public/css/main.scss dist/public/css/main.css",
+        "build-sass": "node-sass src/public/css/main.scss dist/public/css/main.css --output-style compressed",
         "watch-sass": "node-sass -r -w --output-style expanded src/public/css/main.scss dist/public/css/main.css --source-map dist/public/css/main.css.map && postcss -u autoprefixer -b 'latest 2 versions' < dist/public/css/main.css",
         "eslint": "eslint src/",
         "debug": "npm run build && npm run watch-debug",

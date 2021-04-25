@@ -58,7 +58,7 @@ class KPIBar extends BaseChart {
         drawBar(margin.left, this.barHeight/2, data[1], [["fill", "black"]]);
 
         // Forecast if Available
-        if (!isNaN(data[3])) {
+        if (!isNaN(data[3]) && data[3] > data[1]) {
             drawBar(this.xScale(data[1]) + margin.left, this.barHeight/2, data[3], [["fill", "url(#diagonal-stripe-1) none"], ["width", this.xScale(data[3]) - this.xScale(data[1])]]);
         }
 
