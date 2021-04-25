@@ -5,7 +5,7 @@
     "main": "server.js",
     "scripts": {
         "start": "npm run serve",
-        "build": "npm run build-ts && npm run build-sass && npm run copy-static-assets",
+        "build": "npm run eslint && npm run build-ts && npm run build-sass && npm run copy-static-assets",
         "serve": "node dist/server.js",
         "watch": "npm run copy-static-assets && npm run build-sass && concurrently -k -p \"[{name}]\" -n \"Sass,TypeScriptClient,TypeScriptServer,Node\" -c \"yellow.bold,cyan.bold,orange.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts-client\" \"npm run watch-ts-server\" \"npm run watch-node\" \"npm run browser-sync\"",
         "copy-static-assets": "ts-node copyStaticAssets.ts",
@@ -15,7 +15,7 @@
         "build-ts": "tsc --project ./tsconfig-server.json && tsc --project ./tsconfig-client.json",
         "build-sass": "node-sass src/public/css/main.scss dist/public/css/main.css",
         "watch-sass": "node-sass -r -w --output-style expanded src/public/css/main.scss dist/public/css/main.css --source-map dist/public/css/main.css.map && postcss -u autoprefixer -b 'latest 2 versions' < dist/public/css/main.css",
-        "eslint": "eslint src/**",
+        "eslint": "eslint src/",
         "debug": "npm run build && npm run watch-debug",
         "serve-debug": "nodemon --inspect dist/server.js",
         "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\"",
