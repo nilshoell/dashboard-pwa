@@ -1,5 +1,3 @@
-import fs from "fs";
-
 console.debug("index.js linked");
 
 $(function () {
@@ -50,6 +48,9 @@ class App {
         });
     }
 
+    /**
+     * Registers the service workers for PWA completeness
+     */
     registerSW() {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./service-worker.js')

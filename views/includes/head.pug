@@ -4,6 +4,12 @@ head
   meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
   meta(name="description" content="A Progressive Web App to create mobile dashboards using D3js.")
   meta(name="author" content="Nils Höll")
+  meta(name="theme-color" content="#00463c")
+
+  link(rel="manifest" href="/public/manifest.json")
+  link(rel="icon" type="image/png" href="/public/images/favicon.png")
+  link(rel="apple-touch-icon" href="public/images/icon_192.png")
+  link(rel='stylesheet', href='/public/css/main.css')
 
   script(defer src='https://use.fontawesome.com/releases/v5.15.3/js/all.js' crossorigin="anonymous")
   script(src='/public/js/vendor/d3.min.js')
@@ -13,6 +19,3 @@ head
   script(src='/public/js/index.js' type="module")
   script(src='/public/js/components/helperFunctions.js')
 
-  link(rel='stylesheet', href='/public/css/main.css')
-  link(rel="icon" type="image/png" href="/public/images/favicon.png")
-  link(rel="manifest" href="/public/manifest.json")

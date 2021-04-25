@@ -1,11 +1,20 @@
+const CACHE_NAME = 'sw-cache-example';
+const to_cache = [
+  '/',
+  'public/manifest.json',
+  'public/images/favicon.png',
+  'public/images/splash-screen.png',
+];
+
 self.addEventListener('install', function(event) {
-    console.log('used to register the service worker')
-  })
+    console.log('Install Event for SW');
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(to_cache));
+});
   
-  self.addEventListener('fetch', function(event) {
-    console.log('used to intercept requests so we can check for the file or data in the cache')
-  })
-  
-  self.addEventListener('activate', function(event) {
-    console.log('this event triggers when the service worker activates')
-  })
+self.addEventListener('fetch', function(event) {
+  console.log('Fetch Event for SW');
+});
+
+self.addEventListener('activate', function(event) {
+  console.log('Activate Event for SW');
+});
