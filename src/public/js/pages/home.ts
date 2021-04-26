@@ -1,4 +1,5 @@
 import KPITile from "./../charts/kpiTile.js";
+import * as Helper from "./../components/helperFunctions.js";
 
 $(function () {
     // Setup Object
@@ -22,15 +23,15 @@ class Home {
         this.kpis = [
             {data: {
                 barData: [5210,4530,6890],
-                sparkData: randomSpark(4000,5000,30,4530),
+                sparkData: Helper.randomSpark(4000,5000,30,4530),
             }, name: "Test-KPI 1", rendered: false},
             {data: {
                 barData: [2550210,7445300,9468990],
-                sparkData: randomSpark(7000000,7500000,30,7445300),
+                sparkData: Helper.randomSpark(7000000,7500000,30,7445300),
             }, name: "Test-KPI 2", rendered: false},
             {data: {
                 barData: [52100,45300,68900],
-                sparkData: randomSpark(40000,45000,30,45300),
+                sparkData: Helper.randomSpark(40000,45000,30,45300),
             }, name: "Test-KPI 3", rendered: false}
         ];
 

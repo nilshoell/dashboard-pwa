@@ -15,7 +15,7 @@ class App {
         $("[data-toggle='popover']").popover();
 
         // Register Service Workers in Prod
-        if (window.location.protocol == "https:") {
+        if (window.location.protocol === "https:") {
             this.registerSW();
         }
     }

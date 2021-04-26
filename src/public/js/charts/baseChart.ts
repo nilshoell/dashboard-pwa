@@ -1,3 +1,5 @@
+import * as Helper from "./../components/helperFunctions.js";
+
 /**
  * Abstract base class for all charts
  */
@@ -39,7 +41,7 @@ class BaseChart {
      * Creates a D3 SVG element as specified
      */
     prepareChart() {
-        console.log("Preparing chart canvas on #" + this.canvasID + " for " + getCaller(2, false));
+        console.log("Preparing chart canvas on #" + this.canvasID + " for " + Helper.getCaller(2, false));
         this.svg = d3.select("#" + this.canvasID)
             .append("svg")
             .attr("width", this.baseData.width ?? "100%")
@@ -109,7 +111,7 @@ class BaseChart {
         };
 
         // Set margins
-        if (this.baseData["margin"] === undefined || newMargin == {}) {
+        if (this.baseData["margin"] === undefined || Helper.emptyObj(newMargin)) {
             margin = defaultMargin;
         } else {
             // Merge objects

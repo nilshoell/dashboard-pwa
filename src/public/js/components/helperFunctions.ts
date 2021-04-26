@@ -59,7 +59,7 @@ function valMinify(value: number) {
     }
 
     // Reduce to total of three digits
-    const outputValue = round(reducedValue, 3 - reducedLength);
+    const outputValue = this.round(reducedValue, 3 - reducedLength);
 
     return String(outputValue) + suffix.symbol;
 
@@ -101,3 +101,23 @@ function getCaller(depth = 1, filename = true) {
     }
     return name;
 }
+
+
+/**
+ * Checks whether an object is empty
+ * @param testObj The object to test
+ * @returns Boolean
+ */
+function emptyObj(testObj:Record<string, unknown>) {
+    // Return true if the var is not an object
+    if (typeof(testObj) === "undefined" || testObj === null) {
+        return false;
+    }
+    if (Object.keys(testObj).length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export { round, valMinify, randomSpark, getCaller, emptyObj };

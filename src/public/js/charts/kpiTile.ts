@@ -60,7 +60,7 @@ class KPITile extends BaseChart {
 
         // Format any input value for textLabel
         const textFormat = (value:number|string, format = ".2s") => {
-            if (typeof(value) == "number") {
+            if (typeof(value) === "number") {
                 return d3.format(format)(value);
             } else {
                 return value;
@@ -174,11 +174,11 @@ class KPITile extends BaseChart {
         const data = this.chartData.data.sparkData;
 
         const max = {
-            x: this.xScale(data.findIndex(d => d == d3.max(data))),
+            x: this.xScale(data.findIndex(d => d === d3.max(data))),
             y: this.yScale(d3.max(data))
         };
         const min = {
-            x: this.xScale(data.findIndex(d => d == d3.min(data))),
+            x: this.xScale(data.findIndex(d => d === d3.min(data))),
             y: this.yScale(d3.min(data))
         };
         const current = {
