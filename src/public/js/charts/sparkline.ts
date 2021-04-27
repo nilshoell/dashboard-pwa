@@ -208,7 +208,9 @@ class Sparkline extends BaseChart {
         // Calculate day differences
         const dayDiffArr = data.map((d:any) => {
             const date = new Date(d.date);
+            console.info("Date", date);
             const dayDiff = (today.getTime() - date.getTime()) / secondsInDay;
+            console.info("Day Diff", dayDiff);
             return {date: dayDiff, val: d.val};
         });
 
