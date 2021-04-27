@@ -21,6 +21,12 @@ class KPIBar extends BaseChart {
         this.chartData = chartData;
         const data = chartData.data;
         const margin = this.baseData.margin;
+
+        // Don't draw on invisible SVGs
+        if (this.baseData.width === 0) {
+            return;
+        }
+
         console.log("Drawing KPIBar with data: ", data);
 
         this.setScales();

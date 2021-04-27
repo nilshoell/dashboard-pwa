@@ -32,7 +32,7 @@ class Projects {
                     }
                     return tempMonth.toString();
                 };
-                return newDate.getFullYear() + "-" + month + "-" + newDate.getDate();
+                return newDate.getFullYear() + "-" + month() + "-" + newDate.getDate();
             };
             kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i), val: d};});
             self.renderKPI("sparkline" + (+index + 1), kpiData);

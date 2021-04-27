@@ -20,6 +20,11 @@ class KPITile extends BaseChart {
         const data = chartData.data;
         console.log("Drawing KPITile with data: ", chartData.name, data);
 
+        // Don't draw on invisible SVGs
+        if (this.baseData.width === 0) {
+            return;
+        }
+
         // Setup Scales
         this.setScales();
 
