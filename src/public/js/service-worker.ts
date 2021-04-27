@@ -1,8 +1,9 @@
 const CACHE_NAME = "dashboard-pwa-cache";
 const to_cache = [
-  "/public/",
-  "/public/js/manifest.json",
-  "/public/js/vendor/*",
+  "/public/manifest.json",
+  "/public/js/vendor/jquery.min.js",
+  "/public/js/vendor/bootstrap.bundle.min.js",
+  "/public/js/vendor/d3.min.js",
   "/public/images/favicon.png",
   "/public/images/splash-screen.png",
 ];
