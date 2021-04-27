@@ -25,14 +25,7 @@ class Projects {
             const date = (x:number) => {
                 const diff = (count - (x + 1)) * 86400000;
                 const newDate = new Date(new Date().getTime() - diff);
-                const month = () => {
-                    const tempMonth = newDate.getMonth() + 1;
-                    if (tempMonth.toString().length == 1) {
-                        return "0" + tempMonth.toString();
-                    }
-                    return tempMonth.toString();
-                };
-                return newDate.getFullYear() + "-" + month() + "-" + newDate.getDate();
+                return newDate.getFullYear() + "-" + String(newDate.getMonth() + 1).padStart(2,"0") + "-" + newDate.getDate();
             };
             kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i), val: d};});
             self.renderKPI("sparkline" + (+index + 1), kpiData);
