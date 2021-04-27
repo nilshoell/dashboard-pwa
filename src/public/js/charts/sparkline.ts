@@ -200,6 +200,7 @@ class Sparkline extends BaseChart {
      */
     convertDates() {
         const data = this.chartData.data;
+        console.info("1. Start date conversion with data", data);
         const now = new Date();
         const today = new Date(now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate());
         const secondsInDay = 86400000;
@@ -210,6 +211,8 @@ class Sparkline extends BaseChart {
             const dayDiff = (today.getTime() - date.getTime()) / secondsInDay;
             return {date: dayDiff, val: d.val};
         });
+
+        console.info("2. Calculated day difference", dayDiffArr);
 
         // Convert from days to weeks, months or years
         const maxDays = Number(d3.max(dayDiffArr, (d) => d["date"]));
@@ -236,6 +239,7 @@ class Sparkline extends BaseChart {
         // Set suffix and new time scale
         this.chartData["suffix"] = suffix;
         this.chartData["data"] = dayDiffArr.map(d => {return {date: d["date"]/divisor * -1, val: d["val"]};});
+        console.info("3. Final data", this.chartData["data"]);
     }
 
 }
