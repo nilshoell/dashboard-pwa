@@ -6,6 +6,8 @@ const router = Router();
 const db = new sqlite.Database("./dist/db/dashboard.db", (err:Error) => {
     if (err) {
         console.error("Error opening database " + err.message);
+    } else {
+        console.log("Connected to Database");
     }
 });
 
@@ -16,7 +18,7 @@ const defaultReturn = {
 
 /**
  * Endpoint to test whether the API is available
- * @param id The ID of the KPI to return
+ * @param params Request parameters
  * @returns Object
  */
 const testFunction = (params) => {
@@ -32,9 +34,63 @@ const testFunction = (params) => {
         }
         returnObj["kpis"] = rows;
         returnObj.success = true;
-      });
+    });
 
     return returnObj;
+};
+
+
+/**
+ * Returns master data like name, unit and sub-KPIs
+ * @param params Request parameters
+ * @returns Object
+ */
+const getMasterData = (params) => {
+
+    const returnObj = defaultReturn;
+    returnObj["params"] = params;
+
+    const stmt = db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id);
+
+    stmt.get((err, rows) => {
+        if (err) {
+            returnObj.errMsg = err.message;
+            return returnObj;
+        }
+        returnObj["master"] = rows[0];
+    });
+
+    returnObj["children"] = getChildren(params)["children"];
+
+    returnObj.success = true;
+    return returnObj;
+
+};
+
+
+/**
+ * Returns the children (=sub-KPIs)
+ * @param params Request parameters
+ * @returns Object
+ */
+const getChildren = (params) => {
+
+    const returnObj = defaultReturn;
+    returnObj["params"] = params;
+
+    const stmt = db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
+
+    stmt.get((err, rows) => {
+        if (err) {
+            returnObj.errMsg = err.message;
+            return returnObj;
+        }
+        returnObj["children"] = rows[0];
+    });
+
+    returnObj.success = true;
+    return returnObj;
+
 };
 
 
@@ -49,7 +105,7 @@ const getDaily = (params) => {
 
 
 /**
- * Gets data aggregated by a specified period
+ * Gets data aggregated by a specified period; wrapper for getTimeFrame()
  * @param params Request parameters
  * @returns KPI data as JSON
  */
@@ -159,7 +215,9 @@ const methods = {
     test: testFunction,
     daily: getDaily,
     period: getPeriod,
-    timeframe: getTimeframe
+    timeframe: getTimeframe,
+    children: getChildren,
+    masterdata: getMasterData
 };
 
 /**
