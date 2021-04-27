@@ -25,7 +25,7 @@ class Projects {
             const date = (x:number) => {
                 const diff = (count - (x + 1)) * 86400000;
                 const newDate = new Date(new Date().getTime() - diff);
-                return newDate.getFullYear() + "-" + String(newDate.getMonth() + 1).padStart(2,"0") + "-" + newDate.getDate();
+                return newDate.getFullYear() + "-" + String(newDate.getMonth() + 1).padStart(2,"0") + "-" + String(newDate.getDate()).padStart(2,"0");
             };
             kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i), val: d};});
             self.renderKPI("sparkline" + (+index + 1), kpiData);
