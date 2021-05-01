@@ -1,4 +1,6 @@
 import Sparkline from "../charts/sparkline.js";
+import BrickWall from "../charts/brickWall.js";
+import * as Helper from "../components/helperFunctions.js";
 
 $(function () {
     new Projects();
@@ -19,17 +21,36 @@ class Projects {
             {data: [116,109,114,120,101,112,100,102,107,105,110,128,123,145,147,124,140,134,129,138,124,175,172,147,146,142,156,153,198,173,184]}
         ];
 
+        const date = (x:number, c:number) => {
+            const diff = (c - (x + 1)) * 86400000;
+            const newDate = new Date(new Date().getTime() - diff);
+            return newDate.getFullYear() + "-" + String(newDate.getMonth() + 1).padStart(2,"0") + "-" + String(newDate.getDate()).padStart(2,"0");
+        };
+
+        const brickData = {data: [
+            {week:"CW1", val: Helper.randomSpark(5,15,6,3)},
+            {week:"CW2", val: Helper.randomSpark(1,15,6,11)},
+            {week:"CW3", val: Helper.randomSpark(10,25,6,17)},
+            {week:"CW4", val: Helper.randomSpark(15,35,6,15)},
+            {week:"CW5", val: Helper.randomSpark(5,15,6,3)},
+            {week:"CW6", val: Helper.randomSpark(1,15,6,11)},
+            {week:"CW7", val: Helper.randomSpark(10,25,6,17)},
+            {week:"CW8", val: Helper.randomSpark(15,35,6,15)},
+            {week:"CW9", val: Helper.randomSpark(5,15,6,3)},
+            {week:"CW10", val: Helper.randomSpark(1,15,6,11)},
+            {week:"CW11", val: Helper.randomSpark(10,25,6,17)},
+            {week:"CW12", val: Helper.randomSpark(15,35,6,15)},
+            {week:"CW13", val: Helper.randomSpark(15,25,4,20)}
+        ]};
+
         kpis.forEach(function (kpi, index) {
             const kpiData = {};
             const count = kpi.data.length;
-            const date = (x:number) => {
-                const diff = (count - (x + 1)) * 86400000;
-                const newDate = new Date(new Date().getTime() - diff);
-                return newDate.getFullYear() + "-" + String(newDate.getMonth() + 1).padStart(2,"0") + "-" + String(newDate.getDate()).padStart(2,"0");
-            };
-            kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i), val: d};});
+            kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i,count), val: d};});
             self.renderKPI("sparkline" + (+index + 1), kpiData);
         });
+
+        this.renderBrick("brickwall", brickData);
 
         this.configureEventListener();
     }
@@ -37,6 +58,12 @@ class Projects {
     configureEventListener() {
         const self = this;
         window.addEventListener("resize", () => self.resizeHandler());
+    }
+
+    renderBrick(canvasID:string, chartData) {
+        const chart = new BrickWall(canvasID, {height: "200px"});
+        chart.drawChart(chartData);
+        this.charts.push(chart);
     }
 
     renderKPI(canvasID:string, chartData) {
