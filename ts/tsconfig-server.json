@@ -1,21 +1,19 @@
 {
     "compilerOptions": {
-        "allowUmdGlobalAccess": true,
-        "module": "es6",
-        "moduleResolution": "Node",
+        "module": "commonjs",
         "esModuleInterop": true,
         "target": "es6",
         "noImplicitAny": false,
+        "moduleResolution": "node",
         "sourceMap": true,
-        "outDir": "dist/public/js",
+        "outDir": "./../dist",
         "baseUrl": ".",
         "paths": {
             "*": [
-                "node_modules/*"
+                "./../node_modules/*"
             ]
         }
     },
-    "include": [
-        "src/public/js/**/*"
-    ]
+    "include": ["./../src/**/*"],
+    "exclude": ["./../src/public/**/*"]
 }
