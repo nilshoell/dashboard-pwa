@@ -76,9 +76,9 @@ https://www.d3indepth.com/shapes/
 
 ### Platform-Independent Use
 
-- [ ] Test on Android phone (FireFox & Chrome)
-- [ ] Test on iPhone
-- [ ] Check resizing/responsiveness
+- [X] Test on Android phone (FireFox & Chrome)
+- [X] Test on iPhone
+- [X] Check resizing/responsiveness
 
 ## Pages
 

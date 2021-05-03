@@ -7,6 +7,7 @@ A Progressive Web App that explores the possibilities of mobile dashboards utili
     - [Development](#development)
     - [Production](#production)
   - [Dependencies](#dependencies)
+  - [Repository Structure](#repository-structure)
 
 ## Installation
 
@@ -41,3 +42,16 @@ This application is build on top of a couple of other technologies, most notably
 | Bootstrap  | CSS Framework            | `4.6.0`    | https://getbootstrap.com/       |
 | SQLite     | Database                 | `5.0.2`    | https://sqlite.org/index.html   |
 | TypeScript | Typed JavaScript         | `4.2.3`    | https://www.typescriptlang.org/ |
+
+
+## Repository Structure
+
+| Path          | Description                                                       |
+|---------------|-------------------------------------------------------------------|
+| `db`          | MySQL Workbench database model; not needed to run the application |
+| `src`         | All application assets                                            |
+| `src/db`      | SQL files to set up and fill the test database                    |
+| `src/public`  | Client assets such as chart definitions, TS/JS and images         |
+| `src/routers` | Server-site routers for the application and API                   |
+| `ts`          | TypeScript compiler setup                                         |
+| `views`       | pug template files                                                |
