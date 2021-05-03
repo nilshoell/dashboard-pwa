@@ -85,7 +85,7 @@ const getChildren = (params) => {
             returnObj.errMsg = err.message;
             return returnObj;
         }
-        returnObj["children"] = rows[0];
+        returnObj["children"] = rows;
     });
 
     returnObj.success = true;
