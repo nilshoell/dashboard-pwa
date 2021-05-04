@@ -35,6 +35,7 @@
     "dependencies": {
         "bootstrap": "^4.6.0",
         "d3": "^6.6.0",
+        "eslint": "^7.25.0",
         "express": "^4.17.1",
         "jquery": "^3.6.0",
         "pug": "^3.0.2",
@@ -52,7 +53,6 @@
         "@typescript-eslint/parser": "^4.22.0",
         "browser-sync": "^2.26.14",
         "concurrently": "^6.0.0",
-        "eslint": "^7.25.0",
         "node-sass": "^5.0.0",
         "nodemon": "^2.0.7",
         "shelljs": "^0.8.4",
