@@ -1,4 +1,5 @@
 console.debug("index.js linked");
+import * as PN from "./components/notifications.js"
 
 $(function () {
     console.info("Document Ready");
@@ -19,10 +20,7 @@ class App {
             this.registerSW();
         }
 
-        window.addEventListener("notificationclick", e => this.handleClick(e));
-
-        this.setupNotifications();
-        this.displayNotification();
+        window.addEventListener("notificationclick", evt => PN.handleClick(evt));
     }
 
     /**
@@ -66,51 +64,4 @@ class App {
             });
         }
     }
-
-    setupNotifications() {
-        Notification.requestPermission(function(status) {
-            console.log("Notification permission status:", status);
-        });
-        
-    }
-
-    displayNotification() {
-        if (Notification.permission == "granted") {
-          navigator.serviceWorker.getRegistration().then(function(reg) {
-            const options = {
-              body: "KPI went out of bounds",
-              icon: "public/images/favicon.png",
-              vibrate: [100, 50, 100],
-              data: {
-                dateOfArrival: Date.now(),
-                primaryKey: 1,
-                kpi: "test"
-              },
-              actions: [
-                {action: "open", title: "Check out the KPI",
-                  icon: "public/images/check.png"},
-                {action: "close", title: "Close notification",
-                  icon: "public/images/cross.png"},
-              ]
-            };
-            reg.showNotification("KPI Warning", options);
-          });
-        }
-      }
-      
-
-      handleClick(e) {
-        const notification = e.notification;
-        const primaryKey = notification.data.primaryKey;
-        const kpi_id = notification.data.kpi;
-        const action = e.action;
-      
-        if (action === "close") {
-          notification.close();
-        } else {
-          window.location.href = "/kpi/" + kpi_id;
-          notification.close();
-        }
-      }
-
 }

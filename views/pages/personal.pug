@@ -2,9 +2,11 @@ extends ../layout.pug
 
 block chart-top
   p Personal KPIs
+  button.btn.btn-main#pn-setup Setup Notifications
+  button.btn.btn-main#pn-trigger Notify Me!
 
 block chart
   
 
 block chart-bottom
-  
+  script(src="/public/js/pages/personal.js" type="module")
