@@ -1,9 +1,15 @@
+/**
+ * Requests permission from the user to send notifications
+ */
 function setupNotifications() {
     Notification.requestPermission(function (status) {
         console.log("Notification permission status:", status);
     });
 }
 
+/**
+ * Sends a test message
+ */
 function displayNotification() {
     if (Notification.permission == "granted") {
         navigator.serviceWorker.getRegistration().then(function (reg) {
@@ -33,6 +39,10 @@ function displayNotification() {
     }
 }
 
+/**
+ * Handles interactions with the notification
+ * @param e Click Event
+ */
 function handleClick(e) {
     const notification = e.notification;
     const primaryKey = notification.data.primaryKey;

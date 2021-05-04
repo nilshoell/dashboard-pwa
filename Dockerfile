@@ -15,7 +15,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 # Install dependencies
-RUN npm install --only=prod
+RUN npm install
 
 # Run the production build process
 RUN npm run build
