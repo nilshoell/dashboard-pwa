@@ -20,7 +20,7 @@ class App {
             this.registerSW();
         }
 
-        window.addEventListener("notificationclick", evt => PN.handleClick(evt));
+        // window.addEventListener("notificationclick", evt => PN.handleClick(evt));
     }
 
     /**

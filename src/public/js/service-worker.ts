@@ -28,3 +28,20 @@ self.addEventListener("activate", function(event) {
 self.addEventListener("push", function(event) {
   console.log("Push Event for SW");
 });
+
+self.addEventListener('notificationclick', (event:any) => {
+  const notification = event.notification;
+  const primaryKey = notification.data.primaryKey;
+  const kpi_id = notification.data.kpi;
+  const action = event.action;
+
+  console.log("Notification click on '" + primaryKey + "' detected; action", action);
+
+  if (action === 'close') {
+    notification.close();
+  } else {
+    window.location.href = 'kpi/' + kpi_id;
+    notification.close();
+  }
+
+});
