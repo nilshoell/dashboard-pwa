@@ -14,6 +14,11 @@ class Personal {
 
     constructor() {
         this.configureEventListener();
+        const channel = new BroadcastChannel('sw-messages');
+        channel.addEventListener('message', event => {
+          console.log('Received', event.data);
+          window.location.href = event.data.redirect;
+        });
     }
 
     configureEventListener() {

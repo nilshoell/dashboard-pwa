@@ -35,12 +35,13 @@ self.addEventListener('notificationclick', (event:any) => {
   const kpi_id = notification.data.kpi;
   const action = event.action;
 
-  console.log("Notification click on '" + primaryKey + "' detected; action", action);
+  const url = "/kpi/" + encodeURIComponent(kpi_id);
 
   if (action === 'close') {
     notification.close();
   } else {
-    window.location.href = 'kpi/' + kpi_id;
+    const channel = new BroadcastChannel('sw-messages');
+    channel.postMessage({redirect: url});
     notification.close();
   }
 
