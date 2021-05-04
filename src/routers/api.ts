@@ -5,9 +5,9 @@ const router = Router();
 
 const db = new sqlite.Database("./dist/db/dashboard.db", (err:Error) => {
     if (err) {
-        console.error("Error opening database " + err.message);
+        console.error("[API] Error opening database " + err.message);
     } else {
-        console.log("Connected to Database");
+        console.log("[API] Connected to Database");
     }
 });
 
@@ -26,17 +26,29 @@ const testFunction = (params) => {
     const returnObj = defaultReturn;
 
     returnObj["params"] = params;
+    console.log("TEST");
 
-    db.all("SELECT * FROM kpis;", (err, rows) => {
-        if (err) {
-            returnObj.errMsg = err.message;
+    db.serialize(() => {
+        db.all("SELECT * FROM kpsis", (err, rows) => {
+            if (err) {
+                console.log("[API] Testerror:",err);
+                returnObj.errMsg = err.message;
+                return returnObj;
+            }
+            console.log("[API] Test",rows.length);
+            returnObj["kpis"] = rows;
+            returnObj["test"] = "DASISTEINTEST";
+            returnObj.success = true;
             return returnObj;
-        }
-        returnObj["kpis"] = rows;
-        returnObj.success = true;
+        });
     });
 
+    db.close();
+
+    console.log(JSON.stringify(returnObj));
+
     return returnObj;
+
 };
 
 
@@ -49,21 +61,24 @@ const getMasterData = (params) => {
 
     const returnObj = defaultReturn;
     returnObj["params"] = params;
+    console.log(params.id);
 
-    const stmt = db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id);
+    const stmt = db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id, (err) => {
+        console.log("[API] Prepare: ", err);
+        stmt.get((err, row) => {
+            if (err) {
+                console.log("[API] Error in Query: ", err.message);
+                returnObj.errMsg = err.message;
+                return returnObj;
+            }
+            console.log("[API]", row);
+            returnObj["data"] = row;
+            returnObj["children"] = getChildren(params)["children"];
 
-    stmt.get((err, rows) => {
-        if (err) {
-            returnObj.errMsg = err.message;
+            returnObj.success = true;
             return returnObj;
-        }
-        returnObj["master"] = rows[0];
+        });
     });
-
-    returnObj["children"] = getChildren(params)["children"];
-
-    returnObj.success = true;
-    return returnObj;
 
 };
 

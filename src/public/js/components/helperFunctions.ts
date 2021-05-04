@@ -120,4 +120,32 @@ function emptyObj(testObj:Record<string, unknown>) {
     }
 }
 
-export { round, valMinify, randomSpark, getCaller, emptyObj };
+
+/**
+ * Returns the base URL for the KPI API
+ */
+ function getApiBase() {
+    return window.location.origin + "/api/kpi/";
+}
+
+
+/**
+ * 
+ * @param method 
+ * @param kpi 
+ * @param filter 
+ * @returns 
+ */
+function callApi(method:string, kpi:string, filter = {}) {
+    const api_base = getApiBase();
+    const filter_string = encodeURIComponent(JSON.stringify(filter));
+    const api_url = api_base + method + "/" + kpi + "/" + filter_string;
+
+    return new Promise((resolve, reject) => {
+        fetch(api_url).then(function (response) {
+              resolve(response.json());
+            });
+    });
+}
+
+export { round, valMinify, randomSpark, getCaller, emptyObj, getApiBase, callApi };

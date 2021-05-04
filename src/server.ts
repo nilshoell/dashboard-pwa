@@ -23,15 +23,19 @@ app.listen(process.env.PORT || 3000, function functionName() {
   console.log("Listening...");
 });
 
-const db = new sqlite.Database("./dist/db/dashboard.db", (err:Error) => {
-  if (err) {
-      console.error("Error opening database " + err.message);
-  } else {
-      const sql = fs.readFileSync("./src/db/create_tables.sql").toString();
-      db.run(sql, (err:Error) => {
-          if (err) {
-              console.log("Error while creating DB: ", err.message);
-          }
-      });
-  }
-});
+// const db = new sqlite.Database(":memory:", (err:Error) => {
+//   if (err) {
+//       console.error("Error opening database " + err.message);
+//   } else {
+//       const sql = fs.readFileSync("./src/db/create_tables.sql").toString();
+
+//       console.log("Creating DB ...")
+//       db.exec(sql, (err:Error) => {
+//         if (err) {
+//             console.log("Error while creating DB: ", err.message);
+//         } else {
+//           console.log("Successfully created DB")
+//         }
+//       });
+//   }
+// });

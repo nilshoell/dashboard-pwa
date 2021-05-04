@@ -1,3 +1,5 @@
+import * as Helper from "./helperFunctions.js";
+
 /**
  * Requests permission from the user to send notifications
  */
@@ -10,7 +12,10 @@ function setupNotifications() {
 /**
  * Sends a test message
  */
-function displayNotification() {
+function displayNotification(kpi_id:string) {
+
+    const kpi_data = Helper.callApi("test", "test", {foo: "bar"});
+
     if (Notification.permission == "granted") {
         navigator.serviceWorker.getRegistration().then(function (reg) {
             const options = {
@@ -20,7 +25,8 @@ function displayNotification() {
                 data: {
                     dateOfArrival: Date.now(),
                     primaryKey: 1,
-                    kpi: "test"
+                    kpi: kpi_id,
+                    kpi_data: kpi_data
                 },
                 actions: [{
                         action: "open",
@@ -39,28 +45,8 @@ function displayNotification() {
     }
 }
 
-/**
- * Handles interactions with the notification
- * @param e Click Event
- */
-function handleClick(e) {
-    const notification = e.notification;
-    const primaryKey = notification.data.primaryKey;
-    const kpi_id = notification.data.kpi;
-    const action = e.action;
-
-    console.log("Notification click on '" + primaryKey + "' detected; action", action);
-  
-    if (action === "close") {
-      notification.close();
-    } else {
-      window.location.href = "/kpi/" + kpi_id;
-      notification.close();
-    }
-  }
 
 export {
     setupNotifications,
-    displayNotification,
-    handleClick
+    displayNotification
 };

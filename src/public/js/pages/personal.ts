@@ -14,6 +14,11 @@ class Personal {
 
     constructor() {
         this.configureEventListener();
+        Helper.callApi("masterdata", "74351e8d7097", {param1: "foo"})
+            .then(response => {
+                console.log(response);
+            });
+        
         const channel = new BroadcastChannel('sw-messages');
         channel.addEventListener('message', event => {
           console.log('Received', event.data);
@@ -30,7 +35,7 @@ class Personal {
 
         $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
-            PN.displayNotification();
+            PN.displayNotification("test");
         });
     }
 }
