@@ -17,14 +17,13 @@ class Personal {
     }
 
     configureEventListener() {
-        console.log("Configureevent");
         
-        $(document).on("#pn-setup", "click", (event) => {
+        $(document).on("click", "#pn-setup", (event) => {
             event.preventDefault();
             PN.setupNotifications();
         });
 
-        $(document).on("#pn-trigger", "click", (event) => {
+        $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
             PN.displayNotification();
         });
