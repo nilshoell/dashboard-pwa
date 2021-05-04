@@ -4,9 +4,13 @@
 INSERT INTO `dashboard`.`partners` (`id`, `name`, `shortname`, `region`) VALUES ('1001', 'International Material Supplies', 'IMS', 'US');
 INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('European Wholesales', 'EWS', 'EU');
 INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Yet Another Customer', 'YAC', 'EU');
-INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Dallas Buyers Club', 'DBC', 'US');
+INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Detroit Buyers Consortium', 'DBC', 'US');
 INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('A Real Customer', 'ARC', 'EU');
 INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Bejing Best Buy', 'BBB', 'ASIA');
+INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Business Analytics Intelligence', 'BAI', 'US');
+INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Arbis Financial', 'AF', 'ASIA');
+INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Metricon', 'MC', 'US');
+INSERT INTO `dashboard`.`partners` (`name`, `shortname`, `region`) VALUES ('Cronos Inc.', 'Cronos', 'EU');
 
 -- -----------------------------------------------------
 -- PRODUCTS
