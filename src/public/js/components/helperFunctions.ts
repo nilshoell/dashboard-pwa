@@ -136,16 +136,14 @@ function emptyObj(testObj:Record<string, unknown>) {
  * @param filter 
  * @returns 
  */
-function callApi(method:string, kpi:string, filter = {}) {
+async function callApi(method:string, kpi:string, filter = {}) {
     const api_base = getApiBase();
     const filter_string = encodeURIComponent(JSON.stringify(filter));
     const api_url = api_base + method + "/" + kpi + "/" + filter_string;
 
-    return new Promise((resolve, reject) => {
-        fetch(api_url).then(function (response) {
-              resolve(response.json());
-            });
-    });
+    const response = await fetch(api_url);
+    const data = await response.json();
+    return data;
 }
 
 export { round, valMinify, randomSpark, getCaller, emptyObj, getApiBase, callApi };
