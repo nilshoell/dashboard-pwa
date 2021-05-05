@@ -12,9 +12,9 @@ function setupNotifications() {
 /**
  * Sends a test message
  */
-function displayNotification(kpi_id:string) {
+async function displayNotification(kpi_id:string) {
 
-    const kpi_data = Helper.callApi("masterdata", kpi_id)["data"];
+    const kpi_data = await Helper.callApi("masterdata", kpi_id)["data"];
 
     if (Notification.permission == "granted") {
         navigator.serviceWorker.getRegistration().then(function (reg) {
