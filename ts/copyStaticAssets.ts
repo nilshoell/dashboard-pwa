@@ -9,3 +9,4 @@ shell.cp("node_modules/jquery/dist/jquery.min.js", "dist/public/js/vendor/");
 shell.cp("node_modules/bootstrap/dist/js/bootstrap.bundle.min.*", "dist/public/js/vendor/");
 shell.cp("node_modules/d3/dist/d3.min.js", "dist/public/js/vendor/");
 shell.cp("src/public/manifest.json", "dist/public/");
+shell.cp("src/db/dashboard.db", "dist/db/");
