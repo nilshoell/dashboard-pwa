@@ -1,15 +1,15 @@
 import Router from "express";
-import sqlite from "sqlite3";
+import sqlite3 from "sqlite3";
+import {open} from "sqlite";
 
 const router = Router();
 
-const db = new sqlite.Database("./dist/db/dashboard.db", (err:Error) => {
-    if (err) {
-        console.error("[API] Error opening database " + err.message);
-    } else {
-        console.log("[API] Connected to Database");
-    }
-});
+async function openDB() {
+    return open({
+        filename: "./dist/db/dashboard.db",
+        driver: sqlite3.Database
+    });
+}
 
 const defaultReturn = {
     success: false,
@@ -21,34 +21,22 @@ const defaultReturn = {
  * @param params Request parameters
  * @returns Object
  */
-const testFunction = (params) => {
+const testFunction = async (params) => {
 
     const returnObj = defaultReturn;
 
     returnObj["params"] = params;
-    console.log("TEST");
+    console.log("[API] Calling testfunc");
 
-    db.serialize(() => {
-        db.all("SELECT * FROM kpsis", (err, rows) => {
-            if (err) {
-                console.log("[API] Testerror:",err);
-                returnObj.errMsg = err.message;
-                return returnObj;
-            }
-            console.log("[API] Test",rows.length);
-            returnObj["kpis"] = rows;
-            returnObj["test"] = "DASISTEINTEST";
-            returnObj.success = true;
-            return returnObj;
-        });
-    });
+    const db = await openDB();
 
-    db.close();
+    const result = await db.all("SELECT * FROM kpis");
+    returnObj["data"] = result;
+    returnObj.success = true;
 
-    console.log(JSON.stringify(returnObj));
+    await db.close();
 
     return returnObj;
-
 };
 
 
@@ -57,28 +45,24 @@ const testFunction = (params) => {
  * @param params Request parameters
  * @returns Object
  */
-const getMasterData = (params) => {
+const getMasterData = async (params) => {
 
     const returnObj = defaultReturn;
     returnObj["params"] = params;
-    console.log(params.id);
 
-    const stmt = db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id, (err) => {
-        console.log("[API] Prepare: ", err);
-        stmt.get((err, row) => {
-            if (err) {
-                console.log("[API] Error in Query: ", err.message);
-                returnObj.errMsg = err.message;
-                return returnObj;
-            }
-            console.log("[API]", row);
-            returnObj["data"] = row;
-            returnObj["children"] = getChildren(params)["children"];
+    const db = await openDB();
 
-            returnObj.success = true;
-            return returnObj;
-        });
-    });
+    const stmt = await db.prepare("SELECT * FROM kpis WHERE id = ?;");
+    await stmt.bind({ 1: params.id })
+    const result = await stmt.get()
+    returnObj["data"] = result;
+
+    await db.close();
+
+    returnObj["children"] = await getChildren(params)["children"];
+
+    returnObj.success = true;
+    return returnObj;
 
 };
 
@@ -88,20 +72,18 @@ const getMasterData = (params) => {
  * @param params Request parameters
  * @returns Object
  */
-const getChildren = (params) => {
+const getChildren = async (params) => {
 
     const returnObj = defaultReturn;
     returnObj["params"] = params;
 
-    const stmt = db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
+    const db = await openDB();
 
-    stmt.get((err, rows) => {
-        if (err) {
-            returnObj.errMsg = err.message;
-            return returnObj;
-        }
-        returnObj["children"] = rows;
-    });
+    const stmt = await db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
+    const result = await stmt.all();
+    returnObj["data"] = result;
+
+    await db.close();
 
     returnObj.success = true;
     return returnObj;
@@ -114,7 +96,7 @@ const getChildren = (params) => {
  * @param params Request parameters
  * @returns KPI data as JSON
  */
-const getDaily = (params) => {
+const getDaily = async (params) => {
     return params;
 };
 
@@ -124,7 +106,7 @@ const getDaily = (params) => {
  * @param params Request parameters
  * @returns KPI data as JSON
  */
-const getPeriod = (params) => {
+const getPeriod = async (params) => {
     const returnObj = defaultReturn;
     if (params.filter.period === undefined || params.filter.period === "") {
         returnObj["errMsg"] = "No period provided.";
@@ -218,7 +200,7 @@ const getPeriod = (params) => {
  * @param params Request parameters
  * @returns KPI data as JSON
  */
-const getTimeframe = (params) => {
+const getTimeframe = async (params) => {
     return params;
 };
 
@@ -238,7 +220,7 @@ const methods = {
 /**
  * API Router
  */
-router.get("/api/kpi/:method/:id/:filter", function(req, res) {
+router.get("/api/kpi/:method/:id/:filter", async function(req, res) {
 
     // Get params
     const params = req.params;
@@ -251,11 +233,12 @@ router.get("/api/kpi/:method/:id/:filter", function(req, res) {
         params["filter"] = JSON.parse(filter);
         // Call method if available
         if (params.method in methods) {
-            res.json(methods[params.method](params));
+            res.json(await methods[params.method](params));
         } else {
             res.json({success: false, errMsg: "API Method '" + params.method + "' not implemented"});
         }
     } catch (error) {
+        console.error(error);
         res.json({success: false, errMsg: error.message});
     }
 });
