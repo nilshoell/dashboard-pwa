@@ -35,9 +35,9 @@ class Personal {
             PN.setupNotifications();
         });
 
-        $(document).on("click", "#pn-trigger", (event) => {
+        $(document).on("click", "#pn-trigger", async (event) => {
             event.preventDefault();
-            PN.displayNotification("74351e8d7097");
+            await PN.displayNotification("74351e8d7097");
         });
     }
 }
