@@ -52,14 +52,14 @@ const getMasterData = async (params) => {
 
     const db = await openDB();
 
-    const stmt = await db.prepare("SELECT * FROM kpis WHERE id = ?;");
-    await stmt.bind({ 1: params.id })
-    const result = await stmt.get()
+    const stmt = await db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id);
+    const result = await stmt.get();
+    await stmt.finalize();
     returnObj["data"] = result;
 
     await db.close();
 
-    returnObj["children"] = await getChildren(params)["children"];
+    returnObj["data"]["children"] = await getChildren(params)["data"];
 
     returnObj.success = true;
     return returnObj;
@@ -82,6 +82,9 @@ const getChildren = async (params) => {
     const stmt = await db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
     const result = await stmt.all();
     returnObj["data"] = result;
+    await stmt.finalize();
+    console.log(result);
+    
 
     await db.close();
 
