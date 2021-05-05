@@ -38,6 +38,7 @@
         "express": "^4.17.1",
         "jquery": "^3.6.0",
         "pug": "^3.0.2",
+        "sqlite": "^4.0.21",
         "sqlite3": "^5.0.2"
     },
     "devDependencies": {
@@ -50,7 +51,7 @@
         "@types/sqlite3": "^3.1.7",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
-        "browser-sync": "^2.26.14",
+        "browser-sync": "^2.19.0",
         "concurrently": "^6.0.0",
         "eslint": "^7.25.0",
         "node-sass": "^5.0.0",
