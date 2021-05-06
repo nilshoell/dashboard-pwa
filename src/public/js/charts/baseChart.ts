@@ -68,6 +68,7 @@ class BaseChart {
      * @param data JS-Object with data, labels and more
      */
     drawChart(data) {
+        console.log("Drawing " + Helper.getCaller(2, false) + " with data", data);
         throw "drawChart() not implemented in base class.";
     }
 
@@ -83,7 +84,7 @@ class BaseChart {
      * Draw axes for the chart
      * @param data Information for all axes
      */
-    drawAxes(data) {
+    drawAxes(data = {}) {
         throw "drawAxes() not implemented in base class.";
     }
 

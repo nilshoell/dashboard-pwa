@@ -25,6 +25,9 @@ class Sparkline extends BaseChart {
         this.chartData = chartData;
         console.log("Drawing Sparkline with data: ", chartData.data);
 
+        // Add background bounding box
+        this.setBackground();
+
         // Convert dates to negative day diffs
         if (!this.chartData.datesConverted) {
             this.convertDates();
@@ -36,19 +39,16 @@ class Sparkline extends BaseChart {
         // Create scales
         this.setScales();
 
-        // Add background bounding box
-        this.setBackground();
-
         // Create line generator
         const line = d3.line()
             .x((d:any) => this.xScale(d.date))
             .y((d:any) => this.yScale(d.val))
             .curve(d3.curveMonotoneX);
-
+        
         // Setup path object
-        const path = this.svg
-            .selectAll("path")
-            .data(data);
+        d3.selectAll("#" + this.canvasID + " svg g.path-group").remove();
+        const g = this.svg.append("g").attr("class", "path-group");
+        const path = g.selectAll("path").data(data);
 
         path.exit().remove();
 
@@ -139,10 +139,12 @@ class Sparkline extends BaseChart {
             y: this.yScale(data[data.length - 1].val)
         };
 
-        d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
+        d3.selectAll("#" + this.canvasID + " svg g.annotation-group").remove();
+
+        const g = this.svg.append("g").attr("class", "annotation-group");
 
         const drawCircle = (coords:any, color:string) => {
-            this.svg.append("circle")
+            g.append("circle")
                 .attr("cx", coords.x)
                 .attr("cy", coords.y)
                 .attr("r", 3)
@@ -174,11 +176,13 @@ class Sparkline extends BaseChart {
         const margin = this.baseData.margin;
         const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
         const backgroundExists = Boolean(backgrounds.size());
-        const bgWidth = this.baseData.width - margin.x + 4;
-        const bgHeight = this.baseData.height - margin.y + 4;
+        let bgWidth = this.baseData.width - margin.x + 4;
+        let bgHeight = this.baseData.height - margin.y + 4;
 
+        // No negative width/height
         if (bgWidth <= 0 || bgHeight <= 0) {
-            return;
+            bgWidth = 0;
+            bgHeight = 0;
         }
 
         if (backgroundExists) {
@@ -196,6 +200,8 @@ class Sparkline extends BaseChart {
                 .attr("fill", "#b0b0b0")
                 .attr("class", "sparkline-bg");
         }
+
+
     }
 
     /**
