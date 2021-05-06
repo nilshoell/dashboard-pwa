@@ -111,7 +111,7 @@ function getCaller(depth = 1, filename = true) {
 function emptyObj(testObj:Record<string, unknown>) {
     // Return true if the var is not an object
     if (typeof(testObj) === "undefined" || testObj === null) {
-        return false;
+        return true;
     }
     if (Object.keys(testObj).length === 0) {
         return true;
@@ -136,13 +136,31 @@ function emptyObj(testObj:Record<string, unknown>) {
  * @param filter (optional) Additional filters, if supported by the method
  * @returns Result object, with the actual values in the 'data' field
  */
-async function callApi(method:string, kpi:string, filter = {}) {
+async function callApi(method:string, kpi:string, filter = {}, fullResponse= false) {
+
+    // Setup request
     const api_base = getApiBase();
     const filter_string = encodeURIComponent(JSON.stringify(filter));
     const api_url = api_base + method + "/" + kpi + "/" + filter_string;
+
+    // Fetch the API
     const response = await fetch(api_url);
     const data = await response.json();
-    return data;
+
+    // Immediately return on error
+    if (!data.success) {
+        console.error("API Request failed", data.errMsg);
+        return data;
+    }
+
+    // Only return everything if requested or if the response does not contain data
+    if (fullResponse) {
+        return data;
+    } else if (!emptyObj(data.data)) {
+        return data.data;
+    } else {
+        return data;
+    }
 }
 
 export { round, valMinify, randomSpark, getCaller, emptyObj, getApiBase, callApi };
