@@ -3,7 +3,7 @@
   "name": "Mobile Dashboard for Business Data",
   "icons": [
     {
-      "src": "images/icon.png",
+      "src": "images/favicon.png",
       "type": "image/png",
       "sizes": "32x32"
     },
@@ -11,6 +11,12 @@
       "src": "images/splash-screen.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "images/icon_maskable_bg",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ],
   "start_url": "/",
