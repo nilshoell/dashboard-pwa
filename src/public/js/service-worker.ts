@@ -18,15 +18,15 @@ self.addEventListener("install", function(event:any) {
 });
 
 self.addEventListener("fetch", function(event) {
-  console.log("Fetch Event for SW");
+  console.log("Fetch Event for SW", event);
 });
 
 self.addEventListener("activate", function(event) {
-  console.log("Activate Event for SW");
+  console.log("Activate Event for SW", event);
 });
 
 self.addEventListener("push", function(event) {
-  console.log("Push Event for SW");
+  console.log("Push Event for SW", event);
 });
 
 self.addEventListener("notificationclick", (event:any) => {
@@ -34,6 +34,8 @@ self.addEventListener("notificationclick", (event:any) => {
   const kpi_id = notification.data.kpi;
   const action = event.action;
 
+  console.log("Click on notification detected", event);
+  
   const url = "/kpi/" + encodeURIComponent(kpi_id);
 
   if (action === "close") {

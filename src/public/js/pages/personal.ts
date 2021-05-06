@@ -26,7 +26,6 @@ class Personal {
 
     async getData() {
         this.data = await Helper.callApi("masterdata", "74351e8d7097", {});
-        console.log(this.data);
     }
 
     configureEventListener() {
