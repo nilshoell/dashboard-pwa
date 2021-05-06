@@ -17,7 +17,6 @@ async function displayNotification(kpi_id:string) {
     const kpi_data = await Helper.callApi("masterdata", kpi_id)["data"];
     console.log(kpi_data);
     
-
     if (Notification.permission == "granted") {
         navigator.serviceWorker.getRegistration().then(function (reg) {
             const options = {

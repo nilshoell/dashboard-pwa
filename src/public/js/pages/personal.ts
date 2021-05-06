@@ -1,6 +1,5 @@
-import KPITile from "../charts/kpiTile.js";
 import * as Helper from "../components/helperFunctions.js";
-import * as PN from "../components/notifications.js"
+import * as PN from "../components/notifications.js";
 
 $(async function () {
     // Setup Object
@@ -17,9 +16,9 @@ class Personal {
 
     constructor() {
         this.configureEventListener();
-        const channel = new BroadcastChannel('sw-messages');
-        channel.addEventListener('message', event => {
-          console.log('Received', event.data);
+        const channel = new BroadcastChannel("sw-messages");
+        channel.addEventListener("message", event => {
+          console.log("Received", event.data);
           window.location.href = event.data.redirect;
         });
     }

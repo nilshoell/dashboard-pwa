@@ -1,7 +1,7 @@
 import BaseChart from "./baseChart.js";
 
 /**
- * A simple, standard bar chart
+ * A Heatmap-like Representation of multiple Weeks of Data
  */
 class BrickWall extends BaseChart {
 
@@ -41,7 +41,7 @@ class BrickWall extends BaseChart {
                 return "translate(" + xTransform(i) + "," + margin.top + ")";
             });
 
-        const rect = g.selectAll("rect")
+        g.selectAll("rect")
             .data((d:any) => d.val)
             .enter().append("rect")
                 .attr("width", 12)
@@ -123,7 +123,7 @@ class BrickWall extends BaseChart {
         const legend = (x:number, val:number) => {
             const g = this.svg.append("g");
 
-            const text = g.append("text")
+            g.append("text")
                 .attr("x", margin.left + x)
                 .attr("y", this.baseData.height - margin.bottom - 2)
                 .text(val)
@@ -131,7 +131,7 @@ class BrickWall extends BaseChart {
                 .style("text-anchor", "start")
                 .style("font-size", "small");
 
-            const rect = g.append("rect")
+            g.append("rect")
                 .attr("width", 12)
                 .attr("height", 12)
                 .attr("x", margin.left + x)

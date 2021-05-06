@@ -29,18 +29,17 @@ self.addEventListener("push", function(event) {
   console.log("Push Event for SW");
 });
 
-self.addEventListener('notificationclick', (event:any) => {
+self.addEventListener("notificationclick", (event:any) => {
   const notification = event.notification;
-  const primaryKey = notification.data.primaryKey;
   const kpi_id = notification.data.kpi;
   const action = event.action;
 
   const url = "/kpi/" + encodeURIComponent(kpi_id);
 
-  if (action === 'close') {
+  if (action === "close") {
     notification.close();
   } else {
-    const channel = new BroadcastChannel('sw-messages');
+    const channel = new BroadcastChannel("sw-messages");
     channel.postMessage({redirect: url});
     notification.close();
   }

@@ -130,17 +130,16 @@ function emptyObj(testObj:Record<string, unknown>) {
 
 
 /**
- * 
- * @param method 
- * @param kpi 
- * @param filter 
- * @returns 
+ * Wrapper for the API
+ * @param method The API method to call
+ * @param kpi The KPI to refer to
+ * @param filter (optional) Additional filters, if supported by the method
+ * @returns Result object, with the actual values in the 'data' field
  */
 async function callApi(method:string, kpi:string, filter = {}) {
     const api_base = getApiBase();
     const filter_string = encodeURIComponent(JSON.stringify(filter));
     const api_url = api_base + method + "/" + kpi + "/" + filter_string;
-
     const response = await fetch(api_url);
     const data = await response.json();
     return data;

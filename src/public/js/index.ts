@@ -1,5 +1,4 @@
 console.debug("index.js linked");
-import * as PN from "./components/notifications.js"
 
 $(function () {
     console.info("Document Ready");
@@ -20,7 +19,6 @@ class App {
             this.registerSW();
         }
 
-        // window.addEventListener("notificationclick", evt => PN.handleClick(evt));
     }
 
     /**
