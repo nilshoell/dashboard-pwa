@@ -1,40 +1,44 @@
 let timer;
 const touchDuration = 500;
 
-function longTouch(target:EventTarget):TimerHandler {
-    console.log("Long Touch Detected", target);
-    // clearTimeout(timer);
-    // Do something
-    return "false";
+function longTouch(target:EventTarget):any {
+
+    window.clearTimeout(timer);
+
+    // Create the event
+    const event = new CustomEvent(
+        "longtouch",
+        {
+            detail: "A long touch of more than " + touchDuration + " detected",
+            bubbles: true
+        }
+    );
+    
+    // Trigger the event
+    target.dispatchEvent(event);
 }
 
 function touchstart(event:Event) {
-    console.log("Touch Start");
     const target = event.target;
-    // event.preventDefault();
-    console.log("Set Timer");
-    timer = setTimeout(longTouch(target), touchDuration);
+    timer = window.setTimeout(() => {
+        longTouch(target);
+    }, touchDuration);
 }
 
-function touchend(event:Event) {
-    event.preventDefault();
-    console.log("Touch End");
+function touchend() {
     if (timer !== undefined) {
-        console.log("Clear Timer", timer);
-        clearTimeout(timer);
+        window.clearTimeout(timer);
     }
 }
 
-function touchmove(event:Event) {
-    console.log("Touch Move");
+function touchmove() {
     if (timer !== undefined) {
-        console.log("Clear Timer", timer);
-        clearTimeout(timer);
+        window.clearTimeout(timer);
     }
 }
 
 $(function () {
-    // window.addEventListener("touchstart", touchstart, false);
-    // window.addEventListener("touchend", touchend, false);
-    // window.addEventListener("touchmove", touchmove, false);
+    window.addEventListener("touchstart", touchstart);
+    window.addEventListener("touchend", touchend);
+    window.addEventListener("touchmove", touchmove);
 });
