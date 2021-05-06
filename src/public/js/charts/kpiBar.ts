@@ -5,7 +5,7 @@ import BaseChart from "./baseChart.js";
  */
 class KPIBar extends BaseChart {
 
-    barHeight;
+    barHeight:number;
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
@@ -40,10 +40,17 @@ class KPIBar extends BaseChart {
         bars.remove();
 
         const drawBar = (x:number, y:number, val:number, attrs:any) => {
+
+            // Check if negative bar might be drawn
+            let barWidth = Number(this.xScale(val));
+            if (barWidth <= 0) {
+                barWidth = 0;
+            }
+            
             const bar = this.svg.append("rect")
                 .attr("x", x)
                 .attr("y", y)
-                .attr("width", this.xScale(val))
+                .attr("width", barWidth)
                 .attr("height", this.barHeight)
                 .attr("stroke", "black")
                 .attr("stroke-width", 1)
@@ -58,14 +65,26 @@ class KPIBar extends BaseChart {
         drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
 
         // Budget/Target (BUD)
-        drawBar(margin.left + 1, this.barHeight, data[2], [["fill", "none"], ["stroke-width", 2]]);
+        drawBar(margin.left + .5, this.barHeight, data[2], [["fill", "none"], ["stroke-width", 2]]);
 
         // Current value (ACT)
         drawBar(margin.left, this.barHeight/2, data[1], [["fill", "black"]]);
 
         // Forecast if Available
         if (!isNaN(data[3]) && data[3] > data[1]) {
-            drawBar(this.xScale(data[1]) + margin.left, this.barHeight/2, data[3], [["fill", "url(#diagonal-stripe-1) none"], ["width", this.xScale(data[3]) - this.xScale(data[1])]]);
+            let barWidth = Number(this.xScale(data[3]) - this.xScale(data[1]));
+            if (barWidth <= 0) {
+                barWidth = 0;
+            }
+            console.log(barWidth);
+            drawBar(
+                this.xScale(data[1]) + margin.left,
+                this.barHeight/2, data[3],
+                [
+                    ["fill", "url(#diagonal-stripe-1) none"],
+                    ["width", barWidth]
+                ]
+            );
         }
 
         this.drawLabels();

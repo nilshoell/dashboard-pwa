@@ -174,19 +174,25 @@ class Sparkline extends BaseChart {
         const margin = this.baseData.margin;
         const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
         const backgroundExists = Boolean(backgrounds.size());
+        const bgWidth = this.baseData.width - margin.x + 4;
+        const bgHeight = this.baseData.height - margin.y + 4;
+
+        if (bgWidth <= 0 || bgHeight <= 0) {
+            return;
+        }
 
         if (backgroundExists) {
             backgrounds
-                .attr("width", this.baseData.width - margin.x + 4)
-                .attr("height", this.baseData.height - margin.y + 4);
+                .attr("width", bgWidth)
+                .attr("height", bgHeight);
 
         } else {
             this.svg.append("rect")
                 .attr("x", margin.left - 2)
                 .attr("y", margin.top - 2)
                 .attr("rx", 2)
-                .attr("width", this.baseData.width - margin.x + 4)
-                .attr("height", this.baseData.height - margin.y + 4)
+                .attr("width", bgWidth)
+                .attr("height", bgHeight)
                 .attr("fill", "#b0b0b0")
                 .attr("class", "sparkline-bg");
         }
