@@ -5,6 +5,7 @@ $(async function () {
     // Setup Object
     const personal = new Personal();
     await personal.getData();
+
     // $(".row.chart")[0].innerText = JSON.stringify(personal.data);
 });
 
@@ -24,7 +25,8 @@ class Personal {
     }
 
     async getData() {
-        this.data = await Helper.callApi("test", "74351e8d7097", {param1: "foo"});
+        this.data = await Helper.callApi("masterdata", "74351e8d7097", {});
+        console.log(this.data);
     }
 
     configureEventListener() {
@@ -34,9 +36,9 @@ class Personal {
             PN.setupNotifications();
         });
 
-        $(document).on("click", "#pn-trigger", async (event) => {
+        $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
-            await PN.displayNotification("74351e8d7097");
+            PN.displayNotification(this.data);
         });
     }
 }

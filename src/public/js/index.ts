@@ -1,5 +1,3 @@
-console.debug("index.js linked");
-
 $(function () {
     console.info("Document Ready");
     new App();

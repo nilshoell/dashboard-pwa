@@ -12,22 +12,19 @@ function setupNotifications() {
 /**
  * Sends a test message
  */
-async function displayNotification(kpi_id:string) {
+function displayNotification(kpi_data:Record<string, unknown>) {
 
-    const kpi_data = await Helper.callApi("masterdata", kpi_id)["data"];
-    console.log(kpi_data);
-    
     if (Notification.permission == "granted") {
         navigator.serviceWorker.getRegistration().then(function (reg) {
             const options = {
                 // body: "KPI '" + kpi_data["name"] + "' went out of bounds",
-                body: "KPI '' went out of bounds",
+                body: "KPI '" + kpi_data.name + "' went out of bounds",
                 icon: "public/images/favicon.png",
                 vibrate: [100, 50, 100],
                 data: {
                     dateOfArrival: Date.now(),
                     primaryKey: 1,
-                    kpi: kpi_id,
+                    kpi: kpi_data.id,
                     kpi_data: kpi_data
                 },
                 actions: [{
