@@ -3,6 +3,7 @@
 # ---------------------------------------------------------------------------
 # ------------------------------ GENERATE KPIs ------------------------------
 # ---------------------------------------------------------------------------
+# alias kpid='echo $RANDOM | md5sum | awk "{print $1}" | head -c 12'
 
 # Utilities
 import argparse
@@ -19,7 +20,9 @@ prog_date = "2021-05-04"
 prog_description = "Generate CSVs to import into a DB."
 
 # Programm config vars
-output_path = 'kpi.csv'
+output_path = 'src/db/kpi.csv'
+partners = [1001,1002,1004,1005,1003,1004,1005,1006,1007,1005,1008,1009,1010,1008,1009,1010]
+products = [1004,1005,1006,1007,1005,1009,1008,1009,1010,1011,1012,1013,1014,1012,1013,1014]
 
 # ---------------------- CLI PARSER ----------------------
 
@@ -52,36 +55,63 @@ start_date = dt.date(int(sdate[0]), int(sdate[1]), int(sdate[2]))
 end_value = config['end_value']
 start_value = config['start_value']
 
-day_diff = (end_date - start_date).days
-value_diff = end_value - start_value
-value_day = round((value_diff / day_diff), 4)
+if not config['around_value']:
+    day_diff = (end_date - start_date).days
+    value_diff = end_value - start_value
+    value_day = round((value_diff / day_diff), 4)
+
 
 def generateVal(start, direction=True):
-    change = value_day * (rnd.randint(8,15) / 10)
-    if direction:
-        return round(start + change,2)
+    if not config['around_value']:
+        change = value_day * (rnd.randint(8,15) / 10)
+        if direction:
+            return round(start + change,2)
+        else:
+            return round(start - change,2)
     else:
-        return round(start - change,2)
+        change = rnd.randint(-10,10) / 100
+        return round(start * change, 2)
+
+def generateSQL(date, value):
+    string = "'" + date.isoformat() + "',"
+    string += "'" + config['kpi'] + "',"
+    string += "'" + str(value) + "',"
+    if config['rand_dims']:
+        string += "'" + str(rnd.choice(partners)) + "',"
+        string += "'" + str(rnd.choice(products)) + "',"
+    string += "'" + config['scenario'] + "'"
 
 # ---------------------- GENERATION ----------------------
 measures = []
-measures.append([start_date.isoformat(), config['kpi'], start_value, config['scenario']])
+
+if config['rand_dims']:
+    sql_start = "INSERT INTO `measures` (`timestamp`, `kpi`, `value`, `partner`, `product`, `scenario`) VALUES ("
+else:
+    sql_start = "INSERT INTO `measures` (`timestamp`, `kpi`, `value`, `scenario`) VALUES ("
+
+sql_end = ");\n"
+
+measures.append(sql_start + generateSQL(start_date, start_value) + sql_end)
+
+value = start_value
 
 for d in range(day_diff):
     date = start_date + dt.timedelta(days=d)
-    last_val = measures[-1][2]
     r = rnd.randint(0,100)
+    sql_vals = ""
     if value_day > 0 and r > 20:
-        measures.append([date.isoformat(), config['kpi'], generateVal(last_val), config['scenario']])
+        value = generateVal(value)
     elif value_day > 0 and r <= 20:
-        measures.append([date.isoformat(), config['kpi'], generateVal(last_val, False), config['scenario']])
+        value = generateVal(value, False)
     elif value_day <= 0 and r <= 20:
-        measures.append([date.isoformat(), config['kpi'], generateVal(last_val, False), config['scenario']])
+        value = generateVal(value, False)
     elif value_day <= 0 and r > 20:
-        measures.append([date.isoformat(), config['kpi'], generateVal(last_val), config['scenario']])
+        value = generateVal(value)
+    measures.append(sql_start + generateSQL(date, value) + sql_end)
+
 
 
 # ---------------------- OUTPUT ----------------------
-with open(output_path, 'w', newline='') as f:
-    write = csv.writer(f)
-    write.writerows(measures)
+f=open(output_path,'w')
+f.writelines(measures)
+f.close()

@@ -1,7 +1,14 @@
-node_modules/
-.eslintcache
+# Editor Config
 vs/
 .vscode
+.eslintcache
+
+# Application Files
+node_modules/
+dist/
 .DS_Store
 *.Identifier
-dist/
+
+# Other
+src/db/kpi.csv
+src/db/*.db-journal
