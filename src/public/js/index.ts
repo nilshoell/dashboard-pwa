@@ -13,7 +13,9 @@ class App {
         $("[data-toggle='popover']").popover();
 
         // Setup long touch event listener for all charts
-        $(document).on("longtouch", ".chart-canvas", (e) => {console.log("Long touch on", e.currentTarget)});
+        // $(document).on("longtouch", ".chart-canvas", (e) => {
+        //     console.log("Long touch on", e.currentTarget);
+        // });
 
         // Register Service Workers in Prod
         if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {

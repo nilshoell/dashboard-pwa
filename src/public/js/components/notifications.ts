@@ -1,5 +1,3 @@
-import * as Helper from "./helperFunctions.js";
-
 /**
  * Requests permission from the user to send notifications
  */
