@@ -18,6 +18,9 @@ body {
 .btn-sq {
     width: 100% !important;
     height: 100% !important;
+    background-color: $bg-dark;
+    border-color: $bg-dark;
+    color: $text-dark;
 }
 
 .btn-main {
