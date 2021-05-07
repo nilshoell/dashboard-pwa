@@ -1,5 +1,6 @@
 import * as Helper from "../components/helperFunctions.js";
 import * as PN from "../components/notifications.js";
+import * as modal from "../components/modals.js";
 
 $(async function () {
     // Setup Object
@@ -38,6 +39,18 @@ class Personal {
         $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
             PN.displayNotification(this.data);
+        });
+
+        $(document).on("longtouch", "#content", () => {
+            const modalContent = [
+                {name:"Short Name", val: "Gross Sales"},
+                {name:"Unit", val: "$"},
+                {name:"Type", val: "Aggregate"},
+                {name:"Formula", val: "{4b9ad3f2ec7c} * {066642e39dac}"},
+                {name:"ID", val: "74351e8d7097"}
+            ];
+            modal.fill("Gross Sales", modalContent);
+            modal.display();
         });
     }
 }
