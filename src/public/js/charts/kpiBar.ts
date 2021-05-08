@@ -111,6 +111,15 @@ class KPIBar extends BaseChart {
         // $('.numeric-label').each((index, label) => label.remove());
         d3.selectAll("#" + this.canvasID + " svg text.numeric-label").remove();
 
+        // Returns a shade of red for negative and a shade of green for positive numbers
+        const textColor = (value:number) => {
+            if (value >= 0) {
+                return "#055b0a ";
+            } else {
+                return "#750c0c";
+            }
+        };
+
         // Wrapper to draw labels
         const textLabel = (x:number, y:number, val:number, color = "black", format = ".2s", attrs=[]) => {
             const text = this.svg.append("text")
@@ -127,11 +136,11 @@ class KPIBar extends BaseChart {
         };
 
         // PY deviation in %
-        textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], "grey", "+.1%", [["font-size", "small"]]);
+        textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
         // Actual value
         textLabel(this.baseData.width * 0.99, this.barHeight + margin.top, labelData[1]);
         // BUD deviation in %
-        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], "grey", "+.1%", [["font-size", "small"]]);
+        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
 
     }
 

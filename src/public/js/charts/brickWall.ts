@@ -11,6 +11,7 @@ class BrickWall extends BaseChart {
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
         this.setMargins({left: 35, right:5, top: 20, bottom: 30});
+
     }
 
     /**
@@ -28,9 +29,18 @@ class BrickWall extends BaseChart {
 
         const minVal = Number(d3.min(data, (d:any) => d3.min(d.val)));
         const maxVal = Number(d3.max(data, (d:any) => d3.max(d.val)));
+
+        // Set up colors
+        let interpolator;
+        if (this.chartData.direction === undefined || this.chartData.direction === "-") {
+            interpolator = d3.interpolateReds;
+        } else {
+            interpolator = d3.interpolateGreens;
+        }
+
         this.sqColor = d3.scaleSequential()
             .domain([minVal,maxVal])
-            .interpolator(d3.interpolateGnBu);
+            .interpolator(interpolator);
 
         const g = this.svg.selectAll("g")
             .data(data)
