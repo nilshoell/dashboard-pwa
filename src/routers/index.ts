@@ -13,15 +13,15 @@ const routes = [
     help: {title: "Dashboard", content:"This page provides a quick overview of the most important KPIs as bars encoding previous, actual, target and forecast values. Use the toggle switch or turn your phone to see a short historical trend, and click on a graphic to get the full details."}
   },
   {
-    id: "production", link:"/production", title: "Production Dashboard", icon: "fa-tachometer-alt",
+    id: "production", link:"/production", title: "Production Dashboard", icon: "fa-industry",
     help: {title: "Production Dashboard", content:"This page provides a quick overview of the most important KPIs as bars encoding previous, actual, target and forecast values. Use the toggle switch or turn your phone to see a short historical trend, and click on a graphic to get the full details."}
   },
   {
-    id: "customers", link:"/customers", title: "Customers", icon: "fa-industry",
+    id: "customers", link:"/customers", title: "Customers", icon: "fa-user-tie",
     help: {title: "Customer Dashboard", content:"This page provides a list of the best and worst customers by sales volume. Click on a graphic to get details."}
   },
   {
-    id: "personal", link:"/personal", title: "Personal", icon: "fa-user",
+    id: "personal", link:"/personal", title: "Personal", icon: "fa-id-card",
     help: {title: "Personal Dashboard", content:"This page collects your personal performance KPIs."
   }}
 ];
