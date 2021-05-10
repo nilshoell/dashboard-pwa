@@ -35,6 +35,10 @@ class Sparkline extends BaseChart {
         }
 
         const data = this.chartData.data;
+        const ac_data = d3.filter(data, (d:any) => d.date <= 0);
+        const fc_data = d3.filter(data, (d:any) => d.date >= 0);
+        this.chartData.ac_data = ac_data;
+        this.chartData.fc_data = fc_data;
 
         // Create scales
         this.setScales();
@@ -44,6 +48,10 @@ class Sparkline extends BaseChart {
             .x((d:any) => this.xScale(d.date))
             .y((d:any) => this.yScale(d.val))
             .curve(d3.curveMonotoneX);
+
+        const fc_line = d3.line()
+            .x((d:any) => this.xScale(d.date))
+            .y((d:any) => this.yScale(d.val));
         
         // Setup path object
         d3.selectAll("#" + this.canvasID + " svg g.path-group").remove();
@@ -57,7 +65,14 @@ class Sparkline extends BaseChart {
             .attr("fill", "none")
             .attr("stroke", "black")
             .attr("stroke-width", 1)
-            .attr("d", line(data));
+            .attr("d", line(ac_data));
+
+        path.join("path")
+            .attr("fill", "none")
+            .attr("stroke", "grey")
+            .attr("stroke-width", 1)
+            .attr("stroke-dasharray", [5, 5])
+            .attr("d", fc_line(fc_data));
 
         // Draw annotations
         this.drawAnnotations();
@@ -77,13 +92,20 @@ class Sparkline extends BaseChart {
         const height = this.baseData.height;
         const data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val};});
         const minDate = Number(d3.min(data, (d:any) => d.date));
-        const maxDate = Number(d3.max(data, (d:any) => d.date));
+        let maxDate = Number(d3.max(data, (d:any) => d.date));
         const minVal = Number(d3.min(data, (d:any) => d.val));
         const maxVal = Number(d3.max(data, (d:any) => d.val));
+        
+        // Check how far into the future values are displayed
+        if (maxDate > minDate * -0.25) {
+            console.log(minDate, 0, minDate * -0.25, maxDate);
+            maxDate = minDate * -0.25;
+        }
 
         this.xScale = d3.scaleLinear()
             .domain([minDate, maxDate])
-            .range([margin.left, width - margin.right]);
+            .range([margin.left, width - margin.right])
+            .clamp(true);
 
         this.yScale = d3.scaleLinear()
             .domain([minVal, maxVal]).nice()
@@ -122,7 +144,8 @@ class Sparkline extends BaseChart {
      * Draws three additional annotations for min, max and current value
      */
     drawAnnotations() {
-        const data = this.chartData.data;
+        const data = this.chartData.ac_data;
+        const data_total = this.chartData.data;
         const maxVal = d3.max(data, (d:any) => d.val);
         const minVal = d3.min(data, (d:any) => d.val);
 
@@ -137,6 +160,10 @@ class Sparkline extends BaseChart {
         const current = {
             x: this.xScale(0),
             y: this.yScale(data[data.length - 1].val)
+        };
+        const forecast = {
+            x: this.xScale(data_total[data_total.length - 1].date),
+            y: this.yScale(data_total[data_total.length - 1].val)
         };
 
         d3.selectAll("#" + this.canvasID + " svg g.annotation-group").remove();
@@ -160,6 +187,12 @@ class Sparkline extends BaseChart {
 
         // Draw current marker
         drawCircle(current, "steelblue");
+
+        // Draw forecast if applicable
+        if (forecast.x > current.x) {
+            drawCircle(forecast, "grey");
+        }
+
     }
 
 

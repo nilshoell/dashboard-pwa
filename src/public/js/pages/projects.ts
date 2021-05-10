@@ -47,6 +47,7 @@ class Projects {
             const kpiData = {};
             const count = kpi.data.length;
             kpiData["data"] = kpi.data.map((d, i) => {return {date: date(i,count), val: d};});
+            // kpiData["data"].push({date: "2021-05-15", val: 300});
             self.renderKPI("sparkline" + (+index + 1), kpiData);
         });
 
