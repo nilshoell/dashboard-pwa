@@ -10,14 +10,10 @@ html(lang="en")
           button.btn.btn-main(type="button" id="sidebarCollapse" disabled)
             i.fa.fas.fa-align-justify
           h4.text-light ERROR
-          button.btn.btn-main(type="button" id="helpButton" disabled)
-            i.fa.fas.fa-question-circle.text-light
+          a.btn.btn-main(role="button" href="/")
+            i.fa.fas.fa-home
 
         div.container
           div.row
             div.col
               block content
-
-        //- include includes/footer.pug
-
-    //- div.overlay

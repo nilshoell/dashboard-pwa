@@ -13,12 +13,12 @@ const routes = [
     help: {title: "Dashboard", content:"This page provides a quick overview of the most important KPIs as bars encoding previous, actual, target and forecast values. Use the toggle switch or turn your phone to see a short historical trend, and click on a graphic to get the full details."}
   },
   {
-    id: "customers", link:"/customers", title: "Customers", icon: "fa-industry",
-    help: {title: "Customer Dashboard", content:"This page provides a list of the best and worst customers by sales volume. Click on a graphic to get details."}
+    id: "production", link:"/production", title: "Production Dashboard", icon: "fa-tachometer-alt",
+    help: {title: "Production Dashboard", content:"This page provides a quick overview of the most important KPIs as bars encoding previous, actual, target and forecast values. Use the toggle switch or turn your phone to see a short historical trend, and click on a graphic to get the full details."}
   },
   {
-    id: "projects", link:"/projects", title: "Projects", icon: "fa-project-diagram",
-    help: {title: "Project Dashboard", content:"This page provides a list of your projects by progress. Click on a graphic to get further information."}
+    id: "customers", link:"/customers", title: "Customers", icon: "fa-industry",
+    help: {title: "Customer Dashboard", content:"This page provides a list of the best and worst customers by sales volume. Click on a graphic to get details."}
   },
   {
     id: "personal", link:"/personal", title: "Personal", icon: "fa-user",
@@ -47,11 +47,5 @@ router.get("/kpi", function(req, res) {
   res.status(400);
   res.render("special/400", {msg: "Please provide a valid KPI ID"});
 });
-
-// router.use(function(req, res) {
-//   res.status(404);
-//   res.render("special/404");
-// });
-
 
 export default router;

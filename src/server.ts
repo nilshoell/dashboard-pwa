@@ -17,6 +17,11 @@ app.use(api);
 
 app.use("/public", express.static(path.join(__dirname, "public")));
 
+app.use(function(req, res) {
+  res.status(404);
+  res.render("special/404");
+});
+
 app.listen(process.env.PORT || 3000, () => {
   console.log("Listening...");
 });
