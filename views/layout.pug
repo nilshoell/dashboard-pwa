@@ -23,12 +23,27 @@ html(lang="en")
 
       div.p-0(id="content")
         //- Header navbar
-        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
-          button.btn.btn-main(type="button" id="sidebarCollapse")
-            i.fa.faw.fas.fa-align-justify
+        nav.navbar.navbar-expand-lg.py-2.navbar-dark.bg-dark
+          button.btn.btn-main.btn-nav(type="button" id="sidebarCollapse")
+            i.fa.fas.fa-align-justify
           h4.text-light #{page.title}
-          button.btn.btn-main(type="button" id="menuToggle")
-            i.fa.faw.fas.fa-ellipsis-v.text-light
+          div.dropdown
+            button.btn.btn-main.btn-nav.dropdown-toggle#menuToggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
+              i.fa.fas.fa-ellipsis-v.text-light
+            div.dropdown-menu.dropdown-menu-right(aria-labelledby="menuToggle")
+              a.dropdown-item(href="#")
+                i.fa.fas.fa-fw.fa-share
+                |  Share
+              a.dropdown-item(href="#")
+                i.fa.fas.fa-fw.fa-sync
+                |  Refresh
+              div.dropdown-divider
+              a.dropdown-item.disabled(href="#")
+                i.fa.fas.fa-fw.fa-calendar-alt
+                |  Time Frame
+              a.dropdown-item.disabled(href="#")
+                i.fa.fas.fa-fw.fa-filter
+                |  Filters
 
         //- Chart content
         div.container.content-container

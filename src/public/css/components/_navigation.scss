@@ -29,6 +29,10 @@ a:focus {
     margin: 40px 0;
 }
 
+#menuToggle.dropdown-toggle::after {
+    content: none;
+}
+
 /* Sidebar */
 
 #sidebar {
