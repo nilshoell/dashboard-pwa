@@ -132,8 +132,6 @@ const getChildren = async (params) => {
     const result = await stmt.all();
     returnObj["data"] = result;
     await stmt.finalize();
-    console.log(result);
-    
 
     await db.close();
 
@@ -149,7 +147,51 @@ const getChildren = async (params) => {
  * @returns KPI data as JSON
  */
 const getDaily = async (params) => {
-    return params;
+    const returnObj = defaultReturn;
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    const sql = "SELECT SUM(value) FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp;";
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    returnObj["data"] = result;
+    await stmt.finalize();
+
+    await db.close();
+
+    returnObj.success = true;
+    return returnObj;
+};
+
+
+/**
+ * Gets data aggregated by day
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getByPartner = async (params) => {
+    const returnObj = defaultReturn;
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    const sql = "SELECT SUM(value) FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    returnObj["data"] = result;
+    await stmt.finalize();
+
+    await db.close();
+
+    returnObj.success = true;
+    return returnObj;
 };
 
 
@@ -162,7 +204,7 @@ const getPeriod = async (params) => {
     const returnObj = defaultReturn;
     if (params.filter.period === undefined || params.filter.period === "") {
         returnObj["errMsg"] = "No period provided.";
-        return returnObj;
+        throw new Error("No period provided.");
     }
 
     const period = params.filter.period;
@@ -179,7 +221,7 @@ const getPeriod = async (params) => {
 
     if (!period.endsWith("TD") && (params.filter.endDate === undefined || params.filter.endDate === "")) {
         returnObj["errMsg"] = "End date required for all non-to-date periods.";
-        return returnObj;
+        throw new Error("End date required for all non-to-date periods.");
     } else if (!period.endsWith("TD")) {
         endDate = params.filter.endDate;
     }
@@ -236,13 +278,13 @@ const getPeriod = async (params) => {
     
         default:
             returnObj["errMsg"] = "Invalid period '" + period + "'.";
-            return returnObj;
+            throw new Error("Invalid period '" + period + "'.");
     }
 
     params["startDate"] = startDate;
     params["endDate"] = endDate;
 
-    return getTimeframe(params);
+    return params;
 };
 
 
@@ -253,7 +295,24 @@ const getPeriod = async (params) => {
  * @returns KPI data as JSON
  */
 const getTimeframe = async (params) => {
-    return params;
+    const returnObj = defaultReturn;
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    const sql = "SELECT SUM(value) FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    returnObj["data"] = result;
+    await stmt.finalize();
+
+    await db.close();
+
+    returnObj.success = true;
+    return returnObj;
 };
 
 
@@ -270,8 +329,8 @@ const getTimeframe = async (params) => {
 const methods = {
     test: testFunction,
     daily: getDaily,
-    period: getPeriod,
     timeframe: getTimeframe,
+    partner: getByPartner,
     children: getChildren,
     masterdata: getMasterData
 };
