@@ -59,18 +59,42 @@ day_diff = (end_date - start_date).days
 value_diff = end_value - start_value
 value_day = round((value_diff / day_diff), 4)
 
-def generateVal(start, direction=True):
-    change = rnd.randint(-10,10) / 100
-    return round(start * change)
+if config["calculated"]:
+    input_1 = "src/db/kpis/sales_volume_ac.csv"
+    input_2 = "src/db/kpis/sales_price_ac.csv"
+    with open(input_1) as f:
+        content_1 = f.readlines()
+    with open(input_2) as f:
+        content_2 = f.readlines()
+    vals_1 = []
+    vals_2 = []
+    for line in content_1:
+        vals_1.append(int(line.split(",")[7].strip("'")))
+    for line in content_2:
+        vals_2.append(int(line.split(",")[5].strip("'")))
+
+def generateVal(start, index):
+    if config['calculated'] and vals_2[index] > 0:
+        return vals_1[index] * vals_2[index]
+    elif config['calculated']:
+        return 0
+    
+    if value_diff < 70:
+        change = rnd.randint(start_value, end_value)
+        return round(change)
+    else:
+        change = rnd.randint(-5,5) / 100 * value_diff
+        return round(start + change)
 
 def generateSQL(date, value):
     string = "'" + date.isoformat() + "',"
     string += "'" + config['kpi'] + "',"
-    string += "'" + str(value) + "',"
+    string += str(value) + ","
     if config['rand_dims']:
         string += "'" + str(rnd.choice(partners)) + "',"
         string += "'" + str(rnd.choice(products)) + "',"
     string += "'" + config['scenario'] + "'"
+    return string
 
 # ---------------------- GENERATION ----------------------
 measures = []
@@ -85,24 +109,27 @@ sql_end = ");\n"
 measures.append(sql_start + generateSQL(start_date, start_value) + sql_end)
 
 value = start_value
+index = 0
 
 for d in range(day_diff):
     date = start_date + dt.timedelta(days=d)
     r = rnd.randint(0,100)
     sql_vals = ""
     if value_day > 0 and r > 20:
-        value = generateVal(value)
+        value = generateVal(value, index)
     elif value_day > 0 and r <= 20:
-        value = generateVal(value, False)
+        value = generateVal(value, index)
     elif value_day <= 0 and r <= 20:
-        value = generateVal(value, False)
+        value = generateVal(value, index)
     elif value_day <= 0 and r > 20:
-        value = generateVal(value)
+        value = generateVal(value, index)
     measures.append(sql_start + generateSQL(date, value) + sql_end)
-
+    index += 1
 
 
 # ---------------------- OUTPUT ----------------------
 f=open(output_path,'w')
 f.writelines(measures)
 f.close()
+
+exit()

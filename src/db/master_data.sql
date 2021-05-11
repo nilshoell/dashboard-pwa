@@ -34,8 +34,8 @@ INSERT INTO `products` (`name`, `shortname`, `parent`) VALUES ('Product 1303-II'
 -- KPIs
 -- -----------------------------------------------------
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `formula`) VALUES ('74351e8d7097', 'Gross Sales', 'Sales', '9efcb5361969', '$', '+', '{4b9ad3f2ec7c} * {066642e39dac}');
-INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('4b9ad3f2ec7c', 'Sales Volume', 'Sales Volume', '74351e8d7097', 't', '+');
-INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('066642e39dac', 'Sales Price per Ton', 'Sales Price', '74351e8d7097', '$/t', '+');
+INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('4b9ad3f2ec7c', 'Sales Volume', 'Sales Volume', '74351e8d7097', '', '+');
+INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('066642e39dac', 'Sales Price', 'Sales Price', '74351e8d7097', '$', '+');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `formula`) VALUES ('7a0c8fcbc047', 'Conversion Rate', 'CR', 'NONE', '%', '+', '{28053d385141} / {2983c4e7082f}');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('28053d385141', 'Sales Wins', 'Wins', '7a0c8fcbc047', '', '+');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('2983c4e7082f', 'Sales Leads', 'Leads', '7a0c8fcbc047', '', '+');

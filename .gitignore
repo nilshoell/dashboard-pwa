@@ -8,6 +8,7 @@ node_modules/
 dist/
 .DS_Store
 *.Identifier
+src/db/kpis/
 
 # Other
 src/db/kpi.csv
