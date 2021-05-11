@@ -72,7 +72,9 @@ const defaultReturn = {
  */
 const testFunction = async (params) => {
 
-    const returnObj = defaultReturn;
+    // Copy object by val
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
 
     returnObj["params"] = params;
     console.log("[API] Calling testfunc");
@@ -81,7 +83,7 @@ const testFunction = async (params) => {
 
     const result = await db.all("SELECT * FROM kpis");
     returnObj["data"] = result;
-    returnObj.success = true;
+    returnObj["success"] = true;
 
     await db.close();
 
@@ -96,7 +98,8 @@ const testFunction = async (params) => {
  */
 const getMasterData = async (params) => {
 
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
@@ -108,11 +111,12 @@ const getMasterData = async (params) => {
 
     await db.close();
 
-    returnObj["data"]["children"] = await getChildren(params)["data"];
+    const children = await getChildren(params);
+    
+    returnObj["data"]["children"] = children["data"];
 
-    returnObj.success = true;
+    returnObj["success"] = true;
     return returnObj;
-
 };
 
 
@@ -123,21 +127,22 @@ const getMasterData = async (params) => {
  */
 const getChildren = async (params) => {
 
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
 
     const stmt = await db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
     const result = await stmt.all();
-    returnObj["data"] = result;
+    returnObj["data"] = result.map(d => d.id);
     await stmt.finalize();
 
     await db.close();
 
-    returnObj.success = true;
+    returnObj["success"] = true;
+    console.log("Return:", returnObj);
     return returnObj;
-
 };
 
 
@@ -147,7 +152,8 @@ const getChildren = async (params) => {
  * @returns KPI data as JSON
  */
 const getDaily = async (params) => {
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
@@ -163,7 +169,38 @@ const getDaily = async (params) => {
 
     await db.close();
 
-    returnObj.success = true;
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * Gets the latest data point
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+const getLatest = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const now =new Date();
+    const today = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0");
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    const sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? SORT BY timestamp DESC LIMIT 1;";
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
+    const result = await stmt.all();
+    returnObj["data"] = result;
+    await stmt.finalize();
+
+    await db.close();
+
+    returnObj["success"] = true;
     return returnObj;
 };
 
@@ -174,7 +211,8 @@ const getDaily = async (params) => {
  * @returns KPI data as JSON
  */
  const getByPartner = async (params) => {
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
@@ -190,7 +228,7 @@ const getDaily = async (params) => {
 
     await db.close();
 
-    returnObj.success = true;
+    returnObj["success"] = true;
     return returnObj;
 };
 
@@ -201,7 +239,8 @@ const getDaily = async (params) => {
  * @returns KPI data as JSON
  */
 const getPeriod = async (params) => {
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     if (params.filter.period === undefined || params.filter.period === "") {
         returnObj["errMsg"] = "No period provided.";
         throw new Error("No period provided.");
@@ -295,7 +334,8 @@ const getPeriod = async (params) => {
  * @returns KPI data as JSON
  */
 const getTimeframe = async (params) => {
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
@@ -311,7 +351,7 @@ const getTimeframe = async (params) => {
 
     await db.close();
 
-    returnObj.success = true;
+    returnObj["success"] = true;
     return returnObj;
 };
 
@@ -330,6 +370,7 @@ const methods = {
     test: testFunction,
     daily: getDaily,
     timeframe: getTimeframe,
+    latest: getLatest,
     partner: getByPartner,
     children: getChildren,
     masterdata: getMasterData
