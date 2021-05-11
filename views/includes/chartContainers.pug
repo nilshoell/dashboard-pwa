@@ -1,14 +1,18 @@
 mixin kpiBar(id)
-  div.container.mr-1.my-2.px-0.chart-canvas.kpi-bar(id=id)
+  div.chart-label
+    div.container.mr-1.my-2.px-0.chart-canvas.kpi-bar(id=id)
 
 mixin sparkline(id)
-  div.container.mr-1.mt-2.px-0.chart-canvas.sparkline(id=id)
+  div.chart-label
+    div.container.mr-1.mt-2.px-0.chart-canvas.sparkline(id=id)
 
 mixin timeline(id)
-  div.container.mx-auto.my-2.pl-0.chart-canvas.timeline(id=id)
+  div.chart-label
+    div.container.mx-auto.my-2.pl-0.chart-canvas.timeline(id=id)
 
 mixin barChart(id)
-  div.container.mx-1.pl-0.mb-4.chart-canvas.bar-chart(id=id)
+  div.chart-label
+    div.container.mx-1.pl-0.mb-4.chart-canvas.bar-chart(id=id)
 
 mixin sparkbar(id)
   div.row
@@ -18,7 +22,9 @@ mixin sparkbar(id)
       +sparkline("sparkline_" + id)
 
 mixin kpiTile(id)
-  div.container.px-0.chart-canvas.kpi-tile(id=id)
+  div.chart-label
+    div.container.px-0.chart-canvas.kpi-tile(id=id)
 
 mixin brickWall(id)
-  div.container.mx-1.pl-0.mb-4.chart-canvas.brick-wall(id=id)
+  div.chart-label
+    div.container.mx-1.pl-0.mb-4.chart-canvas.brick-wall(id=id)
