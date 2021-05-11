@@ -30,13 +30,13 @@ class App {
     navigationHandlers () {
 
         // Remove sidebar on click on overlay or the dismiss-button
-        $("#dismiss, .overlay").on("click", function () {
+        $(document).on("click", "#dismiss, .overlay", () => {
             $("#sidebar").removeClass("active");
             $(".overlay").removeClass("active");
         });
 
         // Remove sidebar on click on a nav-link
-        $(".nav-link").on("click", function () {
+        $(document).on("click", ".nav-link", function () {
             $("#sidebar").removeClass("active");
             $(".overlay").removeClass("active");
             $($("li.active > .nav-link")[0].parentElement).removeClass("active");
@@ -44,11 +44,43 @@ class App {
         });
 
         // Show sidebar on menu button click
-        $("#sidebarCollapse").on("click", function () {
+        $(document).on("click", "#sidebarCollapse", () => {
             $("#sidebar").addClass("active");
             $(".overlay").addClass("active");
             $(".collapse.in").toggleClass("in");
             $("a[aria-expanded=true]").attr("aria-expanded", "false");
+        });
+
+        // Share the current URL on click
+        $(document).on("click", "#shareBtn", () => {
+
+            const url = window.location.href;
+
+            // Use the new share API if available
+            if ("share" in navigator) {
+                const shareData = {
+                    title: "Mobile Dashboard",
+                    text: "Check out this dashboard!",
+                    url: url,
+                  };
+                navigator.share(shareData).then(() => {
+                    return;
+                });
+            }
+
+            // If not supported or failed, copy to clipboard
+            const dummy = document.createElement("input");
+            document.body.appendChild(dummy);
+            dummy.value = url;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+
+        });
+
+        // Reload the page
+        $(document).on("click", "#refreshBtn", () => {
+            window.location.reload();
         });
     }
 

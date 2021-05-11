@@ -31,17 +31,17 @@ html(lang="en")
             button.btn.btn-main.btn-nav.dropdown-toggle#menuToggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
               i.fa.fas.fa-ellipsis-v.text-light
             div.dropdown-menu.dropdown-menu-right(aria-labelledby="menuToggle")
-              a.dropdown-item(href="#")
+              button.dropdown-item#shareBtn(type="button")
                 i.fa.fas.fa-fw.fa-share
                 |  Share
-              a.dropdown-item(href="#")
+              button.dropdown-item#refreshBtn(type="button")
                 i.fa.fas.fa-fw.fa-sync
                 |  Refresh
               div.dropdown-divider
-              a.dropdown-item.disabled(href="#")
+              button.dropdown-item.disabled#timeFrameBtn(type="button")
                 i.fa.fas.fa-fw.fa-calendar-alt
                 |  Time Frame
-              a.dropdown-item.disabled(href="#")
+              button.dropdown-item.disabled#filterBtn(type="button")
                 i.fa.fas.fa-fw.fa-filter
                 |  Filters
 
