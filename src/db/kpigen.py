@@ -55,22 +55,13 @@ start_date = dt.date(int(sdate[0]), int(sdate[1]), int(sdate[2]))
 end_value = config['end_value']
 start_value = config['start_value']
 
-if not config['around_value']:
-    day_diff = (end_date - start_date).days
-    value_diff = end_value - start_value
-    value_day = round((value_diff / day_diff), 4)
-
+day_diff = (end_date - start_date).days
+value_diff = end_value - start_value
+value_day = round((value_diff / day_diff), 4)
 
 def generateVal(start, direction=True):
-    if not config['around_value']:
-        change = value_day * (rnd.randint(8,15) / 10)
-        if direction:
-            return round(start + change,2)
-        else:
-            return round(start - change,2)
-    else:
-        change = rnd.randint(-10,10) / 100
-        return round(start * change, 2)
+    change = rnd.randint(-10,10) / 100
+    return round(start * change)
 
 def generateSQL(date, value):
     string = "'" + date.isoformat() + "',"

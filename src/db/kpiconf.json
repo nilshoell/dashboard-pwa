@@ -4,7 +4,6 @@
     "kpi": "6a1ebed74d9f",
     "start_value": 0,
     "end_value": 15000000,
-    "around_value": false,
     "rand_dims": false,
     "scenario": "AC"
 }
