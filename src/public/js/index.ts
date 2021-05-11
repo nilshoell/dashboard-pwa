@@ -20,6 +20,7 @@ class App {
         // Register Service Workers in Prod
         if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
             this.registerSW();
+            this.broadcastChannel();
         }
 
     }
@@ -64,5 +65,15 @@ class App {
                 console.error("Service worker not registered:", err);
             });
         }
+    }
+
+    /**
+     * Listens for messages from the push service worker
+     */
+    broadcastChannel() {
+        const channel = new BroadcastChannel("sw-messages");
+        channel.addEventListener("message", event => {
+          window.location.href = event.data.redirect;
+        });
     }
 }
