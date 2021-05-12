@@ -53,19 +53,19 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
 
 async function getLatestBarData(kpi_id:string) {
     const data = [];
-    data.push(await callApi("latest", kpi_id));
-    data.push(await callApi("latest", kpi_id, {scenario: "PY"}));
-    data.push(await callApi("latest", kpi_id, {scenario: "BU"}));
-    data.push(await callApi("latest", kpi_id, {scenario: "FC"}));
+    data.push(await callApi("latest", kpi_id, {scenario: "PY"})["value"] ?? 0);
+    data.push(await callApi("latest", kpi_id, {scenario: "BU"})["value"] ?? 0);
+    data.push(await callApi("latest", kpi_id)["value"]);
+    data.push(await callApi("latest", kpi_id, {scenario: "FC"})["value"] ?? 0);
     return data;
 }
 
 async function getBarData(kpi_id:string, period = "YTD") {
     const data = [];
-    data.push(await callApi("timeframe", kpi_id, {scenario: "AC", period: period}));
-    data.push(await callApi("timeframe", kpi_id, {scenario: "PY", period: period}));
-    data.push(await callApi("timeframe", kpi_id, {scenario: "BU", period: period}));
-    data.push(await callApi("timeframe", kpi_id, {scenario: "FC", period: period}));
+    data.push(await callApi("timeframe", kpi_id, {scenario: "AC", period: period})["value"] ?? 0);
+    data.push(await callApi("timeframe", kpi_id, {scenario: "PY", period: period})["value"] ?? 0);
+    data.push(await callApi("timeframe", kpi_id, {scenario: "BU", period: period})["value"] ?? 0);
+    data.push(await callApi("timeframe", kpi_id, {scenario: "FC", period: period})["value"] ?? 0);
     return data;
 }
 

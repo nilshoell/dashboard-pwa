@@ -1,6 +1,7 @@
 import Router from "express";
 import sqlite3 from "sqlite3";
 import {open} from "sqlite";
+import { start } from "repl";
 
 const router = Router();
 
@@ -57,6 +58,15 @@ const defaultReturn = {
     success: false,
     errMsg: ""
 };
+
+/**
+ * Converts a Date object to an ISO date string
+ * @param date A Date Object
+ * @returns ISO-String
+ */
+function toISO(date:Date) {
+    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2,"0") + "-" + String(date.getDate()).padStart(2,"0")
+}
 
 
 /**
@@ -199,7 +209,7 @@ const getLatest = async (params) => {
     returnObj["params"] = params;
 
     const now =new Date();
-    const today = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0");
+    const today = toISO(now);
 
     const db = await openDB();
 
@@ -271,7 +281,7 @@ const getPeriod = async (params) => {
 
     const period = params.filter.period;
     const now = new Date();
-    const today_str = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+    const today_str = toISO(now);
     const today = new Date(today_str);
     const curYear = today.getFullYear();
     const curMonth = today.getMonth() + 1;
@@ -291,12 +301,12 @@ const getPeriod = async (params) => {
     switch (period) {
         case "W":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 7);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "M":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 30);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "MTD":
@@ -306,7 +316,7 @@ const getPeriod = async (params) => {
 
         case "Q":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 120);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "QTD":
@@ -330,7 +340,7 @@ const getPeriod = async (params) => {
 
         case "Y":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 365);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "YTD":
@@ -341,6 +351,16 @@ const getPeriod = async (params) => {
         default:
             returnObj["errMsg"] = "Invalid period '" + period + "'.";
             throw new Error("Invalid period '" + period + "'.");
+    }
+
+    // Subtract a year if scenario = PY
+    if (params.filter.scenario === "PY") {
+        const newStart = new Date(startDate);
+        const newEnd = new Date(endDate);
+        newStart.setFullYear(newStart.getFullYear() - 1);
+        newEnd.setFullYear(newEnd.getFullYear() - 1);
+        startDate = toISO(newStart);
+        endDate = toISO(newEnd);
     }
 
     params["startDate"] = startDate;
@@ -365,7 +385,7 @@ const getTimeframe = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT SUM(value) FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    const sql = "SELECT SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
