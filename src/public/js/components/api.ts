@@ -80,4 +80,38 @@ async function getCumulativeTimeData(kpi_id:string, scenario = "AC", period = "Y
     return data;
 }
 
-export { getApiBase, callApi, getLatestBarData, getBarData, getTimeData, getCumulativeTimeData };
+/**
+ * Converts KPI IDs in a formula to names
+ * @param formula The original formula as present in the DB
+ * @returns String
+ */
+async function convertFormula(formula:string) {
+    const regex = /({.{12}})/g;
+    const result = [];
+    let res;
+
+    do {
+        res = regex.exec(formula);
+        if (res) {
+            result.push(res[1]);
+        }
+    } while (res);
+
+    const ids = result.map(id => id.substr(1,id.length - 2));
+    const kpis = [];
+
+    for (let i = 0; i < ids.length; i++) {
+        const kpi = await callApi("masterdata", ids[i]);
+        kpis.push({id: ids[i], name: kpi.name});
+    }
+
+    let converted = formula;
+
+    kpis.forEach(async (kpi) => {
+        converted = converted.replace(kpi.id, kpi.name);
+    });
+
+    return converted;
+}
+
+export { getApiBase, callApi, getLatestBarData, getBarData, getTimeData, getCumulativeTimeData, convertFormula };

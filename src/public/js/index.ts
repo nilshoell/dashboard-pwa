@@ -39,13 +39,16 @@ class App {
 
             // Get master data from API
             const data = await API.callApi("masterdata", kpi);
+            const formula = await API.convertFormula(data.formula);
 
             // Fill and display modal
             const modalContent = [
+                {name:"ID", val: data.id},
                 {name:"Short Name", val: data.shortname},
                 {name:"Unit", val: data.unit},
-                {name:"Formula", val: data.shortname},
-                {name:"ID", val: data.shortname}
+                {name:"Formula", val: formula},
+                {name:"Formula", val: data.formula},
+                {name:"Description", val: data.help}
             ];
             Modal.fill(data.name, modalContent);
             Modal.display();
