@@ -39,7 +39,10 @@ class App {
 
             // Get master data from API
             const data = await API.callApi("masterdata", kpi);
-            const formula = await API.convertFormula(data.formula);
+            let formula = await API.convertFormula(data.formula);
+            if (formula === "Direct Measurement") {
+                formula = "";
+            }
 
             // Fill and display modal
             const modalContent = [

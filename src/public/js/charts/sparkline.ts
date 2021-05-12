@@ -30,6 +30,12 @@ class Sparkline extends BaseChart {
             $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
 
+        // Add title if available
+        const label = $("#" + this.canvasID + " .chart-label")[0];
+        if (label) {
+            label.innerText = this.chartData.masterdata.name ?? "";
+        }
+
         // Add background bounding box
         this.setBackground();
 
@@ -123,6 +129,11 @@ class Sparkline extends BaseChart {
      */
     drawAxes() {
         const margin = this.baseData.margin;
+        const unit = this.chartData.masterdata.unit;
+        let format = "~s";
+        if (unit === "%") {
+            format = "%";
+        }
         const xAxis = g => g
             .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
             .call(d3.axisBottom(this.xScale).ticks(2, ".1"))
@@ -135,7 +146,7 @@ class Sparkline extends BaseChart {
 
         const yAxis = g => g
             .attr("transform", "translate(" + (this.baseData.width - margin.right - 5) + ", 0)")
-            .call(d3.axisRight(this.yScale).ticks(2, "~s"))
+            .call(d3.axisRight(this.yScale).ticks(2, format))
             .call(g => g.select(".domain").remove());
 
         d3.selectAll("#" + this.canvasID + " svg g.x-axis").remove();

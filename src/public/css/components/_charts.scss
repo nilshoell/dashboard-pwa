@@ -14,12 +14,12 @@
 
 // KPIBar
 .chart-canvas.kpi-bar {
-    height: 10vh;
+    height: 12vh;
 }
 
 @media screen and (orientation: landscape) {
     .chart-canvas.kpi-bar {
-        height: 17vh;
+        height: 20vh;
     }
 }
 
@@ -43,4 +43,9 @@
     .kpi-tile {
         width: 300px;
     }
+}
+
+// KPIBar
+.chart-canvas.brick-wall {
+    height: 200px;
 }

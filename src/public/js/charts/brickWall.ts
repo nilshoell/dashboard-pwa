@@ -10,7 +10,7 @@ class BrickWall extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
-        this.setMargins({left: 35, right:5, top: 20, bottom: 30});
+        this.setMargins({left: 35, right:5, top: 15, bottom: 30});
 
     }
 
@@ -28,6 +28,12 @@ class BrickWall extends BaseChart {
             $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
 
+        // Add title if available
+        const label = $("#" + this.canvasID + " .chart-label")[0];
+        if (label) {
+            label.innerText = this.chartData.masterdata.name;
+        }
+
         const margin = this.baseData.margin;
 
         this.setScales();
@@ -37,7 +43,7 @@ class BrickWall extends BaseChart {
 
         // Set up colors
         let interpolator;
-        if (this.chartData.direction === undefined || this.chartData.direction === "-") {
+        if (this.chartData.masterdata.direction === undefined || this.chartData.masterdata.direction === "-") {
             interpolator = d3.interpolateReds;
         } else {
             interpolator = d3.interpolateGreens;
@@ -117,7 +123,11 @@ class BrickWall extends BaseChart {
         const xAxis = g => g
             .attr("transform", "translate(0," + (10 + margin.top) + ")")
             .call(d3.axisTop(this.xScale).tickValues(this.xScale.domain().filter((d:number,i:number) => !(i%3))))
-            .call(g => g.select(".domain").remove());
+            .call(g => g.select(".domain").remove())
+            .call(g => g.select(".tick:first-of-type text").clone()
+                .attr("x", -25)
+                .attr("text-anchor", "start")
+                .text("CW"));
 
         d3.selectAll("#" + this.canvasID + " svg g.x-axis").remove();
         this.svg.append("g")

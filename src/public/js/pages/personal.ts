@@ -15,27 +15,27 @@ $(async function () {
     let id = kpi.id;
     kpi["barData"] = await API.getLatestBarData(id);
     kpi["sparkData"] = await API.getTimeData(id, "AC", "Q");
-    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"]});
-    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"]});
+    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"], masterdata: kpi["masterdata"]});
+    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"], masterdata: kpi["masterdata"]});
 
     kpi = personal.kpis[1];
     id = kpi.id;
     kpi["barData"] = await API.getBarData(id, "MTD");
     kpi["sparkData"] = await API.getCumulativeTimeData(id, "AC", "Q");
-    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"]});
-    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"]});
+    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"], masterdata: kpi["masterdata"]});
+    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"], masterdata: kpi["masterdata"]});
 
     kpi = personal.kpis[2];
     id = kpi.id;
-    kpi["barData"] = await API.getBarData(id, "MTD");
+    kpi["barData"] = await API.getBarData(id, "MTD", {aggregate: "avg"});
     kpi["sparkData"] = await API.getTimeData(id, "AC", "M");
-    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"]});
-    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"]});
+    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"], masterdata: kpi["masterdata"]});
+    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"], masterdata: kpi["masterdata"]});
     
     kpi = personal.kpis[3];
     id = kpi.id;
-    personal.kpis[3]["data"] = await API.getTimeData(id, "AC", "Q");
-    personal.renderBrick(String(kpi.canvasID), {kpi: id, data: kpi["data"]});
+    personal.kpis[3]["data"] = await API.getBrickData(id);
+    personal.renderBrick(String(kpi.canvasID), {kpi: id, data: kpi["data"], masterdata: kpi["masterdata"]});
 });
 
 class Personal {

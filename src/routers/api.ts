@@ -179,7 +179,10 @@ const getDaily = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT timestamp, SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+    let sql = "SELECT timestamp AS date, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT timestamp AS date, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+    } 
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
@@ -248,7 +251,10 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT partner, SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+    let sql = "SELECT partner, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT partner, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+    } 
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
@@ -292,8 +298,7 @@ const getPeriod = async (params) => {
     let startMonth:number;
 
     if (!period.endsWith("TD") && (params.filter.endDate === undefined || params.filter.endDate === "")) {
-        returnObj["errMsg"] = "End date required for all non-to-date periods.";
-        throw new Error("End date required for all non-to-date periods.");
+        endDate = today_str;
     } else if (!period.endsWith("TD")) {
         endDate = params.filter.endDate;
     }
@@ -311,7 +316,7 @@ const getPeriod = async (params) => {
 
         case "MTD":
             endDate = today_str;
-            startDate = curYear + "-" + curMonth + "-01";
+            startDate = curYear + "-" + String(curMonth).padStart(2, "0") + "-01";
             break;
 
         case "Q":
@@ -385,7 +390,10 @@ const getTimeframe = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    } 
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();

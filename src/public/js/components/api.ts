@@ -51,33 +51,90 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
     }
 }
 
-async function getLatestBarData(kpi_id:string) {
+async function getLatestBarData(kpi_id:string, filters = {}) {
     const data = [];
-    data.push(await callApi("latest", kpi_id, {scenario: "PY"})["value"] ?? 0);
-    data.push(await callApi("latest", kpi_id, {scenario: "BU"})["value"] ?? 0);
-    data.push(await callApi("latest", kpi_id)["value"]);
-    data.push(await callApi("latest", kpi_id, {scenario: "FC"})["value"] ?? 0);
+    const requests = [{scenario: "PY"}, {scenario: "AC"}, {scenario: "BU"}, {scenario: "FC"}];
+    
+    for (let i = 0; i < requests.length; i++) {
+        const filter = {};
+        Object.assign(filter, requests[i], filters);
+        const result = await callApi("latest", kpi_id, filter);
+        if (result[0] !== undefined) {
+            data.push(result[0]["value"] ?? 0);
+        } else {
+            data.push(0);
+        }
+    }
+
     return data;
 }
 
-async function getBarData(kpi_id:string, period = "YTD") {
+async function getBarData(kpi_id:string, period = "YTD", filters = {}) {
     const data = [];
-    data.push(await callApi("timeframe", kpi_id, {scenario: "AC", period: period})["value"] ?? 0);
-    data.push(await callApi("timeframe", kpi_id, {scenario: "PY", period: period})["value"] ?? 0);
-    data.push(await callApi("timeframe", kpi_id, {scenario: "BU", period: period})["value"] ?? 0);
-    data.push(await callApi("timeframe", kpi_id, {scenario: "FC", period: period})["value"] ?? 0);
+    const requests = [
+        {scenario: "PY", period: period},
+        {scenario: "AC", period: period},
+        {scenario: "BU", period: period},
+        {scenario: "FC", period: period}
+    ];
+    
+    for (let i = 0; i < requests.length; i++) {
+        const filter = {};
+        Object.assign(filter, requests[i], filters);
+        
+        const result = await callApi("timeframe", kpi_id, filter);
+        if (result[0] !== undefined) {
+            data.push(result[0]["val"] ?? 0);
+        } else {
+            data.push(0);
+        }
+    }
     return data;
 }
 
-async function getTimeData(kpi_id:string, scenario = "AC", period = "YTD") {
-    const data = await callApi("daily", kpi_id, {scenario: scenario, period: period});
+async function getTimeData(kpi_id:string, scenario = "AC", period = "YTD", filters = {}) {
+    const filter = {};
+    Object.assign(filter, {scenario: scenario, period: period}, filters);
+    const data = await callApi("daily", kpi_id, filter);
     return data;
 }
 
-async function getCumulativeTimeData(kpi_id:string, scenario = "AC", period = "YTD") {
-    let data = await callApi("daily", kpi_id, {scenario: scenario, period: period});
-    data = await Helper.cumulativeSum(data, "value");
+async function getCumulativeTimeData(kpi_id:string, scenario = "AC", period = "YTD", filters = {}) {
+    const filter = {};
+    Object.assign(filter, {scenario: scenario, period: period}, filters);
+    let data = await callApi("daily", kpi_id, filter);
+    data = await Helper.cumulativeSum(data, "val");
     return data;
+}
+
+async function getBrickData(kpi_id:string, period = "Q", filters = {}) {
+    const filter = {};
+    Object.assign(filter, {period: period}, filters);
+    const data = await callApi("daily", kpi_id, filter);
+
+    let firstDay:number;
+    for (let i = 0; i < data.length; i++) {
+        const date = new Date(data[i].date);
+        if (date.getDay() === 1) {
+            firstDay = i;
+            break;
+        }
+    }
+
+    const reducedData = data.slice(firstDay);
+    const chunks = Math.ceil(reducedData.length / 7);
+
+    const result = [];
+    for (let i = 0; i < chunks; i++) {
+        const chunk = reducedData.slice(i * 7, i * 7 + 7);
+        const values = chunk.map(d => d.val);
+        const calendarWeek = (d:string) => d3.timeFormat("%W")(new Date(d));
+        result.push({week: calendarWeek(reducedData[i * 7].date), val: values});
+    }
+
+    console.log("BRICK", result);
+    
+    return result;
 }
 
 /**
@@ -114,4 +171,4 @@ async function convertFormula(formula:string) {
     return converted;
 }
 
-export { getApiBase, callApi, getLatestBarData, getBarData, getTimeData, getCumulativeTimeData, convertFormula };
+export { getApiBase, callApi, getLatestBarData, getBarData, getTimeData, getCumulativeTimeData, getBrickData, convertFormula };
