@@ -25,6 +25,11 @@ class Sparkline extends BaseChart {
         this.chartData = chartData;
         console.log("Drawing Sparkline with data: ", chartData.data);
 
+        // Store KPI id with chart
+        if (this.chartData.kpi) {
+            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
+        }
+
         // Add background bounding box
         this.setBackground();
 

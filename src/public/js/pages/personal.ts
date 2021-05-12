@@ -1,7 +1,6 @@
 import * as Helper from "../components/helperFunctions.js";
 import * as API from "../components/api.js";
 import * as PN from "../components/notifications.js";
-import * as modal from "../components/modals.js";
 import KPIBar from "./../charts/kpiBar.js";
 import Sparkline from "./../charts/sparkline.js";
 import BrickWall from "./../charts/brickWall.js";
@@ -16,27 +15,27 @@ $(async function () {
     let id = kpi.id;
     kpi["barData"] = await API.getLatestBarData(id);
     kpi["sparkData"] = await API.getTimeData(id, "AC", "Q");
-    personal.renderBar(kpi.canvasID[0], {id: id, data: kpi["barData"]});
-    personal.renderSpark(kpi.canvasID[1], {id: id, data: kpi["sparkData"]});
+    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"]});
+    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"]});
 
     kpi = personal.kpis[1];
     id = kpi.id;
     kpi["barData"] = await API.getBarData(id, "MTD");
     kpi["sparkData"] = await API.getCumulativeTimeData(id, "AC", "Q");
-    personal.renderBar(kpi.canvasID[0], {id: id, data: kpi["barData"]});
-    personal.renderSpark(kpi.canvasID[1], {id: id, data: kpi["sparkData"]});
+    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"]});
+    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"]});
 
     kpi = personal.kpis[2];
     id = kpi.id;
     kpi["barData"] = await API.getBarData(id, "MTD");
     kpi["sparkData"] = await API.getTimeData(id, "AC", "M");
-    personal.renderBar(kpi.canvasID[0], {id: id, data: kpi["barData"]});
-    personal.renderSpark(kpi.canvasID[1], {id: id, data: kpi["sparkData"]});
+    personal.renderBar(kpi.canvasID[0], {kpi: id, data: kpi["barData"]});
+    personal.renderSpark(kpi.canvasID[1], {kpi: id, data: kpi["sparkData"]});
     
     kpi = personal.kpis[3];
     id = kpi.id;
     personal.kpis[3]["data"] = await API.getTimeData(id, "AC", "Q");
-    personal.renderBrick(String(kpi.canvasID), {id: id, data: kpi["data"]});
+    personal.renderBrick(String(kpi.canvasID), {kpi: id, data: kpi["data"]});
 });
 
 class Personal {
@@ -109,21 +108,6 @@ class Personal {
         $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
             PN.displayNotification(this.kpis[1]["masterdata"]);
-        });
-
-        $(document).on("longtouch", ".chart-canvas", (evt) => {
-            const target = evt.target;
-            // Retrieve master data
-            // const id = $(target).data("id");
-            const modalContent = [
-                {name:"Short Name", val: "Gross Sales"},
-                {name:"Unit", val: "$"},
-                {name:"Type", val: "Aggregate"},
-                {name:"Formula", val: "{4b9ad3f2ec7c} * {066642e39dac}"},
-                {name:"ID", val: "74351e8d7097"}
-            ];
-            modal.fill("Gross Sales", modalContent);
-            modal.display();
         });
     }
 }

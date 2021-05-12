@@ -23,6 +23,11 @@ class BarChart extends BaseChart {
         const data = chartData.data;
         console.log("Drawing BarChart with data: ", data);
 
+        // Store KPI id with chart
+        if (this.chartData.kpi) {
+            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
+        }
+
         const margin = this.baseData.margin;
 
         this.barWidth = 0.75 * (this.baseData.width - margin.x) / data.length;

@@ -1,3 +1,6 @@
+import * as Modal from "./components/modals.js";
+import * as API from "./components/api.js";
+
 $(function () {
     console.info("Document Ready");
     new App();
@@ -12,10 +15,28 @@ class App {
         // Initialize popovers
         $("[data-toggle='popover']").popover();
 
-        // Setup long touch event listener for all charts
-        // $(document).on("longtouch", ".chart-canvas", (e) => {
-        //     console.log("Long touch on", e.currentTarget);
-        // });
+        // Setup canvas long touch event
+        $(document).on("longtouch", ".chart-canvas", async (evt) => {
+            const target = evt.currentTarget;
+            const kpi = $(target).data("kpi");
+
+            if (kpi=== undefined) {
+                return;
+            }
+
+            // Get master data from API
+            const data = await API.callApi("masterdata", kpi);
+
+            // Fill and display modal
+            const modalContent = [
+                {name:"Short Name", val: data.shortname},
+                {name:"Unit", val: data.unit},
+                {name:"Formula", val: data.shortname},
+                {name:"ID", val: data.shortname}
+            ];
+            Modal.fill(data.name, modalContent);
+            Modal.display();
+        });
 
         // Register Service Workers in Prod
         if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {

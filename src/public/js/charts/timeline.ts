@@ -26,6 +26,11 @@ class Timeline extends BaseChart {
         const data = chartData.data;
         console.log("Drawing Timeline with data: ", data);
 
+        // Store KPI id with chart
+        if (this.chartData.kpi) {
+            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
+        }
+
         // Create scales with default function
         this.setScales();
 

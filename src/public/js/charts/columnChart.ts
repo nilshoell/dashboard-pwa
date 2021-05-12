@@ -22,6 +22,11 @@ class ColumnChart extends BaseChart {
         const data = chartData.data;
         console.log("Drawing ColumnChart with data: ", data);
 
+        // Store KPI id with chart
+        if (this.chartData.kpi) {
+            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
+        }
+
         const margin = this.baseData.margin;
 
         this.barHeight = 0.75 * (this.baseData.height - margin.y) / data.length;

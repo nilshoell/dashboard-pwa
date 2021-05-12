@@ -23,6 +23,11 @@ class BrickWall extends BaseChart {
         const data = chartData.data;
         console.log("Drawing BrickWall with data: ", data);
 
+        // Store KPI id with chart
+        if (this.chartData.kpi) {
+            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
+        }
+
         const margin = this.baseData.margin;
 
         this.setScales();

@@ -29,6 +29,11 @@ class KPIBar extends BaseChart {
 
         console.log("Drawing KPIBar with data: ", data);
 
+        // Store KPI id with chart
+        if (this.chartData.kpi) {
+            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
+        }
+
         this.setScales();
 
         this.barHeight = 0.5 * (this.baseData.height - margin.y);

@@ -21,15 +21,15 @@ class Home {
         });
 
         this.kpis = [
-            {data: {
+            {kpi:"74351e8d7097", data: {
                 barData: [5210,4530,6890],
                 sparkData: Helper.randomSpark(4000,5000,30,4530),
             }, name: "Test-KPI 1", rendered: false},
-            {data: {
+            {kpi:"74351e8d7097", data: {
                 barData: [2550210,7445300,9468990],
                 sparkData: Helper.randomSpark(7000000,7500000,30,7445300),
             }, name: "Test-KPI 2", rendered: false},
-            {data: {
+            {kpi:"74351e8d7097", data: {
                 barData: [52100,45300,68900],
                 sparkData: Helper.randomSpark(40000,45000,30,45300),
             }, name: "Test-KPI 3", rendered: false}
