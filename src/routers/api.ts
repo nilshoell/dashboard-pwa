@@ -107,12 +107,17 @@ const getMasterData = async (params) => {
     const stmt = await db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id);
     const result = await stmt.get();
     await stmt.finalize();
-    returnObj["data"] = result;
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
 
     await db.close();
 
     const children = await getChildren(params);
-    
+
     returnObj["data"]["children"] = children["data"];
 
     returnObj["success"] = true;
@@ -135,13 +140,17 @@ const getChildren = async (params) => {
 
     const stmt = await db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
     const result = await stmt.all();
-    returnObj["data"] = result.map(d => d.id);
     await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result.map(d => d.id);
+    } else {
+        returnObj["data"] = [];
+    }
 
     await db.close();
 
     returnObj["success"] = true;
-    console.log("Return:", returnObj);
     return returnObj;
 };
 
@@ -164,8 +173,13 @@ const getDaily = async (params) => {
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
-    returnObj["data"] = result;
     await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
 
     await db.close();
 
@@ -195,8 +209,13 @@ const getLatest = async (params) => {
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
     const result = await stmt.all();
-    returnObj["data"] = result;
     await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
 
     await db.close();
 
@@ -223,8 +242,13 @@ const getLatest = async (params) => {
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
-    returnObj["data"] = result;
     await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
 
     await db.close();
 
@@ -242,8 +266,7 @@ const getPeriod = async (params) => {
     const returnObj = {};
     Object.assign(returnObj, defaultReturn);
     if (params.filter.period === undefined || params.filter.period === "") {
-        returnObj["errMsg"] = "No period provided.";
-        throw new Error("No period provided.");
+        params.filter.period = "YTD";
     }
 
     const period = params.filter.period;
@@ -346,8 +369,13 @@ const getTimeframe = async (params) => {
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
-    returnObj["data"] = result;
     await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
 
     await db.close();
 

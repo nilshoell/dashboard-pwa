@@ -19,6 +19,15 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
 
     // Setup request
     const api_base = getApiBase();
+
+    // Filter defaults
+    if (!filter["period"]) {
+        filter["period"] = "YTD";
+    }
+    if (!filter["scenario"]) {
+        filter["scenario"] = "AC";
+    }
+
     const filter_string = encodeURIComponent(JSON.stringify(filter));
     const api_url = api_base + method + "/" + kpi + "/" + filter_string;
 
@@ -28,7 +37,7 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
 
     // Immediately return on error
     if (!data.success) {
-        console.error("API Request failed", data.errMsg);
+        console.error("API Request failed:", data.errMsg);
         return data;
     }
 
@@ -42,7 +51,7 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
     }
 }
 
-async function getBarData(kpi_id:string) {
+async function getLatestBarData(kpi_id:string) {
     const data = [];
     data.push(await callApi("latest", kpi_id));
     data.push(await callApi("latest", kpi_id, {scenario: "PY"}));
@@ -51,4 +60,24 @@ async function getBarData(kpi_id:string) {
     return data;
 }
 
-export { getApiBase, callApi, getBarData };
+async function getBarData(kpi_id:string, period = "YTD") {
+    const data = [];
+    data.push(await callApi("timeframe", kpi_id, {scenario: "AC", period: period}));
+    data.push(await callApi("timeframe", kpi_id, {scenario: "PY", period: period}));
+    data.push(await callApi("timeframe", kpi_id, {scenario: "BU", period: period}));
+    data.push(await callApi("timeframe", kpi_id, {scenario: "FC", period: period}));
+    return data;
+}
+
+async function getTimeData(kpi_id:string, scenario = "AC", period = "YTD") {
+    const data = await callApi("daily", kpi_id, {scenario: scenario, period: period});
+    return data;
+}
+
+async function getCumulativeTimeData(kpi_id:string, scenario = "AC", period = "YTD") {
+    let data = await callApi("daily", kpi_id, {scenario: scenario, period: period});
+    data = await Helper.cumulativeSum(data, "value");
+    return data;
+}
+
+export { getApiBase, callApi, getLatestBarData, getBarData, getTimeData, getCumulativeTimeData };

@@ -12,10 +12,31 @@ $(async function () {
     await personal.getMasterData();
 
     // Retrieve data from API
-    let id = personal.kpis[0].id;
-    personal.kpis[0]["barData"] = await API.getBarData(id);
-    id = personal.kpis[1].id;
-    personal.kpis[1]["barData"] = await API.getBarData(id);
+    let kpi = personal.kpis[0];
+    let id = kpi.id;
+    kpi["barData"] = await API.getLatestBarData(id);
+    kpi["sparkData"] = await API.getTimeData(id, "AC", "Q");
+    personal.renderBar(kpi.canvasID[0], {id: id, data: kpi["barData"]});
+    personal.renderSpark(kpi.canvasID[1], {id: id, data: kpi["sparkData"]});
+
+    kpi = personal.kpis[1];
+    id = kpi.id;
+    kpi["barData"] = await API.getBarData(id, "MTD");
+    kpi["sparkData"] = await API.getCumulativeTimeData(id, "AC", "Q");
+    personal.renderBar(kpi.canvasID[0], {id: id, data: kpi["barData"]});
+    personal.renderSpark(kpi.canvasID[1], {id: id, data: kpi["sparkData"]});
+
+    kpi = personal.kpis[2];
+    id = kpi.id;
+    kpi["barData"] = await API.getBarData(id, "MTD");
+    kpi["sparkData"] = await API.getTimeData(id, "AC", "M");
+    personal.renderBar(kpi.canvasID[0], {id: id, data: kpi["barData"]});
+    personal.renderSpark(kpi.canvasID[1], {id: id, data: kpi["sparkData"]});
+    
+    kpi = personal.kpis[3];
+    id = kpi.id;
+    personal.kpis[3]["data"] = await API.getTimeData(id, "AC", "Q");
+    personal.renderBrick(String(kpi.canvasID), {id: id, data: kpi["data"]});
 });
 
 class Personal {
@@ -37,26 +58,42 @@ class Personal {
      */
     async getMasterData() {
         this.kpis.forEach(async kpi => {
-            kpi["masterdata"] = await Helper.callApi("masterdata", kpi.id);
+            kpi["masterdata"] = await API.callApi("masterdata", kpi.id);
         });
     }
 
-    renderBar(canvasID:string, chartData) {
+    /**
+     * Renders a KPIBar chart
+     * @param canvasID The HTML id of the container
+     * @param chartData The data to draw
+     */
+    renderBar(canvasID:string, chartData:any) {
         const chart = new KPIBar(canvasID);
         chart.drawChart(chartData);
         this.charts.push(chart);
     }
 
-    renderSpark(canvasID:string, chartData) {
+    /**
+     * Renders a Sparkline chart
+     * @param canvasID The HTML id of the container
+     * @param chartData The data to draw
+     */
+    renderSpark(canvasID:string, chartData:any) {
         const chart = new Sparkline(canvasID);
         chart.drawChart(chartData);
         this.charts.push(chart);
     }
 
-    renderBrick(canvasID:string, chartData) {
+    /**
+     * Renders a BrickWall chart
+     * @param canvasID The HTML id of the container
+     * @param chartData The data to draw
+     */
+    renderBrick(canvasID:string, chartData:any) {
         const chart = new BrickWall(canvasID);
         chart.drawChart(chartData);
         this.charts.push(chart);
+        
     }
 
     /**
