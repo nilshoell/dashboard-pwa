@@ -1,10 +1,10 @@
 {
     "start_date": "2020-01-01",
     "end_date": "2021-06-30",
-    "kpi": "74351e8d7097",
-    "start_value": 1,
-    "end_value": 15,
+    "kpi": "250e42977eb7",
+    "start_value": 5,
+    "end_value": 9,
     "rand_dims": false,
     "scenario": "AC",
-    "calculated": true
+    "calculated": false
 }

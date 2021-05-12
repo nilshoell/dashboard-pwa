@@ -20,7 +20,8 @@ prog_date = "2021-05-04"
 prog_description = "Generate CSVs to import into a DB."
 
 # Programm config vars
-output_path = 'src/db/kpi.csv'
+output_path = 'src/db/sql.csv'
+csv_path = 'src/db/kpi.csv'
 partners = [1001,1002,1004,1005,1003,1004,1005,1006,1007,1005,1008,1009,1010,1008,1009,1010]
 products = [1004,1005,1006,1007,1005,1009,1008,1009,1010,1011,1012,1013,1014,1012,1013,1014]
 
@@ -98,6 +99,7 @@ def generateSQL(date, value):
 
 # ---------------------- GENERATION ----------------------
 measures = []
+measures_csv = []
 
 if config['rand_dims']:
     sql_start = "INSERT INTO `measures` (`timestamp`, `kpi`, `value`, `partner`, `product`, `scenario`) VALUES ("
@@ -107,6 +109,7 @@ else:
 sql_end = ");\n"
 
 measures.append(sql_start + generateSQL(start_date, start_value) + sql_end)
+measures_csv.append([start_date.isoformat(), start_value])
 
 value = start_value
 index = 0
@@ -124,12 +127,17 @@ for d in range(day_diff):
     elif value_day <= 0 and r > 20:
         value = generateVal(value, index)
     measures.append(sql_start + generateSQL(date, value) + sql_end)
+    measures_csv.append([date.isoformat(), value])
     index += 1
 
 
 # ---------------------- OUTPUT ----------------------
-f=open(output_path,'w')
-f.writelines(measures)
-f.close()
+# f=open(csv_path,'w')
+# f.writelines(measures_csv)
+# f.close()
+
+with open(csv_path, 'w', newline='') as f:
+    writer = csv.writer(f)
+    writer.writerows(measures_csv)
 
 exit()
