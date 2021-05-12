@@ -99,6 +99,11 @@ class Timeline extends BaseChart {
      */
     drawAxes() {
         const margin = this.baseData.margin;
+        const unit = this.chartData.masterdata.unit;
+        let format = "~s";
+        if (unit === "%") {
+            format = "%";
+        }
         const xAxis = g => g
             .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
             .call(d3.axisBottom(this.xScale).ticks(5, "%b-%d").tickSizeOuter(0))
@@ -107,7 +112,7 @@ class Timeline extends BaseChart {
 
         const yAxis = g => g
             .attr("transform", "translate(" + (this.baseData.width - margin.right - 3) + ", 0)")
-            .call(d3.axisRight(this.yScale).ticks(5, "~s"))
+            .call(d3.axisRight(this.yScale).ticks(5, format))
             .call(g => g.select(".domain").remove());
 
         d3.selectAll("#" + this.canvasID + " svg g.x-axis").remove();

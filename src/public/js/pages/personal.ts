@@ -1,4 +1,3 @@
-import * as Helper from "../components/helperFunctions.js";
 import * as API from "../components/api.js";
 import * as PN from "../components/notifications.js";
 import KPIBar from "./../charts/kpiBar.js";

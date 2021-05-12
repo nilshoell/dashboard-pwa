@@ -37,7 +37,7 @@ routes.forEach(page => {
 router.get("/kpi/:id", function(req, res) {
   const params = req.params;
   const page = {
-    id: "kpi", link:"/kpi", title: "KPI", icon: "fa-home",
+    id: params.id, link:"/kpi", title: "KPI", icon: "fa-home",
     help: {title: "Help", content:"This is helpful help!"}
   };
   res.render("pages/kpi", {routes, page, params});
