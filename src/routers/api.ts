@@ -169,7 +169,7 @@ const getDaily = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT SUM(value) FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp;";
+    const sql = "SELECT timestamp, SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
@@ -205,7 +205,7 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? SORT BY timestamp DESC LIMIT 1;";
+    const sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1;";
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
     const result = await stmt.all();
@@ -238,7 +238,7 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT SUM(value) FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+    const sql = "SELECT partner, SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
