@@ -11,16 +11,29 @@ class App {
     constructor() {
         console.info("Initializing App");
         this.navigationHandlers();
+        this.canvasHandlers();
 
         // Initialize popovers
         $("[data-toggle='popover']").popover();
 
+        // Register Service Workers in Prod
+        if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
+            this.registerSW();
+            this.broadcastChannel();
+        }
+
+    }
+
+    /**
+     * Sets up event handlers for global chart interactions
+     */
+    canvasHandlers () {
         // Setup canvas long touch event
         $(document).on("longtouch", ".chart-canvas", async (evt) => {
             const target = evt.currentTarget;
             const kpi = $(target).data("kpi");
 
-            if (kpi=== undefined) {
+            if (kpi === undefined) {
                 return;
             }
 
@@ -38,12 +51,17 @@ class App {
             Modal.display();
         });
 
-        // Register Service Workers in Prod
-        if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
-            this.registerSW();
-            this.broadcastChannel();
-        }
+        // Setup KPI drill-down
+        $(document).on("click", ".chart-canvas", (evt) => {
+            const target = evt.currentTarget;
+            const kpi = $(target).data("kpi");
 
+            if (kpi === undefined) {
+                return;
+            }
+
+            window.location.href = "/kpi/" + kpi;
+        });
     }
 
     /**
@@ -77,7 +95,7 @@ class App {
     /**
      * Registers the service workers for PWA completeness
      */
-    registerSW() {
+    registerSW () {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("/public/js/service-worker.js", {scope: "/"})
               .then((reg) => {
