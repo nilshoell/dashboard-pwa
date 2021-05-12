@@ -28,6 +28,12 @@ class BarChart extends BaseChart {
             $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
 
+        // Add title if available
+        const label = $("#" + this.canvasID + " .chart-label")[0];
+        if (label) {
+            label.innerText = this.chartData.masterdata.name;
+        }
+
         const margin = this.baseData.margin;
 
         this.barWidth = 0.75 * (this.baseData.width - margin.x) / data.length;

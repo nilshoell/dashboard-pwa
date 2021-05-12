@@ -27,6 +27,12 @@ class ColumnChart extends BaseChart {
             $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
 
+        // Add title if available
+        const label = $("#" + this.canvasID + " .chart-label")[0];
+        if (label) {
+            label.innerText = this.chartData.masterdata.name;
+        }
+
         const margin = this.baseData.margin;
 
         this.barHeight = 0.75 * (this.baseData.height - margin.y) / data.length;

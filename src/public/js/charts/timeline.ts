@@ -31,6 +31,12 @@ class Timeline extends BaseChart {
             $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
 
+        // Add title if available
+        const label = $("#" + this.canvasID + " .chart-label")[0];
+        if (label) {
+            label.innerText = this.chartData.masterdata.name;
+        }
+
         // Create scales with default function
         this.setScales();
 

@@ -79,11 +79,15 @@ class KPITile extends BaseChart {
 
         // Returns a shade of red for negative and a shade of green for positive numbers
         const textColor = (value:number) => {
-            if (value >= 0) {
-                return "#055b0a ";
-            } else {
-                return "#750c0c";
+            let color = "#055b0a ";
+            let invertColors = false;
+            if (this.chartData.masterdata.direction === "-") {
+                invertColors = true;
             }
+            if ((value < 0 && !invertColors) || (value >= 0 && invertColors)) {
+                color = "#750c0c ";
+            }
+            return color;
         };
 
         // Draws an easily configurable text label
