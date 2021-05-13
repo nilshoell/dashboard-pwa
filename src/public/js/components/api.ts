@@ -132,8 +132,6 @@ async function getBrickData(kpi_id:string, period = "Q", filters = {}) {
         result.push({week: calendarWeek(reducedData[i * 7].date), val: values});
     }
 
-    console.log("BRICK", result);
-    
     return result;
 }
 

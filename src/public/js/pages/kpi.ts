@@ -32,7 +32,7 @@ $(async function () {
 
     // Update page title and KPI
     $("h4.title")[0].innerText = dashboard.kpi["masterdata"].name;
-    $("#timeline .chart-label")[0].innerText = "";
+    $("#timeline .chart-label").addClass("d-none");
     $("#columnChart .chart-label")[0].innerText = "By Customers:";
     const popover_text = "This page provides a detailed overview of the KPI '" + dashboard.kpi["masterdata"].name + "', including its sub-components";
     $("#help").data("bs.popover").config.content = popover_text;
