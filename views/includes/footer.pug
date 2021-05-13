@@ -1,9 +1,9 @@
 - var help = page.help
 footer.footer#footer
   div.container.d-flex.mt-2.justify-content-around
-    button.btn.btn-main(type="button" id="help" data-toggle="popover" title=help.title data-placement="top" data-content=help.content)
+    a.btn.btn-main(tabindex="0" role="button" id="help" data-toggle="popover" title=help.title data-placement="top" data-content=help.content data-trigger="focus")
       i.fa.fas.fa-question-circle
     a.btn.btn-main(href="/" role="button" id="home")
       i.fa.fas.fa-home
-    button.btn.btn-main(type="button" id="back" onclick="window.history.back();")
+    button.btn.btn-main(type="button" id="back")
       i.fa.fas.fa-arrow-left

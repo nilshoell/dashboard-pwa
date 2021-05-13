@@ -10,7 +10,7 @@ class ColumnChart extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
-        this.setMargins({left: 30, right:5, top: 20});
+        this.setMargins({left: 5, right:5, top: 20});
     }
 
     /**
@@ -18,10 +18,11 @@ class ColumnChart extends BaseChart {
      * @param chartData The data to draw
      */
     drawChart(chartData) {
+        // Base setup
         this.chartData = chartData;
-        const data = chartData.data;
-        console.log("Drawing ColumnChart with data: ", data);
-
+        BaseChart.prototype.drawChart(this);
+        
+        const data = chartData.data.map(d => d.val);
         const margin = this.baseData.margin;
 
         this.barHeight = 0.75 * (this.baseData.height - margin.y) / data.length;
@@ -52,13 +53,14 @@ class ColumnChart extends BaseChart {
     setScales() {
         const margin = this.baseData.margin;
         const width = this.baseData.width;
+        const data = this.chartData.data.map(d => d.val);
 
         this.yScale = (i) => {return (i * (this.barHeight + this.barSpace)) + margin.top;};
         this.yScale.bandwidth = () => {return this.barHeight;};
 
         this.xScale = d3.scaleLinear()
-            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
-            .range([margin.left, width - margin.right]);
+            .domain([0, d3.max(data, (d:number) => d)]).nice()
+            .range([margin.left, width - margin.x]);
     }
 
     /**
@@ -82,7 +84,7 @@ class ColumnChart extends BaseChart {
         const data = this.chartData.data;
         const margin= this.baseData.margin;
 
-        const labelFilter = (d:number) => this.xScale(d) - this.xScale(0) < 20;
+        const labelFilter = (d:any) => this.xScale(d.val) - this.xScale(0) < 50;
 
         this.svg.append("g")
             .attr("fill", "white")
@@ -90,13 +92,29 @@ class ColumnChart extends BaseChart {
             .selectAll("text")
             .data(data)
             .join("text")
-              .attr("x", (d:number) => this.xScale(d) + margin.left)
+              .attr("x", (d:any) => this.xScale(d.val) + margin.left)
               .attr("y", (d:number, i:number) => this.yScale(i) + this.yScale.bandwidth() / 2)
               .attr("dy", "0.35em")
               .attr("dx", -4)
-              .text((d:number) => d3.format(".2s")(d))
+              .text((d:any) => d3.format(".2s")(d.val))
             .call(text => text.filter(labelFilter) // Change style for short bars
-              .attr("dx", +4)
+              .attr("dx", +45)
+              .attr("fill", "black")
+              .attr("text-anchor", "start"));
+
+        this.svg.append("g")
+            .attr("fill", "white")
+            .attr("text-anchor", "start")
+            .selectAll("text")
+            .data(data)
+            .join("text")
+              .attr("x", 12)
+              .attr("y", (d:number, i:number) => this.yScale(i) + this.yScale.bandwidth() / 2)
+              .attr("dy", "0.35em")
+              .attr("dx", -4)
+              .text((d:any) => d.shortname)
+            .call(text => text.filter(labelFilter) // Change style for short bars
+              .attr("dx", +50)
               .attr("fill", "black")
               .attr("text-anchor", "start"));
     }

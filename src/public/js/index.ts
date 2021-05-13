@@ -1,3 +1,6 @@
+import * as Modal from "./components/modals.js";
+import * as API from "./components/api.js";
+
 $(function () {
     console.info("Document Ready");
     new App();
@@ -8,20 +11,72 @@ class App {
     constructor() {
         console.info("Initializing App");
         this.navigationHandlers();
+        this.canvasHandlers();
 
         // Initialize popovers
         $("[data-toggle='popover']").popover();
-
-        // Setup long touch event listener for all charts
-        // $(document).on("longtouch", ".chart-canvas", (e) => {
-        //     console.log("Long touch on", e.currentTarget);
-        // });
+        $(".popover-dismiss").popover({
+            trigger: "focus"
+          });
+          
 
         // Register Service Workers in Prod
         if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
             this.registerSW();
+            this.broadcastChannel();
         }
 
+        $(document).on("click", "#back", () => {
+            window.history.back();
+        });
+
+    }
+
+    /**
+     * Sets up event handlers for global chart interactions
+     */
+    canvasHandlers () {
+        // Setup canvas long touch event
+        $(document).on("longtouch", ".chart-canvas", async (evt) => {
+            const target = evt.currentTarget;
+            const kpi = $(target).data("kpi");
+            const filter = $(target).data("filter");
+
+            if (kpi === undefined) {
+                return;
+            }
+
+            // Get master data from API
+            const data = await API.callApi("masterdata", kpi);
+            let formula = await API.convertFormula(data.formula);
+            if (formula === "Direct Measurement") {
+                formula = "";
+            }
+
+            // Fill and display modal
+            const modalContent = [
+                {name:"Short Name", val: data.shortname},
+                {name:"Unit", val: data.unit},
+                {name:"Formula", val: formula},
+                {name:"Formula", val: data.formula},
+                {name:"Description", val: data.help},
+                {name:"ID", val: data.id},
+            ];
+            Modal.fill(data.name, modalContent, filter);
+            Modal.display();
+        });
+
+        // Setup KPI drill-down
+        $(document).on("click", ".chart-canvas", (evt) => {
+            const target = evt.currentTarget;
+            const kpi = $(target).data("kpi");
+
+            if (kpi === undefined) {
+                return;
+            }
+
+            window.location.href = "/kpi/" + kpi;
+        });
     }
 
     /**
@@ -87,7 +142,7 @@ class App {
     /**
      * Registers the service workers for PWA completeness
      */
-    registerSW() {
+    registerSW () {
         if ("serviceWorker" in navigator) {
             navigator.serviceWorker.register("/public/js/service-worker.js", {scope: "/"})
               .then((reg) => {
@@ -97,4 +152,15 @@ class App {
             });
         }
     }
+
+    /**
+     * Listens for messages from the push service worker
+     */
+    broadcastChannel() {
+        const channel = new BroadcastChannel("sw-messages");
+        channel.addEventListener("message", event => {
+          window.location.href = event.data.redirect;
+        });
+    }
+
 }

@@ -1,9 +1,15 @@
 import KPITile from "./../charts/kpiTile.js";
-import * as Helper from "./../components/helperFunctions.js";
+import * as API from "./../components/api.js";
 
-$(function () {
+$(async function () {
     // Setup Object
-    new Home();
+    const home = new Home();
+    await home.getKPIData();
+
+    // Render only first KPI now
+    home.renderKPI("tile1", home.kpis[0]);
+    
+    home.kpis[0].rendered = true;
 });
 
 class Home {
@@ -13,32 +19,42 @@ class Home {
 
     constructor() {
 
-        const self = this;
-
         // Initialize carousel
         $(".carousel").carousel({
             interval: 5000
         });
 
         this.kpis = [
-            {data: {
-                barData: [5210,4530,6890],
-                sparkData: Helper.randomSpark(4000,5000,30,4530),
-            }, name: "Test-KPI 1", rendered: false},
-            {data: {
-                barData: [2550210,7445300,9468990],
-                sparkData: Helper.randomSpark(7000000,7500000,30,7445300),
-            }, name: "Test-KPI 2", rendered: false},
-            {data: {
-                barData: [52100,45300,68900],
-                sparkData: Helper.randomSpark(40000,45000,30,45300),
-            }, name: "Test-KPI 3", rendered: false}
+            {kpi: "74351e8d7097", period: "MTD", rendered: false},
+            {kpi: "dd751c6b67fb", period: "M", rendered: false},
+            {kpi: "54de7813948a", period: "MTD", rendered: false}
         ];
 
-        // Render the first KPI
-        self.renderKPI("tile1", this.kpis[0]);
-
         this.configureEventListener();
+    }
+
+    async getKPIData() {
+
+        for (let i = 0; i < this.kpis.length; i++) {
+
+            const kpi = this.kpis[i];
+            const id = kpi.kpi;
+
+            // Get master data
+            this.kpis[i]["masterdata"] = await API.callApi("masterdata", id);
+            this.kpis[i]["data"] = {};
+
+            // Get values
+            if (this.kpis[i]["masterdata"].aggregate === "sum") {
+                this.kpis[i]["data"]["barData"] = await API.getBarData(id, kpi.period);
+                this.kpis[i]["data"]["sparkData"] = await API.getCumulativeTimeData(id, "AC", kpi.period);
+                this.kpis[i]["filter"] = {period: kpi.period, scenario: "AC"};
+            } else {
+                this.kpis[i]["data"]["barData"] = await API.getLatestBarData(id);
+                this.kpis[i]["data"]["sparkData"] = await API.getTimeData(id);
+                this.kpis[i]["filter"] = {period: "Latest", scenario: "AC"};
+            }
+        }
     }
 
     configureEventListener() {
@@ -46,7 +62,8 @@ class Home {
         window.addEventListener("resize", () => self.resizeHandler());
 
         // Render other charts on first carousel slide
-        $("#kpiCarousel").on("slid.bs.carousel", function (e) {
+        $(document).on("slid.bs.carousel", "#kpiCarousel", function (e:any) {
+            console.log(e.to);
             if (!self.kpis[e.to].rendered) {
                 self.renderKPI("tile" + (e.to +1), self.kpis[e.to]);
                 self.kpis[e.to].rendered = true;

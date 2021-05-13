@@ -19,10 +19,12 @@ class BarChart extends BaseChart {
      */
     drawChart(chartData):void {
         const self = this;
-        this.chartData = chartData;
-        const data = chartData.data;
-        console.log("Drawing BarChart with data: ", data);
 
+        // Base setup
+        this.chartData = chartData;
+        BaseChart.prototype.drawChart(this);
+
+        const data = chartData.data;
         const margin = this.baseData.margin;
 
         this.barWidth = 0.75 * (this.baseData.width - margin.x) / data.length;

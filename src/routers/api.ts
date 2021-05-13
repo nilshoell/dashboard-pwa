@@ -1,9 +1,51 @@
 import Router from "express";
 import sqlite3 from "sqlite3";
 import {open} from "sqlite";
+import { start } from "repl";
 
 const router = Router();
 
+/**
+ * ---------------------------------------------------------------------------
+ * ---------------------------------- SETUP ----------------------------------
+ * ---------------------------------------------------------------------------
+ */
+
+/**
+ * Calculates the cumulative sum of an array, call with arr.map(cumulativeSum(0))
+ * @param array The initial array
+ * @param field The filed to accumulate
+ * @returns Array
+ */
+async function cumulativeSum(array:any[], field = "val") {
+    const values = array.map(d => d[field]);
+    const sums = values.map((sum => value => sum += value)(0));
+    const retArr = array.map((d, i) => {
+        const val = {};
+        val[field] = sums[i];
+        const obj = Object.assign(d, val);
+        return obj;
+    });
+    return retArr;
+}
+
+/**
+ * Returns the sum of an array of objects
+ * @param array The initial array
+ * @param field The filed to accumulate
+ * @returns Total sum
+ */
+async function objSum(array:any[], field = "val") {
+    const values = array.map(d => d[field]);
+    const reducer = (accumulator:number, currentValue:number) => accumulator + currentValue;
+    const sum = await values.reduce(reducer);
+    return sum;
+}
+
+/**
+ * Opens the Database
+ * @returns Database Object
+ */
 async function openDB() {
     return open({
         filename: "./dist/db/dashboard.db",
@@ -11,10 +53,27 @@ async function openDB() {
     });
 }
 
+// Default Return Object
 const defaultReturn = {
     success: false,
     errMsg: ""
 };
+
+/**
+ * Converts a Date object to an ISO date string
+ * @param date A Date Object
+ * @returns ISO-String
+ */
+function toISO(date:Date) {
+    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2,"0") + "-" + String(date.getDate()).padStart(2,"0")
+}
+
+
+/**
+ * ---------------------------------------------------------------------------
+ * ------------------------------- API METHODS -------------------------------
+ * ---------------------------------------------------------------------------
+ */
 
 /**
  * Endpoint to test whether the API is available
@@ -23,7 +82,9 @@ const defaultReturn = {
  */
 const testFunction = async (params) => {
 
-    const returnObj = defaultReturn;
+    // Copy object by val
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
 
     returnObj["params"] = params;
     console.log("[API] Calling testfunc");
@@ -32,7 +93,7 @@ const testFunction = async (params) => {
 
     const result = await db.all("SELECT * FROM kpis");
     returnObj["data"] = result;
-    returnObj.success = true;
+    returnObj["success"] = true;
 
     await db.close();
 
@@ -47,7 +108,8 @@ const testFunction = async (params) => {
  */
 const getMasterData = async (params) => {
 
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
@@ -55,15 +117,21 @@ const getMasterData = async (params) => {
     const stmt = await db.prepare("SELECT * FROM kpis WHERE id = ?;", params.id);
     const result = await stmt.get();
     await stmt.finalize();
-    returnObj["data"] = result;
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
 
     await db.close();
 
-    returnObj["data"]["children"] = await getChildren(params)["data"];
+    const children = await getChildren(params);
 
-    returnObj.success = true;
+    returnObj["data"]["children"] = children["data"];
+
+    returnObj["success"] = true;
     return returnObj;
-
 };
 
 
@@ -74,23 +142,26 @@ const getMasterData = async (params) => {
  */
 const getChildren = async (params) => {
 
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
     const db = await openDB();
 
     const stmt = await db.prepare("SELECT id FROM kpis WHERE parent = ?;", params.id);
     const result = await stmt.all();
-    returnObj["data"] = result;
     await stmt.finalize();
-    console.log(result);
-    
+
+    if (result !== undefined) {
+        returnObj["data"] = result.map(d => d.id);
+    } else {
+        returnObj["data"] = [];
+    }
 
     await db.close();
 
-    returnObj.success = true;
+    returnObj["success"] = true;
     return returnObj;
-
 };
 
 
@@ -100,25 +171,160 @@ const getChildren = async (params) => {
  * @returns KPI data as JSON
  */
 const getDaily = async (params) => {
-    return params;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    let sql = "SELECT timestamp AS date, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT timestamp AS date, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+    } 
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
 };
 
 
 /**
- * Gets data aggregated by a specified period; wrapper for getTimeFrame()
+ * Gets the latest data point
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+const getLatest = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const now =new Date();
+    const today = toISO(now);
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    const sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1;";
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * Returns FC values
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getForecast = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const now =new Date();
+    const today = toISO(now);
+
+    const db = await openDB();
+
+    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND timestamp > ?;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND timestamp > ?;";
+    } 
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * Gets data aggregated by day
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getByPartner = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    let sql = "SELECT partner, partners.name, partners.shortname, SUM(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT partner, partners.name, partners.shortname, AVG(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
+    }
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * Helper function to convert period labels into time frames
  * @param params Request parameters
  * @returns KPI data as JSON
  */
 const getPeriod = async (params) => {
-    const returnObj = defaultReturn;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
     if (params.filter.period === undefined || params.filter.period === "") {
-        returnObj["errMsg"] = "No period provided.";
-        return returnObj;
+        params.filter.period = "YTD";
     }
 
     const period = params.filter.period;
     const now = new Date();
-    const today_str = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+    const today_str = toISO(now);
     const today = new Date(today_str);
     const curYear = today.getFullYear();
     const curMonth = today.getMonth() + 1;
@@ -129,8 +335,7 @@ const getPeriod = async (params) => {
     let startMonth:number;
 
     if (!period.endsWith("TD") && (params.filter.endDate === undefined || params.filter.endDate === "")) {
-        returnObj["errMsg"] = "End date required for all non-to-date periods.";
-        return returnObj;
+        endDate = today_str;
     } else if (!period.endsWith("TD")) {
         endDate = params.filter.endDate;
     }
@@ -138,22 +343,22 @@ const getPeriod = async (params) => {
     switch (period) {
         case "W":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 7);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "M":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 30);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "MTD":
             endDate = today_str;
-            startDate = curYear + "-" + curMonth + "-01";
+            startDate = curYear + "-" + String(curMonth).padStart(2, "0") + "-01";
             break;
 
         case "Q":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 120);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "QTD":
@@ -177,7 +382,7 @@ const getPeriod = async (params) => {
 
         case "Y":
             startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 365);
-            startDate = startDateObj.getFullYear() + "-" + (startDateObj.getMonth() + 1) + "-" + startDateObj.getDate();
+            startDate = toISO(startDateObj);
             break;
 
         case "YTD":
@@ -187,13 +392,23 @@ const getPeriod = async (params) => {
     
         default:
             returnObj["errMsg"] = "Invalid period '" + period + "'.";
-            return returnObj;
+            throw new Error("Invalid period '" + period + "'.");
+    }
+
+    // Subtract a year if scenario = PY
+    if (params.filter.scenario === "PY") {
+        const newStart = new Date(startDate);
+        const newEnd = new Date(endDate);
+        newStart.setFullYear(newStart.getFullYear() - 1);
+        newEnd.setFullYear(newEnd.getFullYear() - 1);
+        startDate = toISO(newStart);
+        endDate = toISO(newEnd);
     }
 
     params["startDate"] = startDate;
     params["endDate"] = endDate;
 
-    return getTimeframe(params);
+    return params;
 };
 
 
@@ -204,8 +419,66 @@ const getPeriod = async (params) => {
  * @returns KPI data as JSON
  */
 const getTimeframe = async (params) => {
-    return params;
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    } 
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
 };
+
+
+const hasPartner = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    const sql = "SELECT COUNT(*) AS val FROM measures WHERE kpi = ? AND partner NOT NULL;";
+    const stmt = await db.prepare(sql, params.id);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result[0];
+    } else {
+        returnObj["data"] = {val: 0};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * ---------------------------------------------------------------------------
+ * --------------------------------- ROUTING ---------------------------------
+ * ---------------------------------------------------------------------------
+ */
 
 
 /**
@@ -213,11 +486,14 @@ const getTimeframe = async (params) => {
  */
 const methods = {
     test: testFunction,
-    daily: getDaily,
-    period: getPeriod,
-    timeframe: getTimeframe,
+    masterdata: getMasterData,
     children: getChildren,
-    masterdata: getMasterData
+    daily: getDaily,
+    timeframe: getTimeframe,
+    latest: getLatest,
+    forecast: getForecast,
+    partner: getByPartner,
+    hasPartner: hasPartner
 };
 
 /**

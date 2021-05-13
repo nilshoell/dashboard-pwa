@@ -122,45 +122,34 @@ function emptyObj(testObj:Record<string, unknown>) {
 
 
 /**
- * Returns the base URL for the KPI API
+ * Calculates the cumulative sum of an array, call with arr.map(cumulativeSum(0))
+ * @param array The initial array
+ * @param field The filed to accumulate
+ * @returns Array
  */
- function getApiBase() {
-    return window.location.origin + "/api/kpi/";
+ async function cumulativeSum(array:any[], field = "val") {
+    const values = array.map(d => d[field]);
+    const sums = values.map((sum => value => sum += value)(0));
+    const retArr = array.map((d, i) => {
+        const val = {};
+        val[field] = sums[i];
+        const obj = Object.assign(d, val);
+        return obj;
+    });
+    return retArr;
 }
-
 
 /**
- * Wrapper for the API
- * @param method The API method to call
- * @param kpi The KPI to refer to
- * @param filter (optional) Additional filters, if supported by the method
- * @returns Result object, with the actual values in the 'data' field
+ * Returns the sum of an array of objects
+ * @param array The initial array
+ * @param field The filed to accumulate
+ * @returns Total sum
  */
-async function callApi(method:string, kpi:string, filter = {}, fullResponse= false) {
-
-    // Setup request
-    const api_base = getApiBase();
-    const filter_string = encodeURIComponent(JSON.stringify(filter));
-    const api_url = api_base + method + "/" + kpi + "/" + filter_string;
-
-    // Fetch the API
-    const response = await fetch(api_url);
-    const data = await response.json();
-
-    // Immediately return on error
-    if (!data.success) {
-        console.error("API Request failed", data.errMsg);
-        return data;
-    }
-
-    // Only return everything if requested or if the response does not contain data
-    if (fullResponse) {
-        return data;
-    } else if (!emptyObj(data.data)) {
-        return data.data;
-    } else {
-        return data;
-    }
+async function objSum(array:any[], field = "val") {
+    const values = array.map(d => d[field]);
+    const reducer = (accumulator:number, currentValue:number) => accumulator + currentValue;
+    const sum = await values.reduce(reducer);
+    return sum;
 }
 
-export { round, valMinify, randomSpark, getCaller, emptyObj, getApiBase, callApi };
+export { round, valMinify, randomSpark, getCaller, emptyObj, cumulativeSum, objSum };

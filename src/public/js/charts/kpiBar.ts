@@ -18,16 +18,17 @@ class KPIBar extends BaseChart {
      * @param chartData The data to draw, with {data: [py,act,bud,fc]}
      */
     drawChart(chartData) {
+        // Base setup
         this.chartData = chartData;
-        const data = chartData.data;
-        const margin = this.baseData.margin;
+        BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs
         if (this.baseData.width === 0) {
             return;
         }
 
-        console.log("Drawing KPIBar with data: ", data);
+        const data = chartData.data;
+        const margin = this.baseData.margin;
 
         this.setScales();
 
@@ -113,11 +114,15 @@ class KPIBar extends BaseChart {
 
         // Returns a shade of red for negative and a shade of green for positive numbers
         const textColor = (value:number) => {
-            if (value >= 0) {
-                return "#055b0a ";
-            } else {
-                return "#750c0c";
+            let color = "#055b0a ";
+            let invertColors = false;
+            if (this.chartData.masterdata.direction === "-") {
+                invertColors = true;
             }
+            if ((value < 0 && !invertColors) || (value >= 0 && invertColors)) {
+                color = "#750c0c ";
+            }
+            return color;
         };
 
         // Wrapper to draw labels
@@ -135,12 +140,18 @@ class KPIBar extends BaseChart {
             });
         };
 
+        const unit = this.chartData.masterdata.unit;
+        let format = ".2s";
+        if (unit === "%") {
+            format = ".1%";
+        }
+
         // PY deviation in %
         textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
         // Actual value
-        textLabel(this.baseData.width * 0.99, this.barHeight + margin.top, labelData[1]);
+        textLabel(this.baseData.width * 0.99, this.barHeight + margin.top, labelData[1], "black", format);
         // BUD deviation in %
-        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
+        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], textColor(labelData[2]), "+.1%", [["font-size", "small"]]);
 
     }
 
@@ -164,9 +175,14 @@ class KPIBar extends BaseChart {
      */
     drawAxes() {
         const margin = this.baseData.margin;
+        const unit = this.chartData.masterdata.unit;
+        let format = "~s";
+        if (unit === "%") {
+            format = "%";
+        }
         const xAxis = g => g
             .attr("transform", "translate(" + margin.left + "," + (this.baseData.height - margin.bottom - 3) + ")")
-            .call(d3.axisBottom(this.xScale).ticks(2, "~s"))
+            .call(d3.axisBottom(this.xScale).ticks(2, format))
             .call(g => g.select(".domain").remove());
 
 
