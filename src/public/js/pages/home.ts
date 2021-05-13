@@ -1,9 +1,13 @@
 import KPITile from "./../charts/kpiTile.js";
-import * as Helper from "./../components/helperFunctions.js";
+import * as API from "./../components/api.js";
 
-$(function () {
+$(async function () {
     // Setup Object
-    new Home();
+    const home = new Home();
+    await home.getKPIData();
+
+    // Render only first KPI now
+    home.renderKPI("tile1", home.kpis[0]);
 });
 
 class Home {
@@ -13,32 +17,42 @@ class Home {
 
     constructor() {
 
-        const self = this;
-
         // Initialize carousel
         $(".carousel").carousel({
-            interval: 5000
+            interval: false
         });
 
-        this.kpis = [
-            {kpi:"74351e8d7097", data: {
-                barData: [5210,4530,6890],
-                sparkData: Helper.randomSpark(4000,5000,30,4530),
-            }, name: "Test-KPI 1", rendered: false},
-            {kpi:"74351e8d7097", data: {
-                barData: [2550210,7445300,9468990],
-                sparkData: Helper.randomSpark(7000000,7500000,30,7445300),
-            }, name: "Test-KPI 2", rendered: false},
-            {kpi:"74351e8d7097", data: {
-                barData: [52100,45300,68900],
-                sparkData: Helper.randomSpark(40000,45000,30,45300),
-            }, name: "Test-KPI 3", rendered: false}
-        ];
+        this.kpis = [{kpi: "74351e8d7097", period: "MTD"}, {kpi: "dd751c6b67fb", period: "M"}, {kpi: "54de7813948a", period: "MTD"}];
 
         // Render the first KPI
-        self.renderKPI("tile1", this.kpis[0]);
+        // self.renderKPI("tile1", this.kpis[0]);
 
         this.configureEventListener();
+    }
+
+    async getKPIData() {
+
+        for (let i = 0; i < this.kpis.length; i++) {
+
+            const kpi = this.kpis[i];
+            const id = kpi.kpi;
+
+            // Get master data
+            this.kpis[i]["masterdata"] = await API.callApi("masterdata", id);
+            this.kpis[i]["data"] = {};
+            console.log("Masterdata " + id, this.kpis[i]["masterdata"]);
+
+            // Get values
+            if (this.kpis[i]["masterdata"].aggregate === "sum") {
+                this.kpis[i]["data"]["barData"] = await API.getBarData(id, kpi.period);
+                this.kpis[i]["data"]["sparkData"] = await API.getCumulativeTimeData(id, "AC", kpi.period);
+            } else {
+                this.kpis[i]["data"]["barData"] = await API.getLatestBarData(id);
+                this.kpis[i]["data"]["sparkData"] = await API.getTimeData(id);
+            }
+
+            console.log("Data " + id, this.kpis[i]["data"]);
+        }
     }
 
     configureEventListener() {

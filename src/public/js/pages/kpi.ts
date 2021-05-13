@@ -8,7 +8,11 @@ $(async function () {
     const kpi_id = $("#kpi")[0].innerText;
     dashboard.kpi["masterdata"] = await API.callApi("masterdata", kpi_id);
     
-    dashboard.kpi["data"] = await API.getTimeData(kpi_id);
+    if (dashboard.kpi["masterdata"].aggregate === "avg") {
+        dashboard.kpi["data"] = await API.getTimeData(kpi_id);
+    } else {
+        dashboard.kpi["data"] = await API.getCumulativeTimeData(kpi_id);
+    }
     dashboard.renderTimeline("timeline", dashboard.kpi);
 
     // Update page title and KPI

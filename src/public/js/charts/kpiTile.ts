@@ -18,7 +18,7 @@ class KPITile extends BaseChart {
     drawChart(chartData) {
         this.chartData = chartData;
         const data = chartData.data;
-        console.log("Drawing KPITile with data: ", chartData.name, data);
+        console.log("Drawing KPITile with data: ", chartData.masterdata.name, data);
 
         // Don't draw on invisible SVGs
         if (this.baseData.width === 0) {
@@ -55,18 +55,20 @@ class KPITile extends BaseChart {
             fc: data[3] ?? 0
         };
 
-        // Remove existing bg/text on redraw
-        this.svg.selectAll("rect").remove();
-        this.svg.selectAll("text").remove();
-        
         // Background
+        d3.selectAll("#" + this.canvasID + " svg rect.tile-bg").remove();
         this.svg.append("rect")
             .attr("x", 0)
             .attr("y", 0)
             .attr("rx", 3)
             .attr("width", this.baseData.width)
             .attr("height", this.baseData.height)
-            .attr("fill", "white");
+            .attr("fill", "white")
+            .attr("class", "tile-bg");
+
+        // Remove existing bg/text on redraw
+        d3.selectAll("#" + this.canvasID + " svg g.label-group").remove();
+        const g = this.svg.append("g").attr("class", "label-group");
 
         // Format any input value for textLabel
         const textFormat = (value:number|string, format = ".2s") => {
@@ -92,7 +94,7 @@ class KPITile extends BaseChart {
 
         // Draws an easily configurable text label
         const textLabel = (x:number, y:number, value:number|string, format = ".2s", attrs:any[] = []) => {
-            const text = this.svg.append("text")
+            const text = g.append("text")
                 .attr("x", x)
                 .attr("y", y)
                 .text(textFormat(value,format))
@@ -108,7 +110,7 @@ class KPITile extends BaseChart {
         const halfHeight = this.baseData.height / 2;
 
         // Title on Top
-        textLabel(this.baseData.width / 2, 20, this.chartData.name, undefined, [["fill", "dimgrey"], ["font-size", "x-large"], ["text-anchor", "middle"]]);
+        textLabel(this.baseData.width / 2, 20, this.chartData.masterdata.name, undefined, [["fill", "dimgrey"], ["font-size", "x-large"], ["text-anchor", "middle"]]);
 
         // ACT in center
         textLabel(this.baseData.width / 2, 60, d.act, ".3s", [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
@@ -130,7 +132,8 @@ class KPITile extends BaseChart {
      */
     drawSparkline() {
 
-        const data = this.chartData.data.sparkData;
+        const data = this.chartData.data.sparkData.map(d => d.val);
+        console.log(data);
 
         this.svg.selectAll("path").remove();
 
@@ -141,9 +144,9 @@ class KPITile extends BaseChart {
             .curve(d3.curveMonotoneX);
 
         // Setup path object
-        const path = this.svg
-            .selectAll("path")
-            .data(data);
+        d3.selectAll("#" + this.canvasID + " svg g.path-group").remove();
+        const g = this.svg.append("g").attr("class", "path-group");
+        const path = g.selectAll("path").data(data);
 
         path.exit().remove();
 
@@ -185,7 +188,7 @@ class KPITile extends BaseChart {
      * Draws three additional annotations for min, max and current value
      */
     drawAnnotations() {
-        const data = this.chartData.data.sparkData;
+        const data = this.chartData.data.sparkData.map(d => d.val);
 
         const max = {
             x: this.xScale(data.findIndex(d => d === d3.max(data))),
@@ -200,10 +203,11 @@ class KPITile extends BaseChart {
             y: this.yScale(data[data.length - 1])
         };
 
-        d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
+        d3.selectAll("#" + this.canvasID + " svg g.annotation-group").remove();
+        const g = this.svg.append("g").attr("class", "annotation-group");
 
         const drawCircle = (coords:any, color:string) => {
-            this.svg.append("circle")
+            g.append("circle")
                 .attr("cx", coords.x)
                 .attr("cy", coords.y)
                 .attr("r", 3)
@@ -225,7 +229,7 @@ class KPITile extends BaseChart {
      * Configures the scales for the sparkline
      */
     setScales() {
-        const data = this.chartData.data.sparkData;
+        const data = this.chartData.data.sparkData.map(d => d.val);
         const margin = this.baseData.margin;
         this.xScale = d3.scaleLinear()
             .domain(d3.extent(data, (d:number, i:number) => i))
