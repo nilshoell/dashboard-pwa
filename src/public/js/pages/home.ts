@@ -8,6 +8,7 @@ $(async function () {
 
     // Render only first KPI now
     home.renderKPI("tile1", home.kpis[0]);
+    
     home.kpis[0].rendered = true;
 });
 
@@ -59,7 +60,8 @@ class Home {
         window.addEventListener("resize", () => self.resizeHandler());
 
         // Render other charts on first carousel slide
-        $("#kpiCarousel").on("slid.bs.carousel", function (e) {
+        $(document).on("slid.bs.carousel", "#kpiCarousel", function (e:any) {
+            console.log(e.to);
             if (!self.kpis[e.to].rendered) {
                 self.renderKPI("tile" + (e.to +1), self.kpis[e.to]);
                 self.kpis[e.to].rendered = true;

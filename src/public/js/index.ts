@@ -32,6 +32,7 @@ class App {
         $(document).on("longtouch", ".chart-canvas", async (evt) => {
             const target = evt.currentTarget;
             const kpi = $(target).data("kpi");
+            const filter = $(target).data("filter");
 
             if (kpi === undefined) {
                 return;
@@ -46,14 +47,14 @@ class App {
 
             // Fill and display modal
             const modalContent = [
-                {name:"ID", val: data.id},
                 {name:"Short Name", val: data.shortname},
                 {name:"Unit", val: data.unit},
                 {name:"Formula", val: formula},
                 {name:"Formula", val: data.formula},
-                {name:"Description", val: data.help}
+                {name:"Description", val: data.help},
+                {name:"ID", val: data.id},
             ];
-            Modal.fill(data.name, modalContent);
+            Modal.fill(data.name, modalContent, filter);
             Modal.display();
         });
 
