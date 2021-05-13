@@ -22,18 +22,13 @@ class KPITile extends BaseChart {
      * @param chartData The data to draw, with {data: {sparkData: [], barData:[]}}
      */
     drawChart(chartData) {
+
         this.chartData = chartData;
-        const data = chartData.data;
-        console.log("Drawing KPITile with data: ", chartData.masterdata.name, data);
+        BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs
         if (this.baseData.width === 0) {
             return;
-        }
-
-        // Store KPI id with chart
-        if (this.chartData.kpi) {
-            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
 
         // Remove existing bg/text on redraw

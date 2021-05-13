@@ -19,21 +19,12 @@ class BarChart extends BaseChart {
      */
     drawChart(chartData):void {
         const self = this;
+
+        // Base setup
         this.chartData = chartData;
+        BaseChart.prototype.drawChart(this);
+
         const data = chartData.data;
-        console.log("Drawing BarChart with data: ", data);
-
-        // Store KPI id with chart
-        if (this.chartData.kpi) {
-            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
-        }
-
-        // Add title if available
-        const label = $("#" + this.canvasID + " .chart-label")[0];
-        if (label) {
-            label.innerText = this.chartData.masterdata.name;
-        }
-
         const margin = this.baseData.margin;
 
         this.barWidth = 0.75 * (this.baseData.width - margin.x) / data.length;

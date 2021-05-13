@@ -18,27 +18,17 @@ class KPIBar extends BaseChart {
      * @param chartData The data to draw, with {data: [py,act,bud,fc]}
      */
     drawChart(chartData) {
+        // Base setup
         this.chartData = chartData;
-        const data = chartData.data;
-        const margin = this.baseData.margin;
+        BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs
         if (this.baseData.width === 0) {
             return;
         }
 
-        console.log("Drawing KPIBar with data: ", data);
-
-        // Store KPI id with chart
-        if (this.chartData.kpi) {
-            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
-        }
-
-        // Add title if available
-        const label = $("#" + this.canvasID + " .chart-label")[0];
-        if (label) {
-            label.innerText = this.chartData.masterdata.name;
-        }
+        const data = chartData.data;
+        const margin = this.baseData.margin;
 
         this.setScales();
 

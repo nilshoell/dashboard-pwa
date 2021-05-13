@@ -41,7 +41,6 @@ class BaseChart {
      * Creates a D3 SVG element as specified
      */
     prepareChart() {
-        console.log("Preparing chart canvas on #" + this.canvasID + " for " + Helper.getCaller(2, false));
         this.svg = d3.select("#" + this.canvasID)
             .append("svg")
             .attr("width", this.baseData.width ?? "100%")
@@ -64,12 +63,24 @@ class BaseChart {
     }
 
     /**
-     * Draw the actual chart (not implemented in the base class)
+     * Stores the chart data with the object
      * @param data JS-Object with data, labels and more
      */
     drawChart(data) {
-        console.log("Drawing " + Helper.getCaller(2, false) + " with data", data);
-        throw "drawChart() not implemented in base class.";
+        // Store KPI id and filters with chart
+        if (data.chartData.kpi) {
+            console.log("#" + data.canvasID,data.chartData.kpi);
+            $("#" + data.canvasID).data("kpi", data.chartData.kpi);
+        }
+        if (data.chartData.filter) {
+            $("#" + data.canvasID).data("filter", data.chartData.filter);
+        }
+
+        // Add title if available
+        const label = $("#" + data.canvasID + " .chart-label")[0];
+        if (label && data.chartData.masterdata) {
+            label.innerText = data.chartData.masterdata.name;
+        }
     }
 
     /**
@@ -85,6 +96,7 @@ class BaseChart {
      * @param data Information for all axes
      */
     drawAxes(data = {}) {
+        console.log("Drawing Axes with data", data);
         throw "drawAxes() not implemented in base class.";
     }
 

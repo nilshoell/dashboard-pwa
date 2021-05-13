@@ -21,20 +21,9 @@ class Sparkline extends BaseChart {
      * @param chartData Object containing data to draw
      */
     drawChart(chartData) {
-
+        // Base setup
         this.chartData = chartData;
-        console.log("Drawing Sparkline with data: ", chartData.data);
-
-        // Store KPI id with chart
-        if (this.chartData.kpi) {
-            $("#" + this.canvasID).data("kpi", this.chartData.kpi);
-        }
-
-        // Add title if available
-        const label = $("#" + this.canvasID + " .chart-label")[0];
-        if (label) {
-            label.innerText = this.chartData.masterdata.name ?? "";
-        }
+        BaseChart.prototype.drawChart(this);
 
         // Add background bounding box
         this.setBackground();
