@@ -6,6 +6,7 @@ vs/
 # Application Files
 node_modules/
 dist/
+src/db/kpis
 .DS_Store
 *.Identifier
 
