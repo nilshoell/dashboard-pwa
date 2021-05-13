@@ -69,7 +69,6 @@ class BaseChart {
     drawChart(data) {
         // Store KPI id and filters with chart
         if (data.chartData.kpi) {
-            console.log("#" + data.canvasID,data.chartData.kpi);
             $("#" + data.canvasID).data("kpi", data.chartData.kpi);
         }
         if (data.chartData.filter) {

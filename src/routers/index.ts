@@ -38,7 +38,7 @@ router.get("/kpi/:id", function(req, res) {
   const params = req.params;
   const page = {
     id: params.id, link:"/kpi", title: "KPI", icon: "fa-home",
-    help: {title: "Help", content:"This is helpful help!"}
+    help: {title: "KPI Overview", content:"This page provides a detailed overview of a single KPI."}
   };
   res.render("pages/kpi", {routes, page, params});
 });

@@ -18,8 +18,13 @@ $(async function () {
     // Update page title and KPI
     $("h4.title")[0].innerText = dashboard.kpi["masterdata"].name;
     $("#timeline .chart-label")[0].innerText = "";
+    const popover_text = "This page provides a detailed overview of the KPI '" + dashboard.kpi["masterdata"].name + "', including its sub-components";
+    $("#help").data("bs.popover").config.content = popover_text;
 
     const children = dashboard.kpi["masterdata"]["children"];
+    if (children.length == 0) {
+        $("#components").addClass("d-none");
+    }
 
     for (let i = 0; i < children.length; i++) {
         const id = children[i];
