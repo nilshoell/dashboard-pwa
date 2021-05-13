@@ -5,6 +5,12 @@ import BaseChart from "./baseChart.js";
  */
 class KPITile extends BaseChart {
 
+    labelGroup;
+    sparklineGroup;
+    sparklineBg;
+    tileBg;
+    annotationsGroup;
+
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
         // Set margins (only needed for sparkline)
@@ -29,6 +35,20 @@ class KPITile extends BaseChart {
         if (this.chartData.kpi) {
             $("#" + this.canvasID).data("kpi", this.chartData.kpi);
         }
+
+        // Remove existing bg/text on redraw
+        this.svg.selectAll("g.tile-bg").remove();
+        this.svg.selectAll("g.label-group").remove();
+        this.svg.selectAll("g.sparkline-bg").remove();
+        this.svg.selectAll("g.path-group").remove();
+        this.svg.selectAll("g.annotation-group").remove();
+        
+        // Order Chart Elements
+        this.tileBg = this.svg.append("g").attr("class", "tile-bg");
+        this.labelGroup = this.svg.append("g").attr("class", "label-group");
+        this.sparklineBg = this.svg.append("g").attr("class", "sparkline-bg");
+        this.sparklineGroup = this.svg.append("g").attr("class", "path-group");
+        this.annotationsGroup = this.svg.append("g").attr("class", "annotation-group");
 
         // Setup Scales
         this.setScales();
@@ -56,8 +76,7 @@ class KPITile extends BaseChart {
         };
 
         // Background
-        d3.selectAll("#" + this.canvasID + " svg rect.tile-bg").remove();
-        this.svg.append("rect")
+        this.tileBg.append("rect")
             .attr("x", 0)
             .attr("y", 0)
             .attr("rx", 3)
@@ -65,11 +84,7 @@ class KPITile extends BaseChart {
             .attr("height", this.baseData.height)
             .attr("fill", "white")
             .attr("class", "tile-bg");
-
-        // Remove existing bg/text on redraw
-        d3.selectAll("#" + this.canvasID + " svg g.label-group").remove();
-        const g = this.svg.append("g").attr("class", "label-group");
-
+        
         // Format any input value for textLabel
         const textFormat = (value:number|string, format = ".2s") => {
             if (typeof(value) === "number") {
@@ -94,7 +109,7 @@ class KPITile extends BaseChart {
 
         // Draws an easily configurable text label
         const textLabel = (x:number, y:number, value:number|string, format = ".2s", attrs:any[] = []) => {
-            const text = g.append("text")
+            const text = this.labelGroup.append("text")
                 .attr("x", x)
                 .attr("y", y)
                 .text(textFormat(value,format))
@@ -133,9 +148,6 @@ class KPITile extends BaseChart {
     drawSparkline() {
 
         const data = this.chartData.data.sparkData.map(d => d.val);
-        console.log(data);
-
-        this.svg.selectAll("path").remove();
 
         // Create line generator
         const line = d3.line()
@@ -144,9 +156,7 @@ class KPITile extends BaseChart {
             .curve(d3.curveMonotoneX);
 
         // Setup path object
-        d3.selectAll("#" + this.canvasID + " svg g.path-group").remove();
-        const g = this.svg.append("g").attr("class", "path-group");
-        const path = g.selectAll("path").data(data);
+        const path = this.sparklineGroup.selectAll("path").data(data);
 
         path.exit().remove();
 
@@ -164,16 +174,8 @@ class KPITile extends BaseChart {
     setBackground() {
 
         const margin = this.baseData.margin;
-        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
-        const backgroundExists = Boolean(backgrounds.size());
 
-        if (backgroundExists) {
-            backgrounds
-                .attr("width", this.baseData.width - margin.y + 4)
-                .attr("height", this.baseData.height - margin.x + 4);
-
-        } else {
-            this.svg.append("rect")
+        this.sparklineBg.append("rect")
                 .attr("x", margin.left - 2)
                 .attr("y", margin.top - 2)
                 .attr("rx", 2)
@@ -181,7 +183,6 @@ class KPITile extends BaseChart {
                 .attr("height", this.baseData.height - margin.y + 4)
                 .attr("fill", "#b0b0b0")
                 .attr("class", "sparkline-bg");
-        }
     }
 
     /**
@@ -203,11 +204,8 @@ class KPITile extends BaseChart {
             y: this.yScale(data[data.length - 1])
         };
 
-        d3.selectAll("#" + this.canvasID + " svg g.annotation-group").remove();
-        const g = this.svg.append("g").attr("class", "annotation-group");
-
         const drawCircle = (coords:any, color:string) => {
-            g.append("circle")
+            this.annotationsGroup.append("circle")
                 .attr("cx", coords.x)
                 .attr("cy", coords.y)
                 .attr("r", 3)

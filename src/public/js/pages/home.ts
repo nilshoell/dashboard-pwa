@@ -8,6 +8,7 @@ $(async function () {
 
     // Render only first KPI now
     home.renderKPI("tile1", home.kpis[0]);
+    home.kpis[0].rendered = true;
 });
 
 class Home {
@@ -19,13 +20,14 @@ class Home {
 
         // Initialize carousel
         $(".carousel").carousel({
-            interval: false
+            interval: 5000
         });
 
-        this.kpis = [{kpi: "74351e8d7097", period: "MTD"}, {kpi: "dd751c6b67fb", period: "M"}, {kpi: "54de7813948a", period: "MTD"}];
-
-        // Render the first KPI
-        // self.renderKPI("tile1", this.kpis[0]);
+        this.kpis = [
+            {kpi: "74351e8d7097", period: "MTD", rendered: false},
+            {kpi: "dd751c6b67fb", period: "M", rendered: false},
+            {kpi: "54de7813948a", period: "MTD", rendered: false}
+        ];
 
         this.configureEventListener();
     }
@@ -40,7 +42,6 @@ class Home {
             // Get master data
             this.kpis[i]["masterdata"] = await API.callApi("masterdata", id);
             this.kpis[i]["data"] = {};
-            console.log("Masterdata " + id, this.kpis[i]["masterdata"]);
 
             // Get values
             if (this.kpis[i]["masterdata"].aggregate === "sum") {
@@ -50,8 +51,6 @@ class Home {
                 this.kpis[i]["data"]["barData"] = await API.getLatestBarData(id);
                 this.kpis[i]["data"]["sparkData"] = await API.getTimeData(id);
             }
-
-            console.log("Data " + id, this.kpis[i]["data"]);
         }
     }
 
