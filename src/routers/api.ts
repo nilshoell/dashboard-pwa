@@ -288,9 +288,9 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    let sql = "SELECT partner, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+    let sql = "SELECT partner, partners.name, partners.shortname, SUM(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-        sql = "SELECT partner, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
+        sql = "SELECT partner, partners.name, partners.shortname, AVG(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
     }
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
@@ -449,6 +449,31 @@ const getTimeframe = async (params) => {
 };
 
 
+const hasPartner = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    const sql = "SELECT COUNT(*) AS val FROM measures WHERE kpi = ? AND partner NOT NULL;";
+    const stmt = await db.prepare(sql, params.id);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result[0];
+    } else {
+        returnObj["data"] = {val: 0};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
 /**
  * ---------------------------------------------------------------------------
  * --------------------------------- ROUTING ---------------------------------
@@ -467,7 +492,8 @@ const methods = {
     timeframe: getTimeframe,
     latest: getLatest,
     forecast: getForecast,
-    partner: getByPartner
+    partner: getByPartner,
+    hasPartner: hasPartner
 };
 
 /**

@@ -13,7 +13,7 @@ function fill(title:string, body:Record<string, any>[], filter = {}) {
     let bodyContent = "";
 
     if (!Helper.emptyObj(filter)) {
-        bodyContent += "<b>Period:</b>" + filter["period"] + "<b>Scenario:</b>" + filter["scenario"] + + "</br><hr></br>";
+        bodyContent += "<b>Period: </b>" + filter["period"] + "<b> Scenario: </b>" + filter["scenario"] + "</br><hr>";
     }
 
     body.forEach(entry => {

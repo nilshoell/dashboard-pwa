@@ -48,9 +48,11 @@ class Home {
             if (this.kpis[i]["masterdata"].aggregate === "sum") {
                 this.kpis[i]["data"]["barData"] = await API.getBarData(id, kpi.period);
                 this.kpis[i]["data"]["sparkData"] = await API.getCumulativeTimeData(id, "AC", kpi.period);
+                this.kpis[i]["filter"] = {period: kpi.period, scenario: "AC"};
             } else {
                 this.kpis[i]["data"]["barData"] = await API.getLatestBarData(id);
                 this.kpis[i]["data"]["sparkData"] = await API.getTimeData(id);
+                this.kpis[i]["filter"] = {period: "Latest", scenario: "AC"};
             }
         }
     }
