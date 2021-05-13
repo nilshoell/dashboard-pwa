@@ -238,6 +238,43 @@ const getLatest = async (params) => {
 
 
 /**
+ * Returns FC values
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getForecast = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const now =new Date();
+    const today = toISO(now);
+
+    const db = await openDB();
+
+    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND timestamp > ?;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND timestamp > ?;";
+    } 
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
  * Gets data aggregated by day
  * @param params Request parameters
  * @returns KPI data as JSON
@@ -254,7 +291,7 @@ const getLatest = async (params) => {
     let sql = "SELECT partner, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
         sql = "SELECT partner, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner;";
-    } 
+    }
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
@@ -274,7 +311,7 @@ const getLatest = async (params) => {
 
 
 /**
- * Gets data aggregated by a specified period; wrapper for getTimeFrame()
+ * Helper function to convert period labels into time frames
  * @param params Request parameters
  * @returns KPI data as JSON
  */
@@ -424,12 +461,13 @@ const getTimeframe = async (params) => {
  */
 const methods = {
     test: testFunction,
+    masterdata: getMasterData,
+    children: getChildren,
     daily: getDaily,
     timeframe: getTimeframe,
     latest: getLatest,
-    partner: getByPartner,
-    children: getChildren,
-    masterdata: getMasterData
+    forecast: getForecast,
+    partner: getByPartner
 };
 
 /**

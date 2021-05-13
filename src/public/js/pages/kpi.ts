@@ -8,17 +8,28 @@ $(async function () {
     const kpi_id = $("#kpi")[0].innerText;
     dashboard.kpi["masterdata"] = await API.callApi("masterdata", kpi_id);
     
-    $("h4.title")[0].innerText = dashboard.kpi["masterdata"].name;
     dashboard.kpi["data"] = await API.getTimeData(kpi_id);
     dashboard.renderTimeline("timeline", dashboard.kpi);
+
+    // Update page title and KPI
+    $("h4.title")[0].innerText = dashboard.kpi["masterdata"].name;
     $("#timeline .chart-label")[0].innerText = "";
 
     const children = dashboard.kpi["masterdata"]["children"];
+
     for (let i = 0; i < children.length; i++) {
         const id = children[i];
         const data = {};
         data["masterdata"] = await API.callApi("masterdata", id);
-        data["data"] = await API.getBarData(id);
+        if (data["masterdata"].aggregate === "sum") {
+            data["barData"] = await API.getBarData(id);
+            data["sparkData"] = await API.getCumulativeTimeData(id);
+        } else {
+            data["barData"] = await API.getLatestBarData(id);
+            data["sparkData"] = await API.getTimeData(id);
+        }
+        dashboard.renderBar("kpibar_" + (i + 1), {kpi: id, data: data["barData"], masterdata: data["masterdata"]});
+        dashboard.renderSpark("sparkline_" + (i + 1), {kpi: id, data: data["sparkData"], masterdata: data["masterdata"]});
     }
 
 });
@@ -40,11 +51,13 @@ class KPIDashboard {
         window.addEventListener("resize", () => self.resizeHandler());
 
         // Toggle view button
-        $(document).on("click", "#toggleView", () => {
+        $(document).on("click", "#toggleSwitch", () => {
             const invisible = $(".kpi-col.d-none");
             const visible = $(".kpi-col").not("d-none");
+
             visible.addClass("d-none d-sm-block");
             invisible.removeClass("d-none d-sm-block");
+
             this.resizeHandler();
         });
     }

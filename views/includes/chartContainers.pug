@@ -27,3 +27,14 @@ mixin kpiTile(id)
 mixin brickWall(id)
   div.container.mx-1.pl-0.mb-4.chart-canvas.brick-wall(id=id)
     div.chart-label
+
+mixin toggleSwitch(id)
+  div.row
+    div.col-3.mx-auto
+      span.switch-label KPIBar
+    div.col-3.mx-auto
+      label.switch
+        input(id=id, type="checkbox")
+        span.slider
+    div.col-3.mx-auto
+      span.switch-label Sparkline
