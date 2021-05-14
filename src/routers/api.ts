@@ -216,7 +216,16 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    const sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1;";
+    let sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1;";
+
+    if (params.filter.scenario === "PY") {
+        if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+            sql = "SELECT AVG(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ?;";
+        } else {
+            sql = "SELECT SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ?;";
+        }
+    }
+
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
     const result = await stmt.all();

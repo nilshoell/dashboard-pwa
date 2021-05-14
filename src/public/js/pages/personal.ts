@@ -91,7 +91,6 @@ class Personal {
         const chart = new BrickWall(canvasID);
         chart.drawChart(chartData);
         this.charts.push(chart);
-        
     }
 
     /**
