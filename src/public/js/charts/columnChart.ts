@@ -21,8 +21,9 @@ class ColumnChart extends BaseChart {
         // Base setup
         this.chartData = chartData;
         BaseChart.prototype.drawChart(this);
+        console.log(chartData);
         
-        const data = chartData.data.map(d => d.val);
+        const data = chartData.data;
         const margin = this.baseData.margin;
 
         this.barHeight = 0.75 * (this.baseData.height - margin.y) / data.length;
@@ -32,14 +33,15 @@ class ColumnChart extends BaseChart {
 
         const bars = this.svg
             .selectAll("rect")
-            .data(data);
+            .data(data, d => d.val);
 
         bars.join("rect")
             .attr("x", margin.left)
-            .attr("y", (d:number, i:number) => this.yScale(i))
-            .attr("width", (d:number) => this.xScale(d))
+            .attr("y", (d:any, i:number) => this.yScale(i))
+            .attr("width", (d:any) => this.xScale(d.val))
             .attr("height", this.yScale.bandwidth())
-            .attr("data-value", (d:number) => d)
+            .attr("data-value", (d:any) => d.val)
+            .attr("data-id", (d:any) => d.product ?? d.partner ?? "")
             .attr("fill", chartData.color ?? "dimgrey");
 
         // bars.exit().remove();
@@ -86,9 +88,12 @@ class ColumnChart extends BaseChart {
 
         const labelFilter = (d:any) => this.xScale(d.val) - this.xScale(0) < 50;
 
+        this.svg.selectAll("g.text-label").remove();
+
         this.svg.append("g")
             .attr("fill", "white")
             .attr("text-anchor", "end")
+            .attr("class", "text-label")
             .selectAll("text")
             .data(data)
             .join("text")
@@ -105,6 +110,7 @@ class ColumnChart extends BaseChart {
         this.svg.append("g")
             .attr("fill", "white")
             .attr("text-anchor", "start")
+            .attr("class", "text-label")
             .selectAll("text")
             .data(data)
             .join("text")
