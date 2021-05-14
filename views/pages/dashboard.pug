@@ -2,15 +2,15 @@ extends ../layout.pug
 include ../includes/chartContainers.pug
 
 block chart-top
-  p Important KPIs
+  +toggleSwitch("toggleSwitch")
 
 block chart
-  +kpiBar("kpiBar1")
-  +kpiBar('kpiBar2')
-  +kpiBar('kpiBar3')
-  +kpiBar('kpiBar4')
-  +kpiBar('kpiBar5')
-  +kpiBar('kpiBar6')
+  +sparkbar("1")
+  +sparkbar("2")
+  +sparkbar("3")
+  +sparkbar("4")
+  +sparkbar("5")
+  +sparkbar("6")
 
 block chart-bottom
   script(src="/public/js/pages/dashboard.js" type="module")
