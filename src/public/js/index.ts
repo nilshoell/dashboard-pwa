@@ -18,19 +18,12 @@ class App {
         $(".popover-dismiss").popover({
             trigger: "focus"
           });
-          
 
         // Register Service Workers in Prod
         if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
             this.registerSW();
             this.broadcastChannel();
         }
-
-        $(document).on("click", "#back", (evt) => {
-            evt.preventDefault();
-            window.history.go(-1);
-        });
-
     }
 
     /**
