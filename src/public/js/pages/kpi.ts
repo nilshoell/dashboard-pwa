@@ -1,4 +1,5 @@
 import * as API from "./../components/api.js";
+import * as Helper from "./../components/helperFunctions.js";
 import KPIBar from "./../charts/kpiBar.js";
 import Sparkline from "./../charts/sparkline.js";
 import Timeline from "./../charts/timeline.js";
@@ -12,6 +13,7 @@ $(async function () {
     // Timeline Data
     if (dashboard.kpi["masterdata"].aggregate === "avg") {
         dashboard.kpi["data"] = await API.getTimeData(kpi_id);
+        dashboard.kpi["data"] = await Helper.movingAvg(dashboard.kpi["data"], 14);
     } else {
         dashboard.kpi["data"] = await API.getCumulativeTimeData(kpi_id);
     }

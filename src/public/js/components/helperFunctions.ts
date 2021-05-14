@@ -152,4 +152,36 @@ async function objSum(array:any[], field = "val") {
     return sum;
 }
 
-export { round, valMinify, randomSpark, getCaller, emptyObj, cumulativeSum, objSum };
+
+/**
+ * Takes a time series array and calculates the rolling/moving average
+ * @param input The original time series array ([{date: "2021-01-01", val: 1234}])
+ * @param range Over how many days the average should be calculated
+ * @returns A new array of objects with range - 1 elements less
+ */
+async function movingAvg(input:any[], range:number) {
+
+    const data = input.map(d => d.val);
+
+    const resultData = [];
+    let index = range - 1;
+    const length = data.length;
+
+    const sum = (arr:number[]) => {
+        let length = arr.length;
+        let sum = 0;
+        while (length--) sum += Number(arr[length]);
+        return sum;
+    };
+    const avg = (arr:number[], index:number, range:number) => round(sum(arr.slice(index - range, index)) / range,2);
+
+    while (++index <= length) {
+        resultData.push(avg(data, index, range));
+    }
+
+    const result = resultData.map((v, i) => {return {date: input[i + (range - 1)].date, val: v};});
+
+    return result;
+}
+
+export { round, valMinify, randomSpark, getCaller, emptyObj, cumulativeSum, objSum, movingAvg };

@@ -12,37 +12,6 @@ const router = Router();
  */
 
 /**
- * Calculates the cumulative sum of an array, call with arr.map(cumulativeSum(0))
- * @param array The initial array
- * @param field The filed to accumulate
- * @returns Array
- */
-async function cumulativeSum(array:any[], field = "val") {
-    const values = array.map(d => d[field]);
-    const sums = values.map((sum => value => sum += value)(0));
-    const retArr = array.map((d, i) => {
-        const val = {};
-        val[field] = sums[i];
-        const obj = Object.assign(d, val);
-        return obj;
-    });
-    return retArr;
-}
-
-/**
- * Returns the sum of an array of objects
- * @param array The initial array
- * @param field The filed to accumulate
- * @returns Total sum
- */
-async function objSum(array:any[], field = "val") {
-    const values = array.map(d => d[field]);
-    const reducer = (accumulator:number, currentValue:number) => accumulator + currentValue;
-    const sum = await values.reduce(reducer);
-    return sum;
-}
-
-/**
  * Opens the Database
  * @returns Database Object
  */
