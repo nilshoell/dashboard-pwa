@@ -43,7 +43,8 @@ INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VA
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `formula`) VALUES ('a474fee353a1', 'Workload', 'Workload', 'NONE', '%', '+', '{250e42977eb7} / {54de7813948a}');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('54de7813948a', 'Total Hours Worked', 'Hours', 'a474fee353a1', 'h', '+');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('250e42977eb7', 'Billable Worked', 'Billable Hours', 'a474fee353a1', 'h', '+');
-INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `formula`) VALUES ('9efcb5361969', 'Net Profit', 'Profit', 'NONE', '$', '+', '{74351e8d7097} - {c0b0067928e3}');
+INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `formula`) VALUES ('9efcb5361969', 'Net Profit', 'Profit', '53c6cd0b443b', '$', '+', '{74351e8d7097} - {c0b0067928e3}');
+INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `formula`) VALUES ('53c6cd0b443b', 'Profit Margin', 'Margin', 'NONE', '%', '+', '{9efcb5361969} / {74351e8d7097}');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('c0b0067928e3', 'Total Costs', 'Costs', '9efcb5361969', '$', '-');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('255e926dc950', 'Open Orders', 'Orders', 'NONE', '', '+');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('3f6e4e8df453', 'Production Volume', 'Production', 'a9d7701c54d1', '', '+');

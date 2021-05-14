@@ -9,6 +9,7 @@
 import argparse
 import datetime as dt
 import csv
+from os import get_exec_path
 import random as rnd
 import json
 
@@ -20,8 +21,8 @@ prog_date = "2021-05-04"
 prog_description = "Generate CSVs to import into a DB."
 
 # Programm config vars
-output_path = 'src/db/sql.csv'
-csv_path = 'src/db/kpi.csv'
+output_path = './sql.csv'
+csv_path = './kpi.csv'
 partners = [1001,1002,1004,1005,1003,1004,1005,1006,1007,1005,1008,1009,1010,1008,1009,1010]
 products = [1004,1005,1006,1007,1005,1009,1008,1009,1010,1011,1012,1013,1014,1012,1013,1014]
 
@@ -84,8 +85,14 @@ def generateVal(start, index):
         change = rnd.randint(start_value, end_value)
         return round(change)
     else:
-        change = rnd.randint(-5,5) / 100 * value_diff
-        return round(start + change)
+        raw = rnd.randint(start_value, end_value)
+        change = rnd.randint(-5,5) / 100 * raw
+        res = round(start + change,2)
+        if res < start_value:
+            res = start_value
+        elif res > end_value:
+            res = end_value
+        return res
 
 def generateSQL(date, value):
     string = "'" + date.isoformat() + "',"
@@ -108,8 +115,8 @@ else:
 
 sql_end = ");\n"
 
-measures.append(sql_start + generateSQL(start_date, start_value) + sql_end)
-measures_csv.append([start_date.isoformat(), start_value])
+# measures.append(sql_start + generateSQL(start_date, start_value) + sql_end)
+# measures_csv.append([start_date.isoformat(), start_value])
 
 value = start_value
 index = 0
@@ -132,9 +139,8 @@ for d in range(day_diff):
 
 
 # ---------------------- OUTPUT ----------------------
-# f=open(csv_path,'w')
-# f.writelines(measures_csv)
-# f.close()
+with open(output_path, 'w') as f:
+    f.writelines(measures)
 
 with open(csv_path, 'w', newline='') as f:
     writer = csv.writer(f)
