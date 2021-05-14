@@ -11,7 +11,7 @@ class Timeline extends BaseChart {
             top: 5,
             bottom: 30,
             left: 10,
-            right: 25
+            right: 30
         };
         this.setMargins(margin);
     }
@@ -73,13 +73,14 @@ class Timeline extends BaseChart {
         const minDate = new Date(d3.min(data, (d:any) => d.date));
         const maxDate = new Date(d3.max(data, (d:any) => d.date));
         const maxVal = Number(d3.max(data, (d:any) => d.val));
+        const minVal = d3.min([0, Number(d3.min(data, (d:any) => d.val))]);
 
         this.xScale = d3.scaleTime()
             .domain([minDate, maxDate])
             .range([margin.left, width - margin.right]);
 
         this.yScale = d3.scaleLinear()
-            .domain([0, maxVal]).nice()
+            .domain([minVal, maxVal]).nice()
             .range([height - margin.bottom, margin.top]);
     }
 

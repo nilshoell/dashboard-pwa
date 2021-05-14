@@ -77,7 +77,6 @@ class KPIBar extends BaseChart {
             if (barWidth <= 0) {
                 barWidth = 0;
             }
-            console.log(barWidth);
             drawBar(
                 this.xScale(data[1]) + margin.left,
                 this.barHeight/2, data[3],
@@ -161,8 +160,10 @@ class KPIBar extends BaseChart {
     setScales() {
         const margin = this.baseData.margin;
 
+        const minValue = d3.min([0, d3.min(this.chartData.data, (d:number) => d)]);
+
         this.xScale = d3.scaleLinear()
-            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .domain([minValue, d3.max(this.chartData.data, (d:number) => d)]).nice()
             .range([0, this.baseData.width - margin.x]);
 
         this.yScale = d3.scaleLinear()
