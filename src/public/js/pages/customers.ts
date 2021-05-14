@@ -1,58 +1,73 @@
-import BarChart from "../charts/barChart.js";
+import * as API from "../components/api.js";
 import ColumnChart from "../charts/columnChart.js";
+import KPIBar from "../charts/kpiBar.js";
 
-$(function () {
-    new CustomerDashboard();
+$(async function () {
+    const dashboard = new CustomerDashboard();
+    await dashboard.getMasterData();
+    await dashboard.getChartData();
+    dashboard.renderColumn("overview", dashboard.kpis[0]);
 });
 
 class CustomerDashboard {
 
     charts = [];
+    kpis = [];
+    brick = {}
 
     constructor() {
-        const barChart = new BarChart("barChart1");
-        const barChartData = {data: [12, 5, 6, 6, 9, 10, 12, 15, 17, 23]};
-        barChart.drawChart(barChartData);
 
-        const columnChart = new ColumnChart("columnChart1");
-        const columnChartData = {data: [1234567,1567890,5678901,3456789,8901234,10123456,9500000,8300000,7400000,6700000,3254700]};
-        columnChart.drawChart(columnChartData);
+        this.kpis = [
+            {id: "74351e8d7097", masterdata: {}, filter: {period: "YTD"}}
+        ];
 
-        this.charts.push(barChart);
-        this.charts.push(columnChart);
         this.configureEventListener();
     }
 
     configureEventListener() {
         const self = this;
-        // $(document).on("click", "#addButton", () => self.addChart());
-        // $(document).on("click", "#barChart1", () => self.updateData(this.charts[0]));
         window.addEventListener("resize", () => self.resizeHandler());
-    }
 
-    addChart() {
-        const chart = new BarChart("barChart2");
-        this.charts.push(chart);
-        this.updateData(chart);
-    }
+        // Drill-Down on bar click
+        $(document).on("click", "#overview svg rect", (evt) => {
+            const partner = $(evt.target).data("id");
+            window.location.href = "/partner/" + partner;
+        });
 
-    resizeHandler() {
-        this.charts.forEach((chart:BarChart) => {
-            chart.resizeChart();
+        // Manual entry of ID
+        $(document).on("click", "#searchBtn", () => {
+            const partner = $("#search").val();
+            if (partner !== "" && !isNaN(Number(partner))) {
+                window.location.href = "/partner/" + partner;
+            } else {
+                $("#search").addClass("is-invalid");
+            }
         });
     }
 
-    updateData(chart:BarChart) {
-        const length = d3.randomInt(5,10);
-        const int = d3.randomInt(5, 25);
-
-        const data = [];
-
-        for (let index = 0; index < length(); index++) {
-            data.push(int());
+    async getMasterData() {
+        for (let i = 0; i < this.kpis.length; i++) {
+            const id = this.kpis[i].id;
+            this.kpis[i].masterdata = await API.callApi("masterdata", id);
         }
-
-        chart.drawChart({data: data});
     }
 
+    async getChartData() {
+        for (let i = 0; i < this.kpis.length; i++) {
+            const id = this.kpis[i].id;
+            this.kpis[i]["data"] = await API.callApi("partner", id);
+        }
+    }
+
+    renderColumn(canvasID:string, chartData:any) {
+        const chart = new ColumnChart(canvasID);
+        chart.drawChart(chartData);
+        this.charts.push(chart);
+    }
+
+    resizeHandler() {
+        this.charts.forEach((chart:KPIBar) => {
+            chart.resizeChart();
+        });
+    }
 }

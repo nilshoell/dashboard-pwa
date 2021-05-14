@@ -1,0 +1,18 @@
+extends ../layout.pug
+include ../includes/chartContainers.pug
+
+block chart-top
+  div.d-none#partner #{page.id}
+  div#partner-info
+
+block chart
+  //- Timeline view
+  +barChart("barChart")
+  //- Products view
+  +barChart("columnChart")
+
+  +sparkline("sales")
+  +sparkbar("volume")
+
+block chart-bottom
+  script(src="/public/js/pages/partner.js" type="module")

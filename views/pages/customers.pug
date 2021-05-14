@@ -2,11 +2,16 @@ extends ../layout.pug
 include ../includes/chartContainers.pug
 
 block chart-top
-  p Customer KPIs
 
 block chart
-  +barChart("barChart1")
-  +barChart("columnChart1")
+  +barChart("overview")
+  div.input-group
+    input.form-control#search(type="text", placeholder="Enter ID")
+    div.input-group-append
+      button.btn.btn-main#searchBtn(type="button")
+        i.fa.fas.fa-search
+        |  Search
+    div.invalid-feedback Please provide a valid Customer ID
 
 block chart-bottom
   script(src="/public/js/pages/customers.js" type="module")
