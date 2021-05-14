@@ -1,0 +1,16 @@
+extends ../layout.pug
+include ../includes/chartContainers.pug
+
+block chart-top
+  +toggleSwitch("toggleSwitch")
+
+block chart
+  +sparkbar("1")
+  +sparkbar("2")
+  +sparkbar("3")
+  +sparkbar("4")
+  div.row.mt-2
+    +brickWall("brickwall")
+
+block chart-bottom
+  script(src="/public/js/pages/production.js" type="module")
