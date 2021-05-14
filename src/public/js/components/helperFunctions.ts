@@ -167,6 +167,12 @@ async function movingAvg(input:any[], range:number) {
     let index = range - 1;
     const length = data.length;
 
+    if (length < range && length < 14) {
+        return input;
+    } else if (length < range) {
+        range = 7;
+    }
+
     const sum = (arr:number[]) => {
         let length = arr.length;
         let sum = 0;

@@ -1,29 +1,30 @@
-import * as API from "../components/api.js";
-import ColumnChart from "../charts/columnChart.js";
-import KPIBar from "../charts/kpiBar.js";
+import { BasePage } from "./basePage.js";
 
+/**
+ * Executes on document ready
+ * Loads data and renders dashboards
+ */
 $(async function () {
     const dashboard = new CustomerDashboard();
     await dashboard.getMasterData();
-    await dashboard.getChartData();
-    dashboard.renderColumn("overview", dashboard.kpis[0]);
+    await dashboard.getChartData("partner");
+    dashboard.renderColumnChart("overview", dashboard.kpis[0]);
 });
 
-class CustomerDashboard {
+class CustomerDashboard extends BasePage {
 
-    charts = [];
-    kpis = [];
     brick = {}
 
     constructor() {
-
+        super();
         this.kpis = [
             {id: "74351e8d7097", masterdata: {}, filter: {period: "YTD"}}
         ];
-
-        this.configureEventListener();
     }
 
+    /**
+     * Set up event listeners
+     */
     configureEventListener() {
         const self = this;
         window.addEventListener("resize", () => self.resizeHandler());
@@ -42,32 +43,6 @@ class CustomerDashboard {
             } else {
                 $("#search").addClass("is-invalid");
             }
-        });
-    }
-
-    async getMasterData() {
-        for (let i = 0; i < this.kpis.length; i++) {
-            const id = this.kpis[i].id;
-            this.kpis[i].masterdata = await API.callApi("masterdata", id);
-        }
-    }
-
-    async getChartData() {
-        for (let i = 0; i < this.kpis.length; i++) {
-            const id = this.kpis[i].id;
-            this.kpis[i]["data"] = await API.callApi("partner", id);
-        }
-    }
-
-    renderColumn(canvasID:string, chartData:any) {
-        const chart = new ColumnChart(canvasID);
-        chart.drawChart(chartData);
-        this.charts.push(chart);
-    }
-
-    resizeHandler() {
-        this.charts.forEach((chart:KPIBar) => {
-            chart.resizeChart();
         });
     }
 }

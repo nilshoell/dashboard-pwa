@@ -110,7 +110,6 @@ const getChildren = async (params) => {
     if (result !== undefined) {
         // Parse IDs from formula and add to result
         const formula = result_2.formula;
-        console.log(formula);
         
         const regex = /({.{12}})/g;
         const result = [];
@@ -226,13 +225,13 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    let sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ? ORDER BY timestamp DESC LIMIT 1;";
+    let sql = "SELECT * FROM measures WHERE kpi = ? AND scenario = ? AND timestamp <= ? ORDER BY timestamp DESC LIMIT 1;";
 
     if (params.filter.scenario === "PY") {
         if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-            sql = "SELECT AVG(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ?;";
+            sql = "SELECT AVG(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp <= ?;";
         } else {
-            sql = "SELECT SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ?;";
+            sql = "SELECT SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp <= ?;";
         }
     }
 

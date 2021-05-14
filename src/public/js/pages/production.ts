@@ -52,16 +52,17 @@ class Dashboard extends BasePage {
      */
     async getChartData() {
         for (let i = 0; i < this.kpis.length; i++) {
-            const id = this.kpis[i].id;
-            if (this.kpis[i]["masterdata"].aggregate === "sum") {
-                this.kpis[i]["barData"] = await API.getBarData(id);
-                this.kpis[i]["sparkData"] = await API.getCumulativeTimeData(id);
+            const kpi = this.kpis[i];
+            const id = kpi.id;
+            if (kpi.masterdata.aggregate === "sum") {
+                kpi.barData = await API.getBarData(id);
+                kpi.sparkData = await API.getCumulativeTimeData(id);
             } else {
-                this.kpis[i]["barData"] = await API.getLatestBarData(id, {aggregate: "avg"});
+                kpi.barData = await API.getLatestBarData(id, {aggregate: "avg"});
                 const data = await API.getTimeData(id);
-                this.kpis[i]["sparkData"] = await Helper.movingAvg(data, 14);
+                kpi.sparkData = await Helper.movingAvg(data, 14);
             }
         }
-        this.brick["data"] = await API.getBrickData(this.brick["id"]);
+        this.brick.data = await API.getBrickData(this.brick["id"]);
     }
 }

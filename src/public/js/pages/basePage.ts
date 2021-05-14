@@ -1,5 +1,4 @@
 import * as API from "../components/api.js";
-import * as Helper from "../components/helperFunctions.js";
 
 // Chart imports
 import BarChart from "../charts/barChart.js";
@@ -9,7 +8,6 @@ import KPIBar from "../charts/kpiBar.js";
 import KPITile from "./../charts/kpiTile.js";
 import Sparkline from "../charts/sparkline.js";
 import TimeLine from "../charts/timeline.js";
-import Timeline from "../charts/timeline.js";
 
 /**
  * Common page setup
@@ -178,12 +176,13 @@ class BasePage {
 }
 
 interface KPI {
-    id:string,
-    masterdata?:Record<string, any>,
-    data?:any[],
-    filter?:Record<string, any>,
-    barData?:any[],
-    sparkData?:any[]
+    id: string,
+    masterdata?: Record<string, any>,
+    data?: any[] | Record<string, any>,
+    filter?: Record<string, any>,
+    barData?: any[],
+    sparkData?: any[],
+    rendered?: boolean
 }
 
 export { BasePage, KPI };

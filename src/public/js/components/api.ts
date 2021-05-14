@@ -92,7 +92,7 @@ async function getBarData(kpi_id:string, period = "YTD", filters = {}) {
     return data;
 }
 
-async function getTimeData(kpi_id:string, scenario = "AC", period = "YTD", filters = {}) {
+async function getTimeData(kpi_id:string, scenario = "AC", period = "YTD", filters = {}):Promise<any[]> {
     const filter = {};
     Object.assign(filter, {scenario: scenario, period: period}, filters);
     const data = await callApi("daily", kpi_id, filter);

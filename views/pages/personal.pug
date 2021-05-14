@@ -2,19 +2,20 @@ extends ../layout.pug
 include ../includes/chartContainers.pug
 
 block chart-top
-  div.btn-group.ml-3(role="group")
+  div.btn-group.ml-3.mb-2(role="group")
     button.btn.btn-main#pn-setup
       i.fa.fas.fa-bell
       |  Setup Notifications
     button.btn.btn-main#pn-trigger(style="border-left: 2px solid gray;")
       i.fa.fas.fa-paper-plane
       |  Notify Me!
+  +toggleSwitch("toggleSwitch")
 
 block chart
-  +sparkbar("cr")
-  +sparkbar("bh")
-  +sparkbar("wl")
-  +brickWall("tw")
+  +sparkbar("1")
+  +sparkbar("2")
+  +sparkbar("3")
+  +brickWall("brickwall")
 
 block chart-bottom
   script(src="/public/js/pages/personal.js" type="module")

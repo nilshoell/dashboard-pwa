@@ -21,7 +21,6 @@ class ColumnChart extends BaseChart {
         // Base setup
         this.chartData = chartData;
         BaseChart.prototype.drawChart(this);
-        console.log(chartData);
         
         const data = chartData.data;
         const margin = this.baseData.margin;
