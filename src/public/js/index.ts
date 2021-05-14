@@ -26,8 +26,9 @@ class App {
             this.broadcastChannel();
         }
 
-        $(document).on("click", "#back", () => {
-            window.history.back();
+        $(document).on("click", "#back", (evt) => {
+            evt.preventDefault();
+            window.history.go(-1);
         });
 
     }
