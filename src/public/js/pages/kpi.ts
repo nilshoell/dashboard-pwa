@@ -24,8 +24,6 @@ $(async function () {
     const hasPartner = await API.callApi("hasPartner", kpi_id);
     if (hasPartner["val"] > 0) {
         dashboard.kpi["columnData"] = await API.callApi("partner", kpi_id, {aggregate: dashboard.kpi["masterdata"].aggregate});
-        console.log(dashboard.kpi["columnData"]);
-        
         dashboard.renderColumn("columnChart", {kpi: kpi_id, data: dashboard.kpi["columnData"], masterdata: dashboard.kpi["masterdata"]});
     } else {
         $("#columnChart").addClass("d-none");

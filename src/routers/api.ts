@@ -34,7 +34,7 @@ const defaultReturn = {
  * @returns ISO-String
  */
 function toISO(date:Date) {
-    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2,"0") + "-" + String(date.getDate()).padStart(2,"0")
+    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2,"0") + "-" + String(date.getDate()).padStart(2,"0");
 }
 
 
@@ -43,32 +43,6 @@ function toISO(date:Date) {
  * ------------------------------- API METHODS -------------------------------
  * ---------------------------------------------------------------------------
  */
-
-/**
- * Endpoint to test whether the API is available
- * @param params Request parameters
- * @returns Object
- */
-const testFunction = async (params) => {
-
-    // Copy object by val
-    const returnObj = {};
-    Object.assign(returnObj, defaultReturn);
-
-    returnObj["params"] = params;
-    console.log("[API] Calling testfunc");
-
-    const db = await openDB();
-
-    const result = await db.all("SELECT * FROM kpis");
-    returnObj["data"] = result;
-    returnObj["success"] = true;
-
-    await db.close();
-
-    return returnObj;
-};
-
 
 /**
  * Returns master data like name, unit and sub-KPIs
@@ -200,6 +174,42 @@ const getDaily = async (params) => {
 
 
 /**
+ * Gets data aggregated by months
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getMonthly = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    let sql = "SELECT strftime('%Y-%m',timestamp) AS date, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY date ORDER BY date ASC;";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT strftime('%Y-%m',timestamp) AS date, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY date ORDER BY date ASC;";
+    }
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
  * Gets the latest data point
  * @param params Request parameters
  * @returns KPI data as JSON
@@ -225,7 +235,6 @@ const getLatest = async (params) => {
             sql = "SELECT SUM(value) AS value FROM measures WHERE kpi = ? AND scenario = ? AND timestamp < ?;";
         }
     }
-
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
     const result = await stmt.all();
@@ -299,6 +308,42 @@ const getLatest = async (params) => {
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
         sql = "SELECT partner, partners.name, partners.shortname, AVG(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
     }
+
+    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const result = await stmt.all();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * Gets data aggregated by a specific time frame
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getTimeframe = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    params = await getPeriod(params);
+
+    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
+        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
+    } 
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
     const result = await stmt.all();
@@ -419,43 +464,11 @@ const getPeriod = async (params) => {
 };
 
 
-
 /**
- * Gets data aggregated by a specific time frame
+ * Helper function to check if any partners are associated with a KPI
  * @param params Request parameters
  * @returns KPI data as JSON
  */
-const getTimeframe = async (params) => {
-    const returnObj = {};
-    Object.assign(returnObj, defaultReturn);
-    returnObj["params"] = params;
-
-    const db = await openDB();
-
-    params = await getPeriod(params);
-
-    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
-    if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?);";
-    } 
-
-    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
-    const result = await stmt.all();
-    await stmt.finalize();
-
-    if (result !== undefined) {
-        returnObj["data"] = result;
-    } else {
-        returnObj["data"] = {};
-    }
-
-    await db.close();
-
-    returnObj["success"] = true;
-    return returnObj;
-};
-
-
 const hasPartner = async (params) => {
     const returnObj = {};
     Object.assign(returnObj, defaultReturn);
@@ -492,10 +505,10 @@ const hasPartner = async (params) => {
  * Object containing all valid methods and their identifiers
  */
 const methods = {
-    test: testFunction,
     masterdata: getMasterData,
     children: getChildren,
     daily: getDaily,
+    monthly: getMonthly,
     timeframe: getTimeframe,
     latest: getLatest,
     forecast: getForecast,
