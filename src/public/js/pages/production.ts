@@ -1,56 +1,44 @@
 import * as API from "../components/api.js";
 import * as Helper from "../components/helperFunctions.js";
-import KPIBar from "../charts/kpiBar.js";
-import Sparkline from "../charts/sparkline.js";
-import BrickWall from "../charts/brickWall.js";
 
+import { BasePage, KPI } from "./basePage.js";
+
+/**
+ * Executes on document ready
+ * Loads data and renders dashboards
+ */
 $(async function () {
     const dashboard = new Dashboard();
     await dashboard.getMasterData();
     await dashboard.getChartData();
     dashboard.kpis.forEach((kpi, i) => {
-        dashboard.renderBar("kpibar_" + (i+1), kpi);
-        dashboard.renderSpark("sparkline_" + (i+1), kpi);
+        dashboard.renderKPIBar("kpibar_" + (i+1), kpi);
+        dashboard.renderSparkline("sparkline_" + (i+1), kpi);
     });
-    dashboard.renderBrick("brickwall", dashboard.brick);
+    dashboard.renderBrickWall("brickwall", dashboard.brick);
 });
 
-class Dashboard {
 
-    charts = [];
-    kpis = [];
-    brick = {}
+class Dashboard extends BasePage {
+
+    brick:KPI;
 
     constructor() {
-
+        super();
         this.kpis = [
-            {id: "3f6e4e8df453", masterdata: {}, filter: {period: "M"}},
-            {id: "a9d7701c54d1", masterdata: {}, filter: {period: "MTD"}},
-            {id: "02141abb649b", masterdata: {}, filter: {period: "M"}},
-            {id: "255e926dc950", masterdata: {}, filter: {period: "MTD"}}
+            {id: "3f6e4e8df453", filter: {period: "M"}},
+            {id: "a9d7701c54d1", filter: {period: "MTD"}},
+            {id: "02141abb649b", filter: {period: "M"}},
+            {id: "255e926dc950", filter: {period: "MTD"}}
         ];
 
-        this.brick = {id: "215570b6b5dd", masterdata: {}, filter: {period: "Q"}};
-        
-        this.configureEventListener();
+        this.brick = {id: "215570b6b5dd", filter: {period: "Q"}};
     }
 
-    configureEventListener() {
-        const self = this;
-        window.addEventListener("resize", () => self.resizeHandler());
-        
-        // Toggle view button
-        $(document).on("click", "#toggleSwitch", () => {
-            const invisible = $(".kpi-col.d-none");
-            const visible = $(".kpi-col").not("d-none");
 
-            visible.addClass("d-none d-sm-block");
-            invisible.removeClass("d-none d-sm-block");
-
-            this.resizeHandler();
-        });
-    }
-
+    /**
+     * Override parent method to get master data
+     */
     async getMasterData() {
         for (let i = 0; i < this.kpis.length; i++) {
             const id = this.kpis[i].id;
@@ -59,6 +47,9 @@ class Dashboard {
         this.brick["masterdata"] = await API.callApi("masterdata", this.brick["id"]);
     }
 
+    /**
+     * Override parent method to get chart data
+     */
     async getChartData() {
         for (let i = 0; i < this.kpis.length; i++) {
             const id = this.kpis[i].id;
@@ -72,43 +63,5 @@ class Dashboard {
             }
         }
         this.brick["data"] = await API.getBrickData(this.brick["id"]);
-    }
-
-    renderBar(canvasID:string, kpi:any) {
-        const chart = new KPIBar(canvasID);
-        const chartData = {};
-
-        chartData["kpi"] = kpi.id;
-        chartData["data"] = kpi.barData;
-        chartData["masterdata"] = kpi.masterdata;
-        chartData["filter"] = kpi.filter;
-
-        chart.drawChart(chartData);
-        this.charts.push(chart);
-    }
-
-    renderSpark(canvasID:string, kpi:any) {
-        const chart = new Sparkline(canvasID);
-        const chartData = {};
-
-        chartData["kpi"] = kpi.id;
-        chartData["data"] = kpi.sparkData;
-        chartData["masterdata"] = kpi.masterdata;
-        chartData["filter"] = kpi.filter;
-
-        chart.drawChart(chartData);
-        this.charts.push(chart);
-    }
-
-    renderBrick(canvasID:string, chartData:any) {
-        const chart = new BrickWall(canvasID);
-        chart.drawChart(chartData);
-        this.charts.push(chart);
-    }
-
-    resizeHandler() {
-        this.charts.forEach((chart:KPIBar) => {
-            chart.resizeChart();
-        });
     }
 }
