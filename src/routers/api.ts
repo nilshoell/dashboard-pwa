@@ -158,6 +158,35 @@ const getChildren = async (params) => {
         returnObj["data"] = [];
     }
 
+    // Second request to additionally parse formula
+    const stmt_2 = await db.prepare("SELECT formula FROM kpis WHERE id = ?;", params.id);
+    const result_2 = await stmt_2.get();
+    
+    await stmt_2.finalize();
+
+    if (result !== undefined) {
+        // Parse IDs from formula and add to result
+        const formula = result_2.formula;
+        console.log(formula);
+        
+        const regex = /({.{12}})/g;
+        const result = [];
+        let res;
+        
+        do {
+            res = regex.exec(formula);
+            if (res) {
+                result.push(res[1]);
+            }
+        } while (res);
+    
+        const initial = returnObj["data"];
+        const ids = result.map(id => id.substr(1,id.length - 2));
+        let total = initial.concat(ids);
+        total = total.filter((item, pos) => total.indexOf(item) === pos);
+        returnObj["data"] = total;
+    }
+
     await db.close();
 
     returnObj["success"] = true;
