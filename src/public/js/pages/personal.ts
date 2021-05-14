@@ -34,10 +34,15 @@ class Personal extends BasePage {
      */
      async getMasterData() {
         for (let i = 0; i < this.kpis.length; i++) {
-            const id = this.kpis[i].id;
-            this.kpis[i].masterdata = await API.callApi("masterdata", id);
+            const kpi = this.kpis[i];
+            const id = kpi.id;
+            kpi.masterdata = await API.callApi("masterdata", id);
+            const filter = {aggregate: kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
+            kpi.filter = Object.assign(filter, kpi.filter);
         }
-        this.brick["masterdata"] = await API.callApi("masterdata", this.brick["id"]);
+        this.brick.masterdata = await API.callApi("masterdata", this.brick["id"]);
+        const filter = {aggregate: this.brick.masterdata.aggregate, scenario: "AC", period: "YTD"};
+        this.brick.filter = Object.assign(filter, this.brick.filter);
     }
 
     /**
@@ -47,16 +52,19 @@ class Personal extends BasePage {
         for (let i = 0; i < this.kpis.length; i++) {
             const kpi = this.kpis[i];
             const id = kpi.id;
+            console.log("KPI", kpi);
+            
             if (kpi.masterdata.aggregate === "sum") {
-                kpi.barData = await API.getBarData(id);
-                kpi.sparkData = await API.getCumulativeTimeData(id);
+                kpi.barData = await API.getBarData(id, kpi.filter);
+                kpi.sparkData = await API.getCumulativeTimeData(id, kpi.filter);
             } else {
-                kpi.barData = await API.getLatestBarData(id, {aggregate: "avg"});
-                const data = await API.getTimeData(id);
-                kpi.sparkData = await Helper.movingAvg(data, 14);
+                kpi.barData = await API.getLatestBarData(id, kpi.filter);
+                const data = await API.getTimeData(id, kpi.filter);
+                kpi.sparkData = await Helper.movingAvg(data, 7);
             }
+            console.log("Data", kpi);
         }
-        this.brick.data = await API.getBrickData(this.brick["id"]);
+        this.brick.data = await API.getBrickData(this.brick.id, this.brick.filter);
     }
 
 

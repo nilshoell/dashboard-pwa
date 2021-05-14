@@ -16,10 +16,10 @@ $(async function () {
     
     // Timeline Data
     if (dashboard.kpi.masterdata.aggregate === "avg") {
-        const data = await API.getTimeData(kpi_id);
+        const data = await API.getTimeData(kpi_id, dashboard.kpi.filter);
         dashboard.kpi.data = await Helper.movingAvg(data, 14);
     } else {
-        dashboard.kpi.data = await API.getCumulativeTimeData(kpi_id);
+        dashboard.kpi.data = await API.getCumulativeTimeData(kpi_id, dashboard.kpi.filter);
     }
 
     dashboard.renderTimeLine("timeline", dashboard.kpi);
@@ -61,19 +61,22 @@ class KPIDashboard extends BasePage {
     async renderComponents(children:any[]) {
         for (let i = 0; i < children.length; i++) {
             const id = children[i];
-            const data:KPI = {id: id, filter: {period: "YTD", scenario: "AC"}};
-            data.masterdata = await API.callApi("masterdata", id);
+            const component:KPI = {id: id, filter: {period: "YTD", scenario: "AC"}};
 
-            if (data.masterdata.aggregate === "sum") {
-                data.barData = await API.getBarData(id);
-                data.sparkData = await API.getCumulativeTimeData(id);
+            component.masterdata = await API.callApi("masterdata", id);
+            const filter = {aggregate: component.masterdata.aggregate, scenario: "AC", period: "YTD"};
+            component.filter = Object.assign(filter, component.filter);
+
+            if (component.masterdata.aggregate === "sum") {
+                component.barData = await API.getBarData(id, component.filter);
+                component.sparkData = await API.getCumulativeTimeData(id, component.filter);
             } else {
-                data.barData = await API.getLatestBarData(id, {aggregate: data.masterdata.aggregate});
-                data.sparkData = await API.getTimeData(id);
+                component.barData = await API.getLatestBarData(id, component.filter);
+                component.sparkData = await API.getTimeData(id, component.filter);
             }
 
-            this.renderKPIBar("kpibar_" + (i + 1), data);
-            this.renderSparkline("sparkline_" + (i + 1), data);
+            this.renderKPIBar("kpibar_" + (i + 1), component);
+            this.renderSparkline("sparkline_" + (i + 1), component);
         }
     }
 }

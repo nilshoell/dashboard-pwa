@@ -44,11 +44,11 @@ class Home extends BasePage {
             const id = kpi.id;
             kpi.data = {};
             if (kpi.masterdata.aggregate === "sum") {
-                kpi.data["barData"] = await API.getBarData(id, kpi.filter.period);
-                kpi.data["sparkData"] = await API.getCumulativeTimeData(id, "AC", kpi.filter.period);
+                kpi.data["barData"] = await API.getBarData(id, kpi.filter);
+                kpi.data["sparkData"] = await API.getCumulativeTimeData(id, kpi.filter);
             } else {
-                kpi.data["barData"] = await API.getLatestBarData(id);
-                const data = await API.getTimeData(id, "AC", kpi.filter.period);
+                kpi.data["barData"] = await API.getLatestBarData(id, kpi.filter);
+                const data = await API.getTimeData(id, kpi.filter);
                 kpi.data["sparkData"] = await Helper.movingAvg(data, 5);
             }
         }

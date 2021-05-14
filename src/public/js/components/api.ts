@@ -51,13 +51,20 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
     }
 }
 
+
+/**
+ * Returns the current data formatted for KPIBars
+ * @param kpi_id The ID of the KPI
+ * @param filters Additional filters
+ * @returns Array of values
+ */
 async function getLatestBarData(kpi_id:string, filters = {}) {
     const data = [];
     const requests = [{scenario: "PY"}, {scenario: "AC"}, {scenario: "BU"}, {scenario: "FC"}];
-    
+
     for (let i = 0; i < requests.length; i++) {
         const filter = {};
-        Object.assign(filter, requests[i], filters);
+        Object.assign(filter, filters, requests[i]);
         const result = await callApi("latest", kpi_id, filter);
         if (result[0] !== undefined) {
             data.push(result[0]["value"] ?? 0);
@@ -69,18 +76,24 @@ async function getLatestBarData(kpi_id:string, filters = {}) {
     return data;
 }
 
-async function getBarData(kpi_id:string, period = "YTD", filters = {}) {
+/**
+ * Returns the cumulated data formatted for KPIBars
+ * @param kpi_id The ID of the KPI
+ * @param filters Additional filters
+ * @returns Array of values
+ */
+async function getBarData(kpi_id:string, filters = {}) {
     const data = [];
     const requests = [
-        {scenario: "PY", period: period},
-        {scenario: "AC", period: period},
-        {scenario: "BU", period: period},
-        {scenario: "FC", period: period}
+        {scenario: "PY"},
+        {scenario: "AC"},
+        {scenario: "BU"},
+        {scenario: "FC"}
     ];
     
     for (let i = 0; i < requests.length; i++) {
         const filter = {};
-        Object.assign(filter, requests[i], filters);
+        Object.assign(filter, filters, requests[i]);
         
         const result = await callApi("timeframe", kpi_id, filter);
         if (result[0] !== undefined) {
@@ -92,24 +105,36 @@ async function getBarData(kpi_id:string, period = "YTD", filters = {}) {
     return data;
 }
 
-async function getTimeData(kpi_id:string, scenario = "AC", period = "YTD", filters = {}):Promise<any[]> {
-    const filter = {};
-    Object.assign(filter, {scenario: scenario, period: period}, filters);
+/**
+ * Returns time series data as present in the DB aggregated by day
+ * @param kpi_id The ID of the KPI
+ * @param filters Additional filters
+ * @returns Array of date-value objects
+ */
+async function getTimeData(kpi_id:string, filter = {}) {
     const data = await callApi("daily", kpi_id, filter);
     return data;
 }
 
-async function getCumulativeTimeData(kpi_id:string, scenario = "AC", period = "YTD", filters = {}) {
-    const filter = {};
-    Object.assign(filter, {scenario: scenario, period: period}, filters);
+/**
+ * Returns cumulated time series data
+ * @param kpi_id The ID of the KPI
+ * @param filters Additional filters
+ * @returns Array of date-value objects
+ */
+async function getCumulativeTimeData(kpi_id:string, filter = {}) {
     let data = await callApi("daily", kpi_id, filter);
     data = await Helper.cumulativeSum(data, "val");
     return data;
 }
 
-async function getBrickData(kpi_id:string, period = "Q", filters = {}) {
-    const filter = {};
-    Object.assign(filter, {period: period}, filters);
+/**
+ * Returns daily values grouped by calendar week for the BrickWall
+ * @param kpi_id The ID of the KPI
+ * @param filters Additional filters
+ * @returns Array of weekly data
+ */
+async function getBrickData(kpi_id:string, filter = {}) {
     const data = await callApi("daily", kpi_id, filter);
 
     let firstDay:number;

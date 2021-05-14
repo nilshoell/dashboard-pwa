@@ -46,8 +46,11 @@ class BasePage {
      */
     async getMasterData() {
         for (let i = 0; i < this.kpis.length; i++) {
-            const id = this.kpis[i].id;
-            this.kpis[i].masterdata = await API.callApi("masterdata", id);
+            const kpi = this.kpis[i];
+            const id = kpi.id;
+            kpi.masterdata = await API.callApi("masterdata", id);
+            const filter = {aggregate: kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
+            kpi.filter = Object.assign(filter, kpi.filter);
         }
     }
 
@@ -59,7 +62,7 @@ class BasePage {
         for (let i = 0; i < this.kpis.length; i++) {
             const kpi = this.kpis[i];
             const id = kpi.id;
-            this.kpis[i]["data"] = await API.callApi(defaultMethod, id, kpi.filter);
+            kpi["data"] = await API.callApi(defaultMethod, id, kpi.filter);
         }
     }
 

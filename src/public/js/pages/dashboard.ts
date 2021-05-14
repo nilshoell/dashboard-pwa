@@ -22,7 +22,7 @@ class Dashboard extends BasePage {
     constructor() {
         super();
         this.kpis = [
-            {id: "9efcb5361969", masterdata: {}, filter: {period: "YTD"}},
+            {id: "9efcb5361969", masterdata: {}, filter: {period: "MTD"}},
             {id: "53c6cd0b443b", masterdata: {}, filter: {period: "YTD"}},
             {id: "74351e8d7097", masterdata: {}, filter: {period: "YTD"}},
             {id: "eb9f9dc3efb7", masterdata: {}, filter: {period: "YTD"}},
@@ -39,11 +39,11 @@ class Dashboard extends BasePage {
             const kpi = this.kpis[i];
             const id = kpi.id;
             if (kpi.masterdata.aggregate === "sum") {
-                kpi.barData = await API.getBarData(id);
-                kpi.sparkData = await API.getCumulativeTimeData(id);
+                kpi.barData = await API.getBarData(id, kpi.filter);
+                kpi.sparkData = await API.getCumulativeTimeData(id, kpi.filter);
             } else {
-                kpi.barData = await API.getLatestBarData(id);
-                const data = await API.getTimeData(id);
+                kpi.barData = await API.getLatestBarData(id, kpi.filter);
+                const data = await API.getTimeData(id, kpi.filter);
                 kpi.sparkData = await Helper.movingAvg(data, 14);
             }
         }
