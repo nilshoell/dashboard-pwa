@@ -35,30 +35,30 @@ self.addEventListener("fetch", function(event:any) {
         cache.put(event.request, response_1.clone());
         return response_1;
       }).catch(function() {
-        return caches.match("/offline");
+        return caches.match("/offline.html");
       });
     })
   );
 });
 
 /**
- * Removes old caches
+ * Removes old caches (Disabled for now)
  */
 self.addEventListener("activate", function(event:any) {
-  console.info("Activate Service Worker");
-  event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          if (cacheName == CACHE_NAME) {
-            return true;
-          }
-        }).map(function(cacheName) {
-          return caches.delete(cacheName);
-        })
-      );
-    })
-  );
+  console.info("Activate Service Worker", event);
+  // event.waitUntil(
+  //   caches.keys().then(function(cacheNames) {
+  //     return Promise.all(
+  //       cacheNames.filter(function(cacheName) {
+  //         if (cacheName == CACHE_NAME) {
+  //           return true;
+  //         }
+  //       }).map(function(cacheName) {
+  //         return caches.delete(cacheName);
+  //       })
+  //     );
+  //   })
+  // );
 });
 
 self.addEventListener("push", function() {
