@@ -186,12 +186,21 @@ const getDaily = async (params) => {
 
     params = await getPeriod(params);
 
-    let sql = "SELECT strftime('%Y-%m',timestamp) AS date, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY date ORDER BY date ASC;";
+    let sql = `
+    SELECT strftime('%Y-%m',timestamp) AS date, SUM(value) AS val
+    FROM measures
+    WHERE kpi = ? AND (scenario = 'AC' OR scenario = 'PY') AND (timestamp BETWEEN ? AND ?)
+    GROUP BY date ORDER BY date ASC;`;
+
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-        sql = "SELECT strftime('%Y-%m',timestamp) AS date, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY date ORDER BY date ASC;";
+        sql = `
+        SELECT strftime('%Y-%m',timestamp) AS date, AVG(value) AS val
+        FROM measures
+        WHERE kpi = ? AND (scenario = 'AC' OR scenario = 'PY') AND (timestamp BETWEEN ? AND ?)
+        GROUP BY date ORDER BY date ASC;`;
     }
 
-    const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
+    const stmt = await db.prepare(sql, params.id, params.startDate, params.endDate);
     const result = await stmt.all();
     await stmt.finalize();
 
@@ -432,7 +441,8 @@ const getPeriod = async (params) => {
             break;
 
         case "Y":
-            startDateObj = new Date(new Date(endDate).getTime() - secondsInDay * 365);
+            startDateObj = new Date(new Date(endDate));
+            startDateObj.setFullYear(startDateObj.getFullYear() - 1);
             startDate = toISO(startDateObj);
             break;
 
@@ -494,6 +504,115 @@ const hasPartner = async (params) => {
 
 
 /**
+ * Gets masterdata for a partner
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getPartnerData = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    const sql = "SELECT * FROM partners WHERE id = ?;";
+    const stmt = await db.prepare(sql, params.id);
+    const result = await stmt.get();
+    await stmt.finalize();
+
+    if (result !== undefined) {
+        returnObj["data"] = result;
+    } else {
+        returnObj["data"] = {};
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    return returnObj;
+};
+
+
+/**
+ * Gets masterdata for a partner
+ * @param params Request parameters
+ * @returns KPI data as JSON
+ */
+ const getProducts = async (params) => {
+    const returnObj = {};
+    Object.assign(returnObj, defaultReturn);
+    returnObj["params"] = params;
+
+    const db = await openDB();
+
+    // 1. Get all Top-Level Products
+    const sql_1 = "SELECT * FROM products WHERE parent = 0;";
+    const top_ids = await db.all(sql_1);
+
+    // 2. Get all children of each Top-Level Product
+    const products = [];
+    const sql_2 = `
+    WITH recursive children as (
+        SELECT * FROM products
+        WHERE id = ?
+        UNION
+        SELECT e.* FROM products as e, children as c
+        WHERE 
+          e.parent = c.ID
+    )
+    SELECT * FROM children;
+    `;
+    const stmt_2 = await db.prepare(sql_2);
+
+    for (let i = 0; i < top_ids.length; i++) {
+        const id = top_ids[i].id;
+        const result = (await stmt_2.all(id)).map(d => d.id);
+        products.push(Object.assign(top_ids[i], {children: result}));
+    }
+
+    await stmt_2.finalize();
+
+    // 3. Get the total value
+    const values = [];
+    let sql_3:string;
+    let stmt_3;
+
+    for (let i = 0; i < products.length; i++) {
+        const ids = products[i].children;
+        const length = ids.length - 1;
+        const placeholder = "?,".repeat(length) + "?";
+
+        if (params.filter.partner !== undefined) {
+            sql_3 = `
+            SELECT SUM(value) AS val
+            FROM measures
+            WHERE kpi = ? AND product IN (`+ placeholder +`) AND partner = ?
+            ORDER BY val DESC;`;
+            stmt_3 = await db.prepare(sql_3, params.id, ...ids, params.filter.partner);
+        } else {
+            sql_3 = `
+            SELECT SUM(value) AS val
+            FROM measures
+            WHERE kpi = ? AND product IN (`+ placeholder +`)
+            ORDER BY val DESC;`;
+            stmt_3 = await db.prepare(sql_3, params.id, ...ids);
+        }
+        
+        const result = await stmt_3.get();
+        
+        await stmt_3.finalize();
+        values.push(Object.assign(products[i],{val: result.val}));
+    }
+
+    await db.close();
+
+    returnObj["success"] = true;
+    returnObj["data"] = values;
+    return returnObj;
+};
+
+
+/**
  * ---------------------------------------------------------------------------
  * --------------------------------- ROUTING ---------------------------------
  * ---------------------------------------------------------------------------
@@ -512,7 +631,9 @@ const methods = {
     latest: getLatest,
     forecast: getForecast,
     partner: getByPartner,
-    hasPartner: hasPartner
+    hasPartner: hasPartner,
+    partnerData: getPartnerData,
+    products: getProducts
 };
 
 /**
