@@ -48,4 +48,11 @@ router.get("/kpi", function(req, res) {
   res.render("special/400", {msg: "Please provide a valid KPI ID"});
 });
 
+// Show the offline page
+router.get("/offline", function(req, res) {
+  res.status(400);
+  res.render("special/offline");
+});
+
+
 export default router;
