@@ -13,7 +13,7 @@
       "type": "image/png"
     },
     {
-      "src": "images/icon_maskable_bg",
+      "src": "images/icon_maskable_bg.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

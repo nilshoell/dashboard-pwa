@@ -17,8 +17,22 @@ self.addEventListener("install", function(event:any) {
     );
 });
 
-self.addEventListener("fetch", function(event) {
+self.addEventListener("fetch", function(event:any) {
   console.log("Fetch Event for SW", event);
+
+  caches.open(CACHE_NAME).then(async function(cache) {
+    const response = await cache.match(event.request);
+    return response || fetch(event.request).then(function (response_1) {
+      cache.put(event.request, response_1.clone());
+      return response_1;
+    });
+  });
+
+  // event.respondWith(
+  //   caches.match(event.request).then(function(response) {
+  //     return response || fetch(event.request);
+  //   })
+  // );
 });
 
 self.addEventListener("activate", function(event) {
