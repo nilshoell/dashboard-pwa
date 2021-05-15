@@ -25,8 +25,8 @@ class ColumnChart extends BaseChart {
         const data = chartData.data;
         const margin = this.baseData.margin;
 
-        this.barHeight = 0.75 * (this.baseData.height - margin.y) / data.length;
-        this.barSpace = 0.25 * (this.baseData.height - margin.y) / data.length;
+        this.barHeight = d3.min([0.75 * (this.baseData.height - margin.y) / data.length, 30]);
+        this.barSpace = 0.25 * this.barHeight;
 
         this.setScales();
 

@@ -48,6 +48,21 @@ router.get("/kpi", function(req, res) {
   res.render("special/400", {msg: "Please provide a valid KPI ID"});
 });
 
+// Additional Customer page
+router.get("/partner/:id", function(req, res) {
+  const params = req.params;
+  const page = {
+    id: params.id, link:"/partner", title: "Customer", icon: "fa-home",
+    help: {title: "Customer Overview", content:"This page provides a detailed overview of a single Customer."}
+  };
+  res.render("pages/partner", {routes, page, params});
+});
+
+router.get("/partner", function(req, res) {
+  res.status(400);
+  res.render("special/400", {msg: "Please provide a valid Partner ID"});
+});
+
 // Show the offline page
 router.get("/offline.html", function(req, res) {
   res.render("special/offline");

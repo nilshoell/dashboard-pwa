@@ -28,6 +28,7 @@ class CustomerDashboard extends BasePage {
         window.addEventListener("resize", () => self.resizeHandler());
 
         // Drill-Down on bar click
+        $(document).off("click", ".chart-canvas");
         $(document).on("click", "#overview svg rect", (evt) => {
             const partner = $(evt.target).data("id");
             window.location.href = "/partner/" + partner;

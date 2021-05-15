@@ -10,7 +10,7 @@ class BarChart extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
-        this.setMargins({left: 30, right:5});
+        this.setMargins({left: 35, bottom: 35, right:5});
     }
 
     /**
@@ -22,13 +22,15 @@ class BarChart extends BaseChart {
 
         // Base setup
         this.chartData = chartData;
+        console.log(chartData);
+        
         BaseChart.prototype.drawChart(this);
 
         const data = chartData.data;
         const margin = this.baseData.margin;
 
-        this.barWidth = 0.75 * (this.baseData.width - margin.x) / data.length;
-        this.barSpace = 0.25 * (this.baseData.width - margin.x) / data.length;
+        this.barWidth = d3.min([0.75 * (this.baseData.width - margin.x) / data.length, 30]);
+        this.barSpace = 0.25 * this.barWidth;
 
         this.setScales();
 
@@ -37,10 +39,10 @@ class BarChart extends BaseChart {
             .data(data);
 
         bars.join("rect")
-            .attr("x", (d:number, i:number) => this.xScale(i))
-            .attr("y", (d:number) => this.yScale(d))
+            .attr("x", (d:any) => this.xScale(d.date))
+            .attr("y", (d:any) => this.yScale(d.val))
             .attr("width", this.xScale.bandwidth())
-            .attr("height", (d:number) => this.yScale(0) - this.yScale(d))
+            .attr("height", (d:any) => this.yScale(0) - this.yScale(d.val))
             .attr("data-value", (d:number) => d)
             .attr("fill", "dimgrey")
             .on("touchstart", function(e:Event) {
@@ -58,15 +60,17 @@ class BarChart extends BaseChart {
         const margin = this.baseData.margin;
         const height = this.baseData.height;
 
-        // this.xScale = d3.scaleBand()
-        //     .domain(d3.range(data.length).map((x) => String(x)))
-        //     .range([margin.left, width - margin.x]);
+        const data:any[] = this.chartData.data;
 
-        this.xScale = (i) => {return (i * (this.barWidth + this.barSpace)) + margin.left;};
-        this.xScale.bandwidth = () => {return this.barWidth;};
+        // .domain(d3.range(data.length).map(d => String(d)))
+        const domain = data.map(d => d.date);
+        this.xScale = d3.scaleBand()
+            .domain(domain)
+            .range([margin.left, this.baseData.width - margin.x])
+            .paddingInner(0.1);
 
         this.yScale = d3.scaleLinear()
-            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .domain([0, d3.max(this.chartData.data, (d:any) => Number(d.val))]).nice()
             .range([height - margin.bottom, margin.top]);
     }
 
@@ -79,9 +83,16 @@ class BarChart extends BaseChart {
             .attr("transform", "translate(" + (margin.left - 2) + ",0)")
             .call(d3.axisLeft(this.yScale).ticks(4, "~s"))
             .call(g => g.select(".domain").remove());
+        
+        const xAxis = g => g
+            .attr("transform", "translate(0," + (this.baseData.height - margin.bottom) + ")")
+            .call(d3.axisBottom(this.xScale).tickValues(this.xScale.domain().filter((d:number,i:number) => !(i%4))))
+            .call(g => g.select(".domain").remove());
 
         d3.selectAll("#" + this.canvasID + " svg g.y-axis").remove();
+        d3.selectAll("#" + this.canvasID + " svg g.x-axis").remove();
         this.svg.append("g").call(yAxis).attr("class", "y-axis");
+        this.svg.append("g").call(xAxis).attr("class", "x-axis");
     }
 
     /**
