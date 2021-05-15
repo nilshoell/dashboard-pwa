@@ -72,7 +72,15 @@ class BaseChart {
             $("#" + data.canvasID).data("kpi", data.chartData.kpi);
         }
         if (data.chartData.filter) {
-            $("#" + data.canvasID).data("filter", data.chartData.filter);
+            const filter = data.chartData.filter;
+            $("#" + data.canvasID).data("filter", filter);
+            if ($("#" + data.canvasID + " .badge-period")[0] !== undefined) {
+                $("#" + data.canvasID + " .badge-period")[0].innerText = filter.period;
+                $("#" + data.canvasID + " .badge-aggregate")[0].innerText = filter.aggregate.toUpperCase();
+                if (filter.scenario !== "AC") {
+                    $("#" + data.canvasID + " .badge-scenario")[0].innerText = filter.scenario;
+                }
+            }
         }
 
         // Add title if available

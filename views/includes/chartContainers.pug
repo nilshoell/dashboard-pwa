@@ -1,21 +1,31 @@
+mixin chartLabel
+  div.row.label.pb-1
+    div.col-8.chart-label
+      //- span.chart-label
+    div.col.pt-1
+      div.badges.d-flex.justify-content-end
+        span.badge.badge-secondary.ml-1.badge-period
+        span.badge.badge-light.ml-1.badge-scenario
+        span.badge.badge-dark.ml-1.badge-aggregate
+
 mixin kpiBar(id)
   div.container.mr-1.my-2.px-0.pb-2.chart-canvas.kpi-bar(id=id)
-    div.chart-label
+    +chartLabel
 
 mixin sparkline(id)
-  div.container.mr-1.mt-2.px-0.py-2.chart-canvas.sparkline(id=id)
-    div.chart-label
+  div.container.mr-1.mt-2.mb-3.px-0.pb-1.chart-canvas.sparkline(id=id)
+    +chartLabel
 
 mixin timeline(id)
   div.container.mx-auto.mt-2.mb-3.px-0.pb-2.chart-canvas.timeline(id=id)
-    div.chart-label
+    +chartLabel
 
 mixin barChart(id)
   div.container.mx-1.pl-0.mb-4.chart-canvas.bar-chart(id=id)
-    div.chart-label
+    +chartLabel
 
 mixin sparkbar(id)
-  div.row
+  div.row.my-1
     div.col-sm-6.kpi-col
       +kpiBar("kpibar_" + id)
     div.col-sm-6.kpi-col.d-none.d-sm-block
@@ -25,8 +35,8 @@ mixin kpiTile(id)
   div.container.px-0.chart-canvas.kpi-tile(id=id)
 
 mixin brickWall(id)
-  div.container.mx-1.pl-2.mb-4.chart-canvas.brick-wall(id=id)
-    div.chart-label
+  div.container.mx-1.pl-2.mb-4.mt-2chart-canvas.brick-wall(id=id)
+    +chartLabel
 
 mixin toggleSwitch(id)
   div.row
