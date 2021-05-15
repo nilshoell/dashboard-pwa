@@ -49,8 +49,7 @@ router.get("/kpi", function(req, res) {
 });
 
 // Show the offline page
-router.get("/offline", function(req, res) {
-  res.status(400);
+router.get("/offline.html", function(req, res) {
   res.render("special/offline");
 });
 

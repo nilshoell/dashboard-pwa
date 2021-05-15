@@ -9,7 +9,7 @@ const to_cache = [
   "/public/images/icon_192.png",
   "/public/images/icon_512.png",
   "/public/images/icon_maskable_bg.png",
-  "/offline"
+  "/offline.html"
 ];
 
 /**
