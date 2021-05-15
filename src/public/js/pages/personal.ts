@@ -11,62 +11,21 @@ import { BasePage, KPI } from "./basePage.js";
 $(async function () {
     // Setup Object
     const personal = new Personal();
-    await personal.getMasterData();
-    await personal.getChartData();
     personal.kpis.forEach((kpi, i) => {
-        personal.renderKPIBar("kpibar_" + (i+1), kpi);
-        personal.renderSparkline("sparkline_" + (i+1), kpi);
+        personal.renderChart("kpibar_" + (i+1), kpi, "KPIBar");
+        personal.renderChart("sparkline_" + (i+1), kpi, "Sparkline");
     });
-    personal.renderBrickWall("brickwall", personal.brick);
+    personal.renderChart("brickwall", personal.brick, "BrickWall");
 });
 
 class Personal extends BasePage {
 
     kpis:KPI[] = [
-        {id: "7a0c8fcbc047", filter: {period: "Q"}},
+        {id: "7a0c8fcbc047", filter: {period: "Q", avg: 7}},
         {id: "250e42977eb7", filter: {period: "MTD"}},
-        {id: "a474fee353a1", filter: {period: "MTD"}}
+        {id: "a474fee353a1", filter: {period: "MTD", avg: 7}}
     ];
     brick:KPI = {id: "dd751c6b67fb"};
-
-    /**
-     * Override parent method to get master data
-     */
-     async getMasterData() {
-        for (let i = 0; i < this.kpis.length; i++) {
-            const kpi = this.kpis[i];
-            const id = kpi.id;
-            kpi.masterdata = await API.callApi("masterdata", id);
-            const filter = {aggregate: kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
-            kpi.filter = Object.assign(filter, kpi.filter);
-        }
-        this.brick.masterdata = await API.callApi("masterdata", this.brick["id"]);
-        const filter = {aggregate: this.brick.masterdata.aggregate, scenario: "AC", period: "YTD"};
-        this.brick.filter = Object.assign(filter, this.brick.filter);
-    }
-
-    /**
-     * Override parent method to get chart data
-     */
-    async getChartData() {
-        for (let i = 0; i < this.kpis.length; i++) {
-            const kpi = this.kpis[i];
-            const id = kpi.id;
-            console.log("KPI", kpi);
-            
-            if (kpi.masterdata.aggregate === "sum") {
-                kpi.barData = await API.getBarData(id, kpi.filter);
-                kpi.sparkData = await API.getCumulativeTimeData(id, kpi.filter);
-            } else {
-                kpi.barData = await API.getLatestBarData(id, kpi.filter);
-                const data = await API.getTimeData(id, kpi.filter);
-                kpi.sparkData = await Helper.movingAvg(data, 7);
-            }
-            console.log("Data", kpi);
-        }
-        this.brick.data = await API.getBrickData(this.brick.id, this.brick.filter);
-    }
-
 
     /**
      * Setup event listeners

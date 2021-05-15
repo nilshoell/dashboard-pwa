@@ -1,6 +1,3 @@
-import * as API from "./../components/api.js";
-import * as Helper from "./../components/helperFunctions.js";
-
 import { BasePage } from "./basePage.js";
 
 /**
@@ -9,11 +6,9 @@ import { BasePage } from "./basePage.js";
  */
 $(async function () {
     const dashboard = new Dashboard();
-    await dashboard.getMasterData();
-    await dashboard.getChartData();
     dashboard.kpis.forEach((kpi, i) => {
-        dashboard.renderKPIBar("kpibar_" + (i+1), kpi);
-        dashboard.renderSparkline("sparkline_" + (i+1), kpi);
+        dashboard.renderChart("kpibar_" + (i+1), kpi, "KPIBar");
+        dashboard.renderChart("sparkline_" + (i+1), kpi, "Sparkline");
     });
 });
 
@@ -29,23 +24,5 @@ class Dashboard extends BasePage {
             {id: "3f6e4e8df453", masterdata: {}, filter: {period: "YTD"}},
             {id: "255e926dc950", masterdata: {}, filter: {period: "YTD"}}
         ];
-    }
-
-    /**
-     * Override parent method to get chart data
-     */
-    async getChartData() {
-        for (let i = 0; i < this.kpis.length; i++) {
-            const kpi = this.kpis[i];
-            const id = kpi.id;
-            if (kpi.masterdata.aggregate === "sum") {
-                kpi.barData = await API.getBarData(id, kpi.filter);
-                kpi.sparkData = await API.getCumulativeTimeData(id, kpi.filter);
-            } else {
-                kpi.barData = await API.getLatestBarData(id, kpi.filter);
-                const data = await API.getTimeData(id, kpi.filter);
-                kpi.sparkData = await Helper.movingAvg(data, 14);
-            }
-        }
     }
 }

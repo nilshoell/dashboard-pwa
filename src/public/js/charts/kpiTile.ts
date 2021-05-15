@@ -24,6 +24,7 @@ class KPITile extends BaseChart {
     drawChart(chartData) {
 
         this.chartData = chartData;
+        
         BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs

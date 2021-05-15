@@ -1,4 +1,5 @@
 import * as API from "../components/api.js";
+import * as Helper from "../components/helperFunctions.js";
 
 // Chart imports
 import BarChart from "../charts/barChart.js";
@@ -38,6 +39,77 @@ class BasePage {
 
             this.resizeHandler();
         });
+    }
+
+
+    /**
+     * Unifies access to data retrieval and drawing into one method for parallelization
+     * @param canvasID The HTML ID to draw on
+     * @param kpi A KPI object with all filters etc.
+     * @param chartType The type of chart to render
+     * @param apiMethod The method on the server API; currently only used for bar/column charts
+     */
+    async renderChart(canvasID:string, kpi:KPI, chartType:string, apiMethod = "timeframe") {
+
+        kpi.masterdata = await API.callApi("masterdata", kpi.id);
+        const filter = {aggregate: kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
+
+        kpi.filter = Object.assign(filter, kpi.filter);
+
+        switch (chartType) {
+            case "BarChart":
+            case "ColumnChart":
+                kpi.data = await API.callApi(apiMethod, kpi.id, kpi.filter);
+                break;
+            
+            case "BrickWall":
+                kpi.data = await API.getBrickData(kpi.id, kpi.filter);
+                console.log("BrickData", kpi.data);
+                
+                break;
+            
+            case "KPIBar":
+                if (kpi.masterdata.aggregate === "sum") {
+                    kpi.barData = await API.getBarData(kpi.id, kpi.filter);
+                } else {
+                    kpi.barData = await API.getLatestBarData(kpi.id, kpi.filter);
+                }
+                break;
+            
+            case "KPITile":
+                kpi.data = {barData: [], sparkData: []};
+                if (kpi.masterdata.aggregate === "sum") {
+                    kpi.data.barData = await API.getBarData(kpi.id, kpi.filter);
+                    kpi.data.sparkData = await API.getCumulativeTimeData(kpi.id, kpi.filter);
+                } else {
+                    kpi.data.barData = await API.getLatestBarData(kpi.id, kpi.filter);
+                    const data = await API.getTimeData(kpi.id, kpi.filter);
+                    kpi.data.sparkData = await Helper.movingAvg(data, kpi.filter.avg ?? 5);
+                }
+                break;
+            
+            case "Sparkline":
+                if (kpi.masterdata.aggregate === "sum") {
+                    kpi.sparkData = await API.getCumulativeTimeData(kpi.id, kpi.filter);
+                } else {
+                    const data = await API.getTimeData(kpi.id, kpi.filter);
+                    kpi.sparkData = await Helper.movingAvg(data, kpi.filter.avg ?? 14);
+                }
+                break;
+
+            case "Timeline":
+                if (kpi.masterdata.aggregate === "sum") {
+                    kpi.data= await API.getCumulativeTimeData(kpi.id, kpi.filter);
+                } else {
+                    const data = await API.getTimeData(kpi.id, kpi.filter);
+                    kpi.data = await Helper.movingAvg(data, kpi.filter.avg ?? 14);
+                }
+                break;
+
+            default:
+                console.error("Invalid chart type '" + String(chartType) + "' provided.");
+        }
+        this["render" + chartType](canvasID, kpi);
     }
 
 

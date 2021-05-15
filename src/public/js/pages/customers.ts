@@ -6,9 +6,7 @@ import { BasePage } from "./basePage.js";
  */
 $(async function () {
     const dashboard = new CustomerDashboard();
-    await dashboard.getMasterData();
-    await dashboard.getChartData("partner");
-    dashboard.renderColumnChart("overview", dashboard.kpis[0]);
+    await dashboard.renderChart("overview", dashboard.kpis[0], "ColumnChart", "partner");
 });
 
 class CustomerDashboard extends BasePage {

@@ -10,13 +10,12 @@ import { BasePage } from "./basePage.js";
 $(async function () {
     const home = new Home();
 
+    // Render only first KPI now
+    await home.renderChart("tile1", home.kpis[0], "KPITile");
+    home.kpis[0].rendered = true;
+
     await home.getMasterData();
     await home.getChartData();
-
-    // Render only first KPI now
-    home.renderKPITile("tile1", home.kpis[0]);
-    
-    home.kpis[0].rendered = true;
 });
 
 class Home extends BasePage {
@@ -63,7 +62,6 @@ class Home extends BasePage {
 
         // Render other charts on first carousel slide
         $(document).on("slid.bs.carousel", "#kpiCarousel", function (e:any) {
-            console.log(e.to);
             if (!self.kpis[e.to].rendered) {
                 self.renderKPITile("tile" + (e.to +1), self.kpis[e.to]);
                 self.kpis[e.to].rendered = true;

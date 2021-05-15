@@ -9,7 +9,7 @@ import * as Helper from "./helperFunctions.js";
 
 
 /**
- * Wrapper for the API
+ * Client API - Wrapper for the Server API
  * @param method The API method to call
  * @param kpi The KPI to refer to
  * @param filter (optional) Additional filters, if supported by the method
