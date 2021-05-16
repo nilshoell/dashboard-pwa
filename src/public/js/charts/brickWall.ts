@@ -10,7 +10,7 @@ class BrickWall extends BaseChart {
 
     constructor(canvasID:string, baseData = {}) {
         super(canvasID, baseData);
-        this.setMargins({left: 35, right:5, top: 15, bottom: 30});
+        this.setMargins({left: 35, right:5, top: 15, bottom: 45});
 
     }
 
