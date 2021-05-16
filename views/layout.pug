@@ -18,7 +18,7 @@ html(lang="en")
           each route in routes
             li.nav-link.p-0(class={active: page.link === route.link})
               a(href=route.link)
-                i.fa.fas(class=route.icon)
+                i.fa.fas.fa-fw(class=route.icon)
                 |  #{route.title}
 
       div.p-0(id="content")

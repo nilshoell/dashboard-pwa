@@ -22,7 +22,15 @@ const routes = [
   },
   {
     id: "personal", link:"/personal", title: "Personal", icon: "fa-id-card",
-    help: {title: "Personal Dashboard", content:"This page collects your personal performance KPIs."
+    help: {title: "Personal Dashboard", content:"This page collects your personal performance KPIs."}
+  },
+  {
+    id: "about", link:"/about", title: "About", icon: "fa-info",
+    help: {title: "About", content:"About Page"}
+  },
+  {
+    id: "imprint", link:"/imprint", title: "Impressum", icon: "fa-balance-scale",
+    help: {title: "Imprint", content:"It's an Imprint."
   }}
 ];
 
