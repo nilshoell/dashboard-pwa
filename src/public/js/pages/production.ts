@@ -22,9 +22,9 @@ class Dashboard extends BasePage {
         super();
         this.kpis = [
             {id: "3f6e4e8df453", filter: {period: "M"}},
-            {id: "a9d7701c54d1", filter: {period: "MTD"}},
-            {id: "02141abb649b", filter: {period: "M"}},
-            {id: "255e926dc950", filter: {period: "MTD"}}
+            {id: "a9d7701c54d1", filter: {period: "W", avg: 3}},
+            {id: "02141abb649b", filter: {period: "W", avg: 3}},
+            {id: "255e926dc950", filter: {period: "W", avg: 3}}
         ];
 
         this.brick = {id: "215570b6b5dd", filter: {period: "Q"}};

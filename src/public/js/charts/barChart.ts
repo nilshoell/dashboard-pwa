@@ -63,7 +63,7 @@ class BarChart extends BaseChart {
         this.xScale = d3.scaleBand()
             .domain(domain)
             .range([margin.left, this.baseData.width - margin.x])
-            .paddingInner(0.1);
+            .paddingInner(0.25);
 
         this.yScale = d3.scaleLinear()
             .domain([0, d3.max(this.chartData.data, (d:any) => Number(d.val))]).nice()

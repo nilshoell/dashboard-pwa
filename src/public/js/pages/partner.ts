@@ -10,6 +10,7 @@ $(async function () {
     const partner_id = $("#partner")[0].innerText;
 
     page.products.masterdata = await API.callApi("partnerData", partner_id);
+    page.months.masterdata = await API.callApi("masterdata", page.months.id);
 
     // Update page title
     const name = page.products.masterdata.name;
@@ -20,13 +21,14 @@ $(async function () {
     if (name.length > 20) {
         $("h4.title").addClass("h5");
     }
-    $("#barChart .chart-label").addClass("d-none");
 
-    page.months.data = await API.callApi("monthly", "74351e8d7097", {partner: partner_id, period: "Y"});
+    page.months.filter = {partner: partner_id, period: "Y", aggregate: "sum"};
+    page.months.data = await API.callApi("monthly", "74351e8d7097", page.months.filter);
     page.renderBarChart("barChart", page.months);
-
+    
     // Get product info
-    page.products.data = await API.callApi("products", "74351e8d7097", {partner: partner_id, period: "YTD"});
+    page.products.filter = {partner: partner_id, period: "YTD", aggregate: "sum"};
+    page.products.data = await API.callApi("products", "74351e8d7097", page.products.filter);
     page.renderColumnChart("columnChart", page.products);
     $("#columnChart .chart-label")[0].innerText = "Products";
 
