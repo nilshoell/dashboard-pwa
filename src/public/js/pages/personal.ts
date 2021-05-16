@@ -1,7 +1,4 @@
-import * as API from "../components/api.js";
 import * as PN from "../components/notifications.js";
-import * as Helper from "../components/helperFunctions.js";
-
 import { BasePage, KPI } from "./basePage.js";
 
 /**
@@ -42,7 +39,7 @@ class Personal extends BasePage {
 
         $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
-            PN.displayNotification(this.kpis[1]["masterdata"]);
+            PN.displayNotification(this.kpis[Number(d3.randomInt(2))]["masterdata"]);
         });
 
         // Toggle KPIBar/Sparkline button

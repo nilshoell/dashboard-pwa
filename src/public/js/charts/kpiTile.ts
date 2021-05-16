@@ -132,7 +132,7 @@ class KPITile extends BaseChart {
         textLabel(10, halfHeight + 20, d.py_dev, "+.1%",[["fill", textColor(d.py_dev)]]);
 
         // BUD top right; deviation below
-        textLabel(this.baseData.width - 10, halfHeight - 20, "BUD", undefined, [["text-anchor", "end"], ["font-size", "small"]]);
+        textLabel(this.baseData.width - 10, halfHeight - 20, "BU", undefined, [["text-anchor", "end"], ["font-size", "small"]]);
         textLabel(this.baseData.width - 10, halfHeight , d.bud, undefined, [["text-anchor", "end"]]);
         textLabel(this.baseData.width - 10, halfHeight + 20, d.bud_dev, "+.1%", [["fill", textColor(d.bud_dev)], ["text-anchor", "end"]]);
 

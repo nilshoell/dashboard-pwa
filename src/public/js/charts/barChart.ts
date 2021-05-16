@@ -22,7 +22,6 @@ class BarChart extends BaseChart {
 
         // Base setup
         this.chartData = chartData;
-        console.log(chartData);
         
         BaseChart.prototype.drawChart(this);
 
@@ -44,10 +43,7 @@ class BarChart extends BaseChart {
             .attr("width", this.xScale.bandwidth())
             .attr("height", (d:any) => this.yScale(0) - this.yScale(d.val))
             .attr("data-value", (d:number) => d)
-            .attr("fill", "dimgrey")
-            .on("touchstart", function(e:Event) {
-                self.toggleLabel(e.target);
-            });
+            .attr("fill", "dimgrey");
 
         // bars.exit().remove();
         this.drawAxes();

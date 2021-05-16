@@ -1,6 +1,4 @@
 import * as API from "./../components/api.js";
-import * as Helper from "./../components/helperFunctions.js";
-
 import { BasePage, KPI } from "./basePage.js";
 
 /**
@@ -13,8 +11,15 @@ $(async function () {
 
     page.products.masterdata = await API.callApi("partnerData", partner_id);
 
-    // Update page title and KPI
-    $("h4.title")[0].innerText = page.products.masterdata.name;
+    // Update page title
+    const name = page.products.masterdata.name;
+    $("h4.title")[0].innerText = name;
+    if (name.length > 24) {
+        $("h4.title").addClass("h6");
+    }
+    if (name.length > 20) {
+        $("h4.title").addClass("h5");
+    }
     $("#barChart .chart-label").addClass("d-none");
 
     page.months.data = await API.callApi("monthly", "74351e8d7097", {partner: partner_id, period: "Y"});

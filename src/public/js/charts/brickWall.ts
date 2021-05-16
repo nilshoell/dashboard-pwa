@@ -27,7 +27,6 @@ class BrickWall extends BaseChart {
         const margin = this.baseData.margin;
 
         this.setScales();
-        console.log(chartData);
         const minVal = Number(d3.min(data, (d:any) => d3.min(d.val)));
         const maxVal = Number(d3.max(data, (d:any) => d3.max(d.val)));
 

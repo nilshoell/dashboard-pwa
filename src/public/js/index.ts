@@ -88,7 +88,7 @@ class App {
         $(document).on("click", ".nav-link", function () {
             $("#sidebar").removeClass("active");
             $(".overlay").removeClass("active");
-            $($("li.active > .nav-link")[0].parentElement).removeClass("active");
+            $("li.nav-link.active").removeClass("active");
             $(this.parentElement).addClass("active");
         });
 

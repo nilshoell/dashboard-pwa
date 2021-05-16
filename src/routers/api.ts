@@ -1,7 +1,6 @@
 import Router from "express";
 import sqlite3 from "sqlite3";
 import {open} from "sqlite";
-import { start } from "repl";
 
 const router = Router();
 

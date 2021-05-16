@@ -35,7 +35,15 @@ $(async function () {
     }
 
     // Update page title and KPI
-    $("h4.title")[0].innerText = dashboard.kpi.masterdata.name;
+    const name = dashboard.kpi.masterdata.name;
+    $("h4.title")[0].innerText = name;
+    if (name.length > 24) {
+        $("h4.title").addClass("h6");
+    }
+    if (name.length > 20) {
+        $("h4.title").addClass("h5");
+    }
+
     $("#formula")[0].innerText = await API.convertFormula(dashboard.kpi.masterdata.formula);
     $("#timeline .chart-label").addClass("d-none");
     $("#columnChart .chart-label")[0].innerText = "By Customers:";

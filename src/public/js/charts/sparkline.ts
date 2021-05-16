@@ -98,7 +98,6 @@ class Sparkline extends BaseChart {
         
         // Check how far into the future values are displayed
         if (maxDate > minDate * -0.25) {
-            console.log(minDate, 0, minDate * -0.25, maxDate);
             maxDate = minDate * -0.25;
         }
 

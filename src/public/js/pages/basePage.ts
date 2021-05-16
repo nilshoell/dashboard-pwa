@@ -64,8 +64,6 @@ class BasePage {
             
             case "BrickWall":
                 kpi.data = await API.getBrickData(kpi.id, kpi.filter);
-                console.log("BrickData", kpi.data);
-                
                 break;
             
             case "KPIBar":

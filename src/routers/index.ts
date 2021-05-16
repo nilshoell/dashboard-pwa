@@ -13,7 +13,7 @@ const routes = [
     help: {title: "Dashboard", content:"This page provides a quick overview of the most important KPIs as bars encoding previous, actual, target and forecast values. Use the toggle switch or turn your phone to see a short historical trend, and click on a graphic to get the full details."}
   },
   {
-    id: "production", link:"/production", title: "Production Dashboard", icon: "fa-industry",
+    id: "production", link:"/production", title: "Production", icon: "fa-industry",
     help: {title: "Production Dashboard", content:"This page provides a quick overview of the most important KPIs as bars encoding previous, actual, target and forecast values. Use the toggle switch or turn your phone to see a short historical trend, and click on a graphic to get the full details."}
   },
   {

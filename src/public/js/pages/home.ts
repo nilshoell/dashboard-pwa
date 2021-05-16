@@ -28,9 +28,9 @@ class Home extends BasePage {
         });
 
         this.kpis = [
-            {id: "74351e8d7097", filter: {period: "MTD"}, rendered: false},
-            {id: "dd751c6b67fb", filter: {period: "M"}, rendered: false},
-            {id: "54de7813948a", filter: {period: "MTD"}, rendered: false}
+            {id: "9efcb5361969", filter: {period: "YTD"}, rendered: false},
+            {id: "eb9f9dc3efb7", filter: {period: "MTD"}, rendered: false},
+            {id: "7a0c8fcbc047", filter: {period: "YTD", avg: 1}, rendered: false}
         ];
     }
 
@@ -48,7 +48,9 @@ class Home extends BasePage {
             } else {
                 kpi.data["barData"] = await API.getLatestBarData(id, kpi.filter);
                 const data = await API.getTimeData(id, kpi.filter);
-                kpi.data["sparkData"] = await Helper.movingAvg(data, 5);
+                console.log(data);
+                
+                kpi.data["sparkData"] = await Helper.movingAvg(data, kpi.filter.avg ?? 5);
             }
         }
     }
