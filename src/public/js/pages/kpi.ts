@@ -17,7 +17,10 @@ $(async function () {
     // Timeline Data
     if (dashboard.kpi.masterdata.aggregate === "avg") {
         const data = await API.getTimeData(kpi_id, dashboard.kpi.filter);
-        dashboard.kpi.data = await Helper.movingAvg(data, 14);
+        if (dashboard.kpi.filter.avg === undefined) {
+            dashboard.kpi.filter.avg = 14;
+        }
+        dashboard.kpi.data = await Helper.movingAvg(data, dashboard.kpi.filter.avg);
     } else {
         dashboard.kpi.data = await API.getCumulativeTimeData(kpi_id, dashboard.kpi.filter);
     }
@@ -55,8 +58,6 @@ $(async function () {
     if (children.length == 0) {
         $("#components").addClass("d-none");
     } else {
-        // dashboard.kpis = children.map(d => {return {id: d};});
-        // dashboard.getMasterData();
         dashboard.renderComponents(children);
     }
 

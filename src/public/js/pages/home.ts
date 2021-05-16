@@ -48,9 +48,10 @@ class Home extends BasePage {
             } else {
                 kpi.data["barData"] = await API.getLatestBarData(id, kpi.filter);
                 const data = await API.getTimeData(id, kpi.filter);
-                console.log(data);
-                
-                kpi.data["sparkData"] = await Helper.movingAvg(data, kpi.filter.avg ?? 5);
+                if (kpi.filter.avg === undefined) {
+                    kpi.filter.avg = 5;
+                }
+                kpi.data["sparkData"] = await Helper.movingAvg(data, kpi.filter.avg);
             }
         }
     }

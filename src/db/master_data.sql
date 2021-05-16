@@ -53,3 +53,4 @@ INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`, `f
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('37337445197e', 'Faulty Parts', 'Faults', 'a9d7701c54d1', '$', '+');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('02141abb649b', 'Production Efficiency', 'Efficiency', 'NONE', '%', '+');
 INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('215570b6b5dd', 'Machine Failures', 'Failures', 'NONE', '', '-');
+INSERT INTO `kpis` (`id`, `name`, `shortname`, `parent`, `unit`, `direction`) VALUES ('5171156a1720', 'Project Progress', 'Progress', 'NONE', '%', '+');

@@ -54,6 +54,10 @@ class BasePage {
         kpi.masterdata = await API.callApi("masterdata", kpi.id);
         const filter = {aggregate: kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
 
+        if (filter.aggregate === "avg" && filter["avg"] === undefined) {
+            filter["avg"] = 7;
+        }
+
         kpi.filter = Object.assign(filter, kpi.filter);
 
         switch (chartType) {

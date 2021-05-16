@@ -63,7 +63,9 @@ class KPIBar extends BaseChart {
         };
 
         // Previous year (PY)
-        drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
+        if (this.chartData.filter.py === undefined || this.chartData.filter.py) {
+            drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
+        }
 
         // Budget/Target (BUD)
         drawBar(margin.left + .5, this.barHeight, data[2], [["fill", "none"], ["stroke-width", 2]]);
@@ -146,7 +148,9 @@ class KPIBar extends BaseChart {
         }
 
         // PY deviation in %
-        textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
+        if (this.chartData.filter.py === undefined || this.chartData.filter.py) {
+            textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
+        }
         // Actual value
         textLabel(this.baseData.width * 0.99, this.barHeight + margin.top, labelData[1], "black", format);
         // BUD deviation in %

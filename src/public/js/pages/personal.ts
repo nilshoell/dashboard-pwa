@@ -20,9 +20,10 @@ class Personal extends BasePage {
     kpis:KPI[] = [
         {id: "7a0c8fcbc047", filter: {period: "Q", avg: 7}},
         {id: "250e42977eb7", filter: {period: "MTD"}},
-        {id: "a474fee353a1", filter: {period: "MTD", avg: 7}}
+        {id: "a474fee353a1", filter: {period: "MTD", avg: 7}},
+        {id: "5171156a1720", filter: {period: "M", avg: 3, py:false}}
     ];
-    brick:KPI = {id: "dd751c6b67fb"};
+    brick:KPI = {id: "dd751c6b67fb", filter: {period: "Q"}};
 
     /**
      * Setup event listeners
