@@ -188,18 +188,18 @@ const getDaily = async (params) => {
     let sql = `
     SELECT strftime('%Y-%m',timestamp) AS date, SUM(value) AS val
     FROM measures
-    WHERE kpi = ? AND (scenario = 'AC' OR scenario = 'PY') AND (timestamp BETWEEN ? AND ?)
+    WHERE kpi = ? AND (scenario = 'AC' OR scenario = 'PY') AND (timestamp BETWEEN ? AND ?) AND partner = ?
     GROUP BY date ORDER BY date ASC;`;
 
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
         sql = `
         SELECT strftime('%Y-%m',timestamp) AS date, AVG(value) AS val
         FROM measures
-        WHERE kpi = ? AND (scenario = 'AC' OR scenario = 'PY') AND (timestamp BETWEEN ? AND ?)
+        WHERE kpi = ? AND (scenario = 'AC' OR scenario = 'PY') AND (timestamp BETWEEN ? AND ?) AND partner = ?
         GROUP BY date ORDER BY date ASC;`;
     }
 
-    const stmt = await db.prepare(sql, params.id, params.startDate, params.endDate);
+    const stmt = await db.prepare(sql, params.id, params.startDate, params.endDate, params.filter.partner);
     const result = await stmt.all();
     await stmt.finalize();
 

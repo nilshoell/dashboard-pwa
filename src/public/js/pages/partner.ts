@@ -22,6 +22,22 @@ $(async function () {
         $("h4.title").addClass("h5");
     }
 
+    const sales = (await API.callApi("monthly", "74351e8d7097", {partner: partner_id, period: "YTD", aggregate: "sum"}));
+    const sum = (arr:number[]) => {
+        let length = arr.length;
+        let sum = 0;
+        while (length--) sum += Number(arr[length]);
+        return sum;
+    };
+    const salesTotal = sum(sales.map(d => d.val));
+
+    // Info sheet
+    let content = "<b>Name</b>: " + name + " (" + page.products.masterdata.shortname + ")<br>";
+    content += "<b>Region</b>: " + page.products.masterdata.region + "<br>";
+    content += "<b>Sales YTD</b>: " + d3.format("~s")(salesTotal) + " USD";
+
+    $("#customerInfo")[0].innerHTML = content;
+
     page.months.filter = {partner: partner_id, period: "Y", aggregate: "sum"};
     page.months.data = await API.callApi("monthly", "74351e8d7097", page.months.filter);
     page.renderBarChart("barChart", page.months);

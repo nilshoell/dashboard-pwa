@@ -41,7 +41,7 @@ class ColumnChart extends BaseChart {
             .attr("height", this.yScale.bandwidth())
             .attr("data-value", (d:any) => d.val)
             .attr("data-id", (d:any) => d.product ?? d.partner ?? "")
-            .attr("fill", chartData.color ?? "dimgrey");
+            .attr("fill", chartData.color ?? "black");
 
         // bars.exit().remove();
         this.drawAxes();

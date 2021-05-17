@@ -33,6 +33,15 @@ class BarChart extends BaseChart {
 
         this.setScales();
 
+        const color = ((date:string) => {
+            const year = new Date().getFullYear();
+            if (Number(date.split("-")[0]) < year) {
+                return "dimgrey";
+            } else {
+                return "black";
+            }
+        });
+
         const bars = this.svg
             .selectAll("rect")
             .data(data);
@@ -43,7 +52,7 @@ class BarChart extends BaseChart {
             .attr("width", this.xScale.bandwidth())
             .attr("height", (d:any) => this.yScale(0) - this.yScale(d.val))
             .attr("data-value", (d:number) => d)
-            .attr("fill", "dimgrey");
+            .attr("fill", d => color(d.date));
 
         // bars.exit().remove();
         this.drawAxes();
