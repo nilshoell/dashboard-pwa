@@ -12,3 +12,8 @@ block chart
     a.alert-link(href="https://github.com/nilshoell/dashboard-pwa")
       i.fa.fab.fa-github
       |  nilshoell/dashboard-pwa
+
+  button.btn.btn-main.mb-2#cachePurge(type="button") Purge Data Caches
+  div.alert.alert-success.alert-dismissible.fade#purgeAlert(role="alert") Caches Purged!
+    button.close(type="button" aria-label="Close")
+      span(aria-hidden="true") &times;

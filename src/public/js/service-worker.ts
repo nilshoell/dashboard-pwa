@@ -48,15 +48,11 @@ self.addEventListener("activate", function(event:any) {
   console.info("Activate Service Worker", event);
   // event.waitUntil(
   //   caches.keys().then(function(cacheNames) {
-  //     return Promise.all(
-  //       cacheNames.filter(function(cacheName) {
-  //         if (cacheName == CACHE_NAME) {
-  //           return true;
-  //         }
-  //       }).map(function(cacheName) {
-  //         return caches.delete(cacheName);
-  //       })
-  //     );
+  //     return Promise.all(cacheNames.map(function (key) {
+  //       if (cacheNames.indexOf(key) === -1) {
+  //         return caches.delete(key);
+  //       }
+  //     }));
   //   })
   // );
 });

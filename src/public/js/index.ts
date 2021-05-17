@@ -1,5 +1,6 @@
 import * as Modal from "./components/modals.js";
 import * as API from "./components/api.js";
+import { stat } from "fs";
 
 $(function () {
     console.info("Document Ready");
@@ -17,19 +18,55 @@ class App {
         $("[data-toggle='popover']").popover();
         $(".popover-dismiss").popover({
             trigger: "focus"
-          });
+        });
+
+        // Initialize alerts
+        $(".alert").alert();
+        $(document).on("click", ".alert button.close", () => {
+            $(".alert").alert("close");
+        });
+
 
         // Register Service Workers in Prod
         if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
             this.registerSW();
             this.broadcastChannel();
         }
+
+        // Purge data caches
+        $(document).on("click", "#cachePurge", (evt: any) => {
+            const static_cache = [
+                "/public/manifest.json",
+                "/public/js/vendor/jquery.min.js",
+                "/public/js/vendor/bootstrap.bundle.min.js",
+                "/public/js/vendor/d3.min.js",
+                "/public/images/favicon.png",
+                "/public/images/splash-screen.png",
+                "/public/images/icon_192.png",
+                "/public/images/icon_512.png",
+                "/public/images/icon_maskable_bg.png",
+                "/offline.html"
+              ];
+            evt.waitUntil(
+                caches.open("dashboard-pwa-cache").then( async (cache) => {
+                    const keys = await cache.keys();
+                    keys.forEach(key => {
+                        const reqPath = new URL(key.url).pathname;
+                        if (static_cache.indexOf(reqPath) === -1) {
+                            cache.delete(key);
+                        }
+                    });
+                })
+            );
+            $("#purgeAlert").addClass("show");
+        });
+
     }
 
     /**
      * Sets up event handlers for global chart interactions
      */
-    canvasHandlers () {
+    canvasHandlers() {
         // Setup canvas long touch event
         $(document).on("longtouch", ".chart-canvas", async (evt) => {
             const target = evt.currentTarget;
@@ -48,13 +85,30 @@ class App {
             }
 
             // Fill and display modal
-            const modalContent = [
-                {name:"Short Name", val: data.shortname},
-                {name:"Unit", val: data.unit},
-                {name:"Formula", val: formula},
-                {name:"Formula", val: data.formula},
-                {name:"Description", val: data.help},
-                {name:"ID", val: data.id},
+            const modalContent = [{
+                    name: "Short Name",
+                    val: data.shortname
+                },
+                {
+                    name: "Unit",
+                    val: data.unit
+                },
+                {
+                    name: "Formula",
+                    val: formula
+                },
+                {
+                    name: "Formula",
+                    val: data.formula
+                },
+                {
+                    name: "Description",
+                    val: data.help
+                },
+                {
+                    name: "ID",
+                    val: data.id
+                },
             ];
             Modal.fill(data.name, modalContent, filter);
             Modal.display();
@@ -76,7 +130,7 @@ class App {
     /**
      * Setup event listeners to toggle the navigation sidebar
      */
-    navigationHandlers () {
+    navigationHandlers() {
 
         // Remove sidebar on click on overlay or the dismiss-button
         $(document).on("click", "#dismiss, .overlay", () => {
@@ -111,7 +165,7 @@ class App {
                     title: "Mobile Dashboard",
                     text: "Check out this dashboard!",
                     url: url,
-                  };
+                };
                 navigator.share(shareData).then(() => {
                     return;
                 });
@@ -136,14 +190,16 @@ class App {
     /**
      * Registers the service workers for PWA completeness
      */
-    registerSW () {
+    registerSW() {
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/public/js/service-worker.js", {scope: "/"})
-              .then((reg) => {
-                console.log("Service worker registered:", reg);
-              }, (err) => {
-                console.error("Service worker not registered:", err);
-            });
+            navigator.serviceWorker.register("/public/js/service-worker.js", {
+                    scope: "/"
+                })
+                .then((reg) => {
+                    console.log("Service worker registered:", reg);
+                }, (err) => {
+                    console.error("Service worker not registered:", err);
+                });
         }
     }
 
@@ -153,8 +209,7 @@ class App {
     broadcastChannel() {
         const channel = new BroadcastChannel("sw-messages");
         channel.addEventListener("message", event => {
-          window.location.href = event.data.redirect;
+            window.location.href = event.data.redirect;
         });
     }
-
 }
