@@ -13,7 +13,17 @@ function fill(title:string, body:Record<string, any>[], filter = {}) {
     let bodyContent = "";
 
     if (!Helper.emptyObj(filter)) {
-        bodyContent += "<b>Period: </b>" + filter["period"] ?? "AC" + "<b> Scenario: </b>" + filter["scenario"] ?? "YTD" + "</br><hr>";
+        const scenario = filter["scenario"] ?? "AC";
+        const period = filter["period"] ?? "YTD";
+        let aggregate = filter["aggregate"].toUpperCase() ?? "SUM";
+
+        if (aggregate == "AVG") {
+            aggregate = "Ø " + filter["avg"];
+        }
+
+        bodyContent += "<b>Scenario: </b><span class='badge badge-light'>" + scenario + "</span><br>";
+        bodyContent += "<b>Period: </b><span class='badge badge-secondary'>" + period + "</span><br>";
+        bodyContent += "<b>Aggregate: </b><span class='badge badge-dark'>" + aggregate + "</span></br><hr>";
     }
 
     body.forEach(entry => {
