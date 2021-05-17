@@ -1,4 +1,5 @@
 import BaseChart from "./baseChart.js";
+import { toISO } from "../components/helperFunctions.js";
 
 /**
  * A standard line graph with a time-based x-axis
@@ -22,6 +23,8 @@ class Timeline extends BaseChart {
      */
     drawChart(chartData) {
         // Base setup
+        const today = toISO(new Date());
+        chartData.data = d3.filter(chartData.data, (d:any) => d.date <= today);
         this.chartData = chartData;
         BaseChart.prototype.drawChart(this);
         

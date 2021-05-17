@@ -26,6 +26,8 @@ $(async function () {
     }
 
     dashboard.renderTimeLine("timeline", dashboard.kpi);
+    dashboard.kpi.filter = {style: "short"};
+    dashboard.renderChart("overview", dashboard.kpi, "KPITile");
 
     // Column Chart
     const hasPartner = await API.callApi("hasPartner", kpi_id);

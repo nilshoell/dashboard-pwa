@@ -1,4 +1,5 @@
 import BaseChart from "./baseChart.js";
+import { toISO } from "../components/helperFunctions.js";
 
 /**
  * A tile containing actual, previous and target values along a sparkline
@@ -46,13 +47,25 @@ class KPITile extends BaseChart {
         this.sparklineGroup = this.svg.append("g").attr("class", "path-group");
         this.annotationsGroup = this.svg.append("g").attr("class", "annotation-group");
 
+        const today = toISO(new Date());
+        this.chartData.data.sparkData = d3.filter(this.chartData.data.sparkData, (d:any) => d.date <= today);
+
         // Setup Scales
         this.setScales();
 
         this.drawAggregates();
-        this.setBackground();
-        this.drawSparkline();
-        this.drawAnnotations();
+
+        if (this.chartData.filter.style !== "short") {
+            this.setBackground();
+            this.drawSparkline();
+            this.drawAnnotations();
+        } else {
+            $("#" + this.canvasID).height(150);
+            $("#" + this.canvasID + " svg").height(150);
+            $("#" + this.canvasID + " svg g.tile-bg rect").height(150);
+            $("#" + this.canvasID + " svg g.label-group text")[0].textContent = "";
+        }
+
 
     }
 
