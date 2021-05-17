@@ -1,4 +1,5 @@
 import BaseChart from "./baseChart.js";
+import { toISO } from "../components/helperFunctions.js";
 
 /**
  * A simple, small line graph with minimal labels
@@ -11,7 +12,7 @@ class Sparkline extends BaseChart {
             top: 5,
             bottom: 15,
             left: 5,
-            right: 25
+            right: 30
         };
         this.setMargins(margin);
     }
@@ -67,12 +68,14 @@ class Sparkline extends BaseChart {
             .attr("stroke-width", 1)
             .attr("d", line(ac_data));
 
-        path.join("path")
-            .attr("fill", "none")
-            .attr("stroke", "grey")
-            .attr("stroke-width", 1)
-            .attr("stroke-dasharray", [5, 5])
-            .attr("d", fc_line(fc_data));
+        if (this.chartData.filter.fc !== false) {
+            path.join("path")
+                .attr("fill", "none")
+                .attr("stroke", "grey")
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", [5, 5])
+                .attr("d", fc_line(fc_data));
+        }
 
         // Draw annotations
         this.drawAnnotations();
@@ -91,14 +94,16 @@ class Sparkline extends BaseChart {
         const width = this.baseData.width;
         const height = this.baseData.height;
         const data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val};});
+        // const ac_data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val};});
         const minDate = Number(d3.min(data, (d:any) => d.date));
         let maxDate = Number(d3.max(data, (d:any) => d.date));
         const minVal = Number(d3.min(data, (d:any) => d.val));
         const maxVal = Number(d3.max(data, (d:any) => d.val));
-        
+
         // Check how far into the future values are displayed
         if (maxDate > minDate * -0.25) {
             maxDate = minDate * -0.25;
+            // this.chartData.filter.fc = false;
         }
 
         this.xScale = d3.scaleLinear()
@@ -250,7 +255,7 @@ class Sparkline extends BaseChart {
     convertDates() {
         const data = this.chartData.data;
         const now = new Date();
-        const today = new Date(now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2,"0") + "-" + String(now.getDate()).padStart(2,"0"));
+        const today = new Date(toISO(now));
         const secondsInDay = 86400000;
         
         // Calculate day differences

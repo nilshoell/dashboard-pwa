@@ -270,18 +270,66 @@ const getLatest = async (params) => {
     Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
 
-    const now =new Date();
+    const period = params.filter.period;
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
     const today = toISO(now);
+    let endDate:string;
+    let startDate:string;
+
+    switch (period) {
+        case "MTD":
+            startDate = year + "-" + String(month).padStart(2, "0") + "-01";
+            endDate = year + "-" + String(month + 1).padStart(2, "0") + "-01";
+            break;
+    
+        case "QTD":
+            switch (true) {
+                case month < 4:
+                    startDate = year + "-01-01";
+                    endDate = year + "-04-01";
+                    break;
+                case month < 7:
+                    startDate = year + "-04-01";
+                    endDate = year + "-07-01";
+                    break;
+                case month < 10:
+                    startDate = year + "-07-01";
+                    endDate = year + "-10-01";
+                    break;
+                default:
+                    startDate = year + "-10-01";
+                    endDate = year + "-12-31";
+                    break;
+            }
+            break;
+    
+        case "YTD":
+            startDate = year + "-01-01";
+            endDate = year + "-12-31";
+            break;
+    
+        default:
+            returnObj["success"] = true;
+            returnObj["data"] = {date: today, val: 0};
+            return returnObj;
+            break;
+    }
 
     const db = await openDB();
 
-    let sql = "SELECT SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND timestamp > ?;";
+    let sql = "SELECT MAX(timestamp) AS date, SUM(value) AS val FROM measures WHERE kpi = ? AND NOT scenario = 'BU' AND timestamp BETWEEN ? AND ?;";
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-        sql = "SELECT AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND timestamp > ?;";
-    } 
+        sql = `
+        SELECT timestamp AS date, value AS val
+        FROM measures
+        WHERE kpi = ? AND NOT scenario = 'BU' AND timestamp BETWEEN ? AND ?
+        ORDER BY timestamp DESC LIMIT 1;`;
+    }
 
-    const stmt = await db.prepare(sql, params.id, params.filter.scenario, today);
-    const result = await stmt.all();
+    const stmt = await db.prepare(sql, params.id, startDate, endDate);
+    const result = await stmt.get();
     await stmt.finalize();
 
     if (result !== undefined) {

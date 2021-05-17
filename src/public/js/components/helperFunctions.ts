@@ -190,4 +190,14 @@ async function movingAvg(input:any[], range:number) {
     return result;
 }
 
-export { round, valMinify, randomSpark, getCaller, emptyObj, cumulativeSum, objSum, movingAvg };
+
+/**
+ * Converts a Date object to an ISO date string
+ * @param date A Date Object
+ * @returns ISO-String
+ */
+ function toISO(date:Date) {
+    return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2,"0") + "-" + String(date.getDate()).padStart(2,"0");
+}
+
+export { round, valMinify, randomSpark, getCaller, emptyObj, cumulativeSum, objSum, movingAvg, toISO};

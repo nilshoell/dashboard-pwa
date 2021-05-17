@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "kpis" (
 	"id"	TEXT NOT NULL,
 	"name"	TEXT NOT NULL,
 	"shortname"	TEXT,
-	"type"	TEXT,
+	"aggregate"	TEXT,
 	"parent"	TEXT NOT NULL,
 	"unit"	TEXT,
 	"direction"	TEXT DEFAULT '+',
@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS "measures" (
 	"product"	INTEGER,
 	"scenario"	TEXT DEFAULT 'AC',
 	PRIMARY KEY("id"),
+	FOREIGN KEY("kpi") REFERENCES "kpis"("id"),
 	FOREIGN KEY("product") REFERENCES "products"("id"),
 	FOREIGN KEY("partner") REFERENCES "partners"("id")
 );

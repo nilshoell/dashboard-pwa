@@ -63,7 +63,7 @@ class KPIBar extends BaseChart {
         };
 
         // Previous year (PY)
-        if (this.chartData.filter.py === undefined || this.chartData.filter.py) {
+        if (this.chartData.filter.py !== false) {
             drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
         }
 
@@ -74,7 +74,7 @@ class KPIBar extends BaseChart {
         drawBar(margin.left, this.barHeight/2, data[1], [["fill", "black"]]);
 
         // Forecast if Available
-        if (!isNaN(data[3]) && data[3] > data[1]) {
+        if (!isNaN(data[3]) && data[3] > data[1] && this.chartData.filter.fc !== false) {
             let barWidth = Number(this.xScale(data[3]) - this.xScale(data[1]));
             if (barWidth <= 0) {
                 barWidth = 0;

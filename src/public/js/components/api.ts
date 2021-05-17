@@ -60,7 +60,7 @@ async function callApi(method:string, kpi:string, filter = {}, fullResponse= fal
  */
 async function getLatestBarData(kpi_id:string, filters = {}) {
     const data = [];
-    const requests = [{scenario: "PY"}, {scenario: "AC"}, {scenario: "BU"}, {scenario: "FC"}];
+    const requests = [{scenario: "PY"}, {scenario: "AC"}, {scenario: "BU"}];
 
     for (let i = 0; i < requests.length; i++) {
         const filter = {};
@@ -72,6 +72,10 @@ async function getLatestBarData(kpi_id:string, filters = {}) {
             data.push(0);
         }
     }
+
+    // Forecast data using special method
+    const fc_res = await callApi("forecast", kpi_id, filters);
+    data.push(fc_res.val ?? 0);
 
     return data;
 }
@@ -87,8 +91,7 @@ async function getBarData(kpi_id:string, filters = {}) {
     const requests = [
         {scenario: "PY"},
         {scenario: "AC"},
-        {scenario: "BU"},
-        {scenario: "FC"}
+        {scenario: "BU"}
     ];
     
     for (let i = 0; i < requests.length; i++) {
@@ -102,6 +105,11 @@ async function getBarData(kpi_id:string, filters = {}) {
             data.push(0);
         }
     }
+
+    // Forecast data using special method
+    const fc_res = await callApi("forecast", kpi_id, filters);
+    data.push(fc_res.val ?? 0);
+
     return data;
 }
 
@@ -113,6 +121,13 @@ async function getBarData(kpi_id:string, filters = {}) {
  */
 async function getTimeData(kpi_id:string, filter = {}) {
     const data = await callApi("daily", kpi_id, filter);
+    // Forecast data using special method
+    if (filter["fc"] !== false) {
+        const fc_res = await callApi("forecast", kpi_id, filter);
+        if (fc_res !== undefined) {
+            data.push(fc_res);
+        }
+    }
     return data;
 }
 
@@ -124,6 +139,13 @@ async function getTimeData(kpi_id:string, filter = {}) {
  */
 async function getCumulativeTimeData(kpi_id:string, filter = {}) {
     let data = await callApi("daily", kpi_id, filter);
+    // Forecast data using special method
+    if (filter["fc"] !== false) {
+        const fc_res = await callApi("forecast", kpi_id, filter);
+        if (fc_res !== undefined) {
+            data.push(fc_res);
+        }
+    }
     data = await Helper.cumulativeSum(data, "val");
     return data;
 }
