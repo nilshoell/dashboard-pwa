@@ -49,7 +49,7 @@ class BasePage {
      * @param chartType The type of chart to render
      * @param apiMethod The method on the server API; currently only used for bar/column charts
      */
-    async renderChart(canvasID:string, kpi:KPI, chartType:string, apiMethod = "timeframe") {
+    async renderChart(canvasID:string, kpi:KPI, chartType:string, apiMethod = "timeframe", baseData = {}) {
 
         kpi.masterdata = await API.callApi("masterdata", kpi.id);
         const filter = {aggregate: kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
@@ -111,7 +111,7 @@ class BasePage {
             default:
                 console.error("Invalid chart type '" + String(chartType) + "' provided.");
         }
-        this["render" + chartType](canvasID, kpi);
+        this["render" + chartType](canvasID, kpi, baseData);
     }
 
 
@@ -145,8 +145,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-    renderBarChart(canvasID:string, kpi:KPI) {
-        const chart = new BarChart(canvasID);
+    renderBarChart(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new BarChart(canvasID, baseData);
         const chartData = kpi;
         chartData["kpi"] = kpi.id;
         chart.drawChart(chartData);
@@ -158,8 +158,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-     renderBrickWall(canvasID:string, kpi:KPI) {
-        const chart = new BrickWall(canvasID);
+     renderBrickWall(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new BrickWall(canvasID, baseData);
         const chartData = kpi;
         chartData["kpi"] = kpi.id;
         chart.drawChart(chartData);
@@ -171,8 +171,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-     renderColumnChart(canvasID:string, kpi:KPI) {
-        const chart = new ColumnChart(canvasID);
+     renderColumnChart(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new ColumnChart(canvasID, baseData);
         const chartData = kpi;
         chartData["kpi"] = kpi.id;
         chart.drawChart(chartData);
@@ -184,8 +184,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-    renderKPIBar(canvasID:string, kpi:KPI) {
-        const chart = new KPIBar(canvasID);
+    renderKPIBar(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new KPIBar(canvasID, baseData);
         const chartData = {};
 
         chartData["kpi"] = kpi.id;
@@ -202,8 +202,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-     renderKPITile(canvasID:string, kpi:KPI) {
-        const chart = new KPITile(canvasID);
+     renderKPITile(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new KPITile(canvasID, baseData);
         const chartData = kpi;
         chartData["kpi"] = kpi.id;
         chart.drawChart(chartData);
@@ -215,8 +215,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-    renderSparkline(canvasID:string, kpi:KPI) {
-        const chart = new Sparkline(canvasID);
+    renderSparkline(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new Sparkline(canvasID, baseData);
         const chartData = {};
 
         chartData["kpi"] = kpi.id;
@@ -233,8 +233,8 @@ class BasePage {
      * @param canvasID The HTML ID of the chart container
      * @param kpi A KPI object containing all necessary data
      */
-     renderTimeLine(canvasID:string, kpi:KPI) {
-        const chart = new TimeLine(canvasID);
+     renderTimeLine(canvasID:string, kpi:KPI, baseData = {}) {
+        const chart = new TimeLine(canvasID, baseData);
         const chartData = kpi;
         chartData["kpi"] = kpi.id;
         chart.drawChart(chartData);
