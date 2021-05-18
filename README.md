@@ -3,11 +3,19 @@
 A Progressive Web App that explores the possibilities of mobile dashboards utilizing D3.js for the visualizations.
 
 - [Dashboard-PWA](#dashboard-pwa)
+  - [Introduction](#introduction)
   - [Installation](#installation)
     - [Development](#development)
     - [Production](#production)
   - [Dependencies](#dependencies)
   - [Repository Structure](#repository-structure)
+
+
+## Introduction
+
+This Node application is part of my master thesis about mobile dashboards and serves as a technical demonstration and implementation of requirements derived from the research.
+
+See the demo site here: https://dashboard.nilshoell.de
 
 ## Installation
 
