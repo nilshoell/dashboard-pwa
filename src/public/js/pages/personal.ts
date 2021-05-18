@@ -21,7 +21,7 @@ class Personal extends BasePage {
         {id: "7a0c8fcbc047", filter: {period: "Q", avg: 7}},
         {id: "250e42977eb7", filter: {period: "MTD"}},
         {id: "a474fee353a1", filter: {period: "MTD", avg: 7}},
-        {id: "5171156a1720", filter: {period: "M", avg: 3, py:false}}
+        {id: "5171156a1720", filter: {period: "M", avg: 3, py:false, fc: false}}
     ];
     brick:KPI = {id: "dd751c6b67fb", filter: {period: "Q"}};
 
@@ -40,7 +40,9 @@ class Personal extends BasePage {
 
         $(document).on("click", "#pn-trigger", (event) => {
             event.preventDefault();
-            PN.displayNotification(this.kpis[Number(d3.randomInt(2))]["masterdata"]);
+            const max = this.kpis.length - 1;
+            const kpi = this.kpis[d3.randomInt(max)()];
+            PN.displayNotification(kpi.masterdata);
         });
 
         // Toggle KPIBar/Sparkline button
