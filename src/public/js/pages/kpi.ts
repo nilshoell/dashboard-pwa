@@ -17,7 +17,7 @@ $(async function () {
     // Setup filters
     const filter = {aggregate: dashboard.kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
     if (filter.aggregate === "avg" && filter["avg"] === undefined) {
-        filter["avg"] = 14;
+        filter["avg"] = 7;
     }
     dashboard.kpi.filter = filter;
     
@@ -89,7 +89,7 @@ class KPIDashboard extends BasePage {
             const component:KPI = {id: id, filter: {period: "YTD", scenario: "AC"}};
 
             component.masterdata = await API.callApi("masterdata", id);
-            const filter = {aggregate: component.masterdata.aggregate, scenario: "AC", period: "YTD", avg: 14};
+            const filter = {aggregate: component.masterdata.aggregate, scenario: "AC", period: "YTD", avg: 7};
             component.filter = Object.assign(filter, component.filter);
 
             if (component.masterdata.aggregate === "sum") {

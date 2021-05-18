@@ -95,7 +95,7 @@ class BasePage {
                     kpi.sparkData = await API.getCumulativeTimeData(kpi.id, kpi.filter);
                 } else {
                     const data = await API.getTimeData(kpi.id, kpi.filter);
-                    kpi.sparkData = await Helper.movingAvg(data, kpi.filter.avg ?? 14);
+                    kpi.sparkData = await Helper.movingAvg(data, kpi.filter.avg ?? 7);
                 }
                 break;
 
@@ -104,7 +104,7 @@ class BasePage {
                     kpi.data= await API.getCumulativeTimeData(kpi.id, kpi.filter);
                 } else {
                     const data = await API.getTimeData(kpi.id, kpi.filter);
-                    kpi.data = await Helper.movingAvg(data, kpi.filter.avg ?? 14);
+                    kpi.data = await Helper.movingAvg(data, kpi.filter.avg ?? 7);
                 }
                 break;
 
