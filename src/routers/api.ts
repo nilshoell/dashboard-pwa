@@ -589,6 +589,8 @@ const hasPartner = async (params) => {
     const returnObj = {};
     Object.assign(returnObj, defaultReturn);
     returnObj["params"] = params;
+    
+    params = await getPeriod(params);
 
     const db = await openDB();
 
@@ -633,16 +635,16 @@ const hasPartner = async (params) => {
             sql_3 = `
             SELECT SUM(value) AS val
             FROM measures
-            WHERE kpi = ? AND product IN (`+ placeholder +`) AND partner = ?
+            WHERE kpi = ? AND product IN (`+ placeholder +`) AND partner = ? AND timestamp BETWEEN ? AND ?
             ORDER BY val DESC;`;
-            stmt_3 = await db.prepare(sql_3, params.id, ...ids, params.filter.partner);
+            stmt_3 = await db.prepare(sql_3, params.id, ...ids, params.filter.partner, params.startDate, params.endDate);
         } else {
             sql_3 = `
             SELECT SUM(value) AS val
             FROM measures
-            WHERE kpi = ? AND product IN (`+ placeholder +`)
+            WHERE kpi = ? AND product IN (`+ placeholder +`) AND timestamp BETWEEN ? AND ?
             ORDER BY val DESC;`;
-            stmt_3 = await db.prepare(sql_3, params.id, ...ids);
+            stmt_3 = await db.prepare(sql_3, params.id, ...ids, params.startDate, params.endDate);
         }
         
         const result = await stmt_3.get();
