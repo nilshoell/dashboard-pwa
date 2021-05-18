@@ -33,7 +33,7 @@ class App {
         }
 
         // Purge data caches
-        $(document).on("click", "#cachePurge", (evt: any) => {
+        $(document).on("click", "#cachePurge", async () => {
             const static_cache = [
                 "/public/manifest.json",
                 "/public/js/vendor/jquery.min.js",
@@ -46,8 +46,7 @@ class App {
                 "/public/images/icon_maskable_bg.png",
                 "/offline.html"
               ];
-            evt.waitUntil(
-                caches.open("dashboard-pwa-cache").then( async (cache) => {
+            await caches.open("dashboard-pwa-cache").then( async (cache) => {
                     const keys = await cache.keys();
                     keys.forEach(key => {
                         const reqPath = new URL(key.url).pathname;
@@ -55,8 +54,7 @@ class App {
                             cache.delete(key);
                         }
                     });
-                })
-            );
+                });
             $("#purgeAlert").addClass("show");
         });
 
