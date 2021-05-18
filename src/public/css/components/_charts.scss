@@ -1,12 +1,11 @@
 /* Chart Container Setups */
-// .chartCol {
-//     height: 95vh;
-// }
 
+// Default chart canvas size
 .chart-canvas {
     height: 50vh;
 }
 
+// Standard label
 .numeric-label {
     text-anchor: middle;
     font-weight: bold;
@@ -16,6 +15,8 @@
 .chart-canvas.bar-chart {
     height: 35vh;
 }
+
+// Timeline
 .chart-canvas.timeline {
     height: 35vh;
 }
@@ -42,6 +43,7 @@
     }
 }
 
+// KPITile
 .kpi-tile {
     height: 200px;
     width: 200px;
@@ -53,7 +55,7 @@
     }
 }
 
-// KPIBar
+// BrickWall
 .chart-canvas.brick-wall {
     height: 200px;
 }

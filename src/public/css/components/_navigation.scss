@@ -1,4 +1,4 @@
-/* Navigation Header and Sidebar */
+/* Navigation Header and Toggle */
 a,
 a:hover,
 a:focus {
@@ -33,35 +33,34 @@ a:focus {
     content: none;
 }
 
-/* Sidebar */
-
+/* Sidebar Definition */
 #sidebar {
-    width: 250px;
     position: fixed;
+    z-index: 999;
+    width: 250px;
+    height: 100vh;
     top: 0;
     left: -250px;
-    height: 100vh;
-    z-index: 999;
     background: $bg-dark;
     color: $text-dark;
     transition: all 0.3s;
     overflow-y: scroll;
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
 #sidebar.active {
     left: 0;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
 }
 
 #dismiss {
+    position: absolute;
     width: 35px;
     height: 35px;
+    top: 10px;
+    right: 10px;
     line-height: 35px;
     text-align: center;
     background: $bg-dark;
-    position: absolute;
-    top: 10px;
-    right: 10px;
     cursor: pointer;
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
@@ -71,14 +70,15 @@ a:focus {
 .overlay {
     display: none;
     position: fixed;
-    top: 0;
+    z-index: 998;
     width: 100vw;
     height: 100vh;
+    top: 0;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 998;
     opacity: 0;
     transition: all 0.5s ease-in-out;
 }
+
 .overlay.active {
     display: block;
     opacity: 1;
@@ -94,17 +94,11 @@ a:focus {
     border-bottom: 1px solid $bg-dark;
 }
 
-#sidebar ul p {
-    color: #fff;
-    padding: 10px;
-}
-
 #sidebar ul li a {
     padding: 10px;
     font-size: 1.1em;
     display: block;
 }
-
 
 #sidebar ul li.active>a,
 a[aria-expanded="true"] {
@@ -116,6 +110,7 @@ a[data-toggle="collapse"] {
     position: relative;
 }
 
+/* Three-Dot dropdown toggle */
 .dropdown-toggle::after {
     display: block;
     position: absolute;
@@ -125,13 +120,12 @@ a[data-toggle="collapse"] {
 }
 
 /* Page Content */
-
 #content {
+    position: absolute;
     width: 100%;
+    top: 0;
+    right: 0;
     padding: 20px;
     min-height: 100vh;
     transition: all 0.3s;
-    position: absolute;
-    top: 0;
-    right: 0;
 }
