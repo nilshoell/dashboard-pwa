@@ -17,9 +17,9 @@ class Dashboard extends BasePage {
     constructor() {
         super();
         this.kpis = [
-            {id: "9efcb5361969", masterdata: {}, filter: {period: "MTD"}},
-            {id: "53c6cd0b443b", masterdata: {}, filter: {period: "YTD"}},
             {id: "74351e8d7097", masterdata: {}, filter: {period: "YTD"}},
+            {id: "9efcb5361969", masterdata: {}, filter: {period: "YTD"}},
+            {id: "53c6cd0b443b", masterdata: {}, filter: {period: "YTD"}},
             {id: "eb9f9dc3efb7", masterdata: {}, filter: {period: "YTD", fc: false}},
             {id: "3f6e4e8df453", masterdata: {}, filter: {period: "YTD"}},
             {id: "255e926dc950", masterdata: {}, filter: {period: "YTD", fc: false}}
