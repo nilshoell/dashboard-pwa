@@ -60,9 +60,10 @@ class KPITile extends BaseChart {
             this.drawSparkline();
             this.drawAnnotations();
         } else {
-            $("#" + this.canvasID).height(150);
+            $("#" + this.canvasID).height(130);
             $("#" + this.canvasID + " svg").height(150);
-            $("#" + this.canvasID + " svg g.tile-bg rect").height(150);
+            $("#" + this.canvasID + " svg g.tile-bg rect").height(120);
+            $("#" + this.canvasID + " svg g.tile-bg rect").attr("y", 15);
             $("#" + this.canvasID + " svg g.label-group text")[0].textContent = "";
         }
 

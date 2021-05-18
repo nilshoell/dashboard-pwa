@@ -77,7 +77,7 @@ class BaseChart {
             if ($("#" + data.canvasID + " .badge-period")[0] !== undefined) {
                 $("#" + data.canvasID + " .badge-period")[0].innerText = filter.period;
                 if (filter.aggregate === "avg") {
-                    $("#" + data.canvasID + " .badge-aggregate")[0].innerText = "Ø " + filter.avg;
+                    $("#" + data.canvasID + " .badge-aggregate")[0].innerText = "Ø " + (filter.avg ?? "");
                 } else {
                     $("#" + data.canvasID + " .badge-aggregate")[0].innerText = filter.aggregate.toUpperCase();
                 }

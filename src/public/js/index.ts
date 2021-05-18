@@ -1,6 +1,5 @@
 import * as Modal from "./components/modals.js";
 import * as API from "./components/api.js";
-import { stat } from "fs";
 
 $(function () {
     console.info("Document Ready");
@@ -79,10 +78,7 @@ class App {
 
             // Get master data from API
             const data = await API.callApi("masterdata", kpi);
-            let formula = await API.convertFormula(data.formula);
-            if (formula === "Direct Measurement") {
-                formula = "";
-            }
+            const formula = await API.convertFormula(data.formula);
 
             // Fill and display modal
             const modalContent = [{
@@ -96,10 +92,6 @@ class App {
                 {
                     name: "Formula",
                     val: formula
-                },
-                {
-                    name: "Formula",
-                    val: data.formula
                 },
                 {
                     name: "Description",
