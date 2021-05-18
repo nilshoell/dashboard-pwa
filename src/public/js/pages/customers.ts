@@ -5,6 +5,7 @@ import { BasePage } from "./basePage.js";
  * Loads data and renders dashboards
  */
 $(async function () {
+    $("#overview").height("60vh");
     const dashboard = new CustomerDashboard();
     await dashboard.renderChart("overview", dashboard.kpis[0], "ColumnChart", "partner");
 });
