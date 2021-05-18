@@ -96,7 +96,7 @@ class KPITile extends BaseChart {
             .attr("class", "tile-bg");
         
         // Format any input value for textLabel
-        const textFormat = (value:number|string, format = ".2s") => {
+        const textFormat = (value:number|string, format:string) => {
             if (typeof(value) === "number") {
                 return d3.format(format)(value);
             } else {
@@ -117,8 +117,13 @@ class KPITile extends BaseChart {
             return color;
         };
 
+        let defaultFormat = ".2s";
+        if (this.chartData.masterdata.unit == "%") {
+            defaultFormat = ".2%";
+        }
+
         // Draws an easily configurable text label
-        const textLabel = (x:number, y:number, value:number|string, format = ".2s", attrs:any[] = []) => {
+        const textLabel = (x:number, y:number, value:number|string, format = defaultFormat, attrs:any[] = []) => {
             const text = this.labelGroup.append("text")
                 .attr("x", x)
                 .attr("y", y)
@@ -138,7 +143,11 @@ class KPITile extends BaseChart {
         textLabel(this.baseData.width / 2, 20, this.chartData.masterdata.name, undefined, [["fill", "dimgrey"], ["font-size", "x-large"], ["text-anchor", "middle"]]);
 
         // ACT in center
-        textLabel(this.baseData.width / 2, 60, d.act, ".3s", [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
+        let actFormat = ".3s";
+        if (this.chartData.masterdata.unit == "%") {
+            actFormat = ".2%";
+        }
+        textLabel(this.baseData.width / 2, 60, d.act, actFormat, [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
 
         // PY top left; deviation below
         textLabel(10, halfHeight - 20, "PY", undefined, [["font-size", "small"]]);
