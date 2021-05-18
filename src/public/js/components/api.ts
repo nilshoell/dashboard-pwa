@@ -139,6 +139,7 @@ async function getTimeData(kpi_id:string, filter = {}) {
  */
 async function getCumulativeTimeData(kpi_id:string, filter = {}) {
     let data = await callApi("daily", kpi_id, filter);
+    data = await Helper.cumulativeSum(data, "val");
     // Forecast data using special method
     if (filter["fc"] !== false) {
         const fc_res = await callApi("forecast", kpi_id, filter);
@@ -146,7 +147,6 @@ async function getCumulativeTimeData(kpi_id:string, filter = {}) {
             data.push(fc_res);
         }
     }
-    data = await Helper.cumulativeSum(data, "val");
     return data;
 }
 
