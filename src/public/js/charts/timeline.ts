@@ -98,11 +98,17 @@ class Timeline extends BaseChart {
         if (unit === "%") {
             format = "%";
         }
+
+        let timeFormat = "%b %d";
+        if (this.chartData.data.length > 120) {
+            timeFormat = "%b %Y";
+        }
+
         const xAxis = g => g
             .attr("transform", "translate(0," + (this.baseData.height - margin.bottom - 3) + ")")
-            .call(d3.axisBottom(this.xScale).ticks(5, "%b-%d").tickSizeOuter(0))
+            .call(d3.axisBottom(this.xScale).ticks(4, timeFormat).tickSizeOuter(0))
             .call(g => g.select(".domain").remove())
-            .call(g => g.selectAll(".tick text").style("text-anchor", "end").attr("transform", "rotate(-20)"));
+            .call(g => g.selectAll(".tick text").style("text-anchor", "middle"));
 
         const yAxis = g => g
             .attr("transform", "translate(" + (this.baseData.width - margin.right - 3) + ", 0)")

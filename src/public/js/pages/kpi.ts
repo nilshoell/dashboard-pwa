@@ -13,12 +13,12 @@ $(async function () {
     const kpi_id = $("#kpi")[0].innerText;
     dashboard.kpi = {id: kpi_id};
     dashboard.kpi.masterdata = await API.callApi("masterdata", kpi_id);
+    
+    // Setup filters
     const filter = {aggregate: dashboard.kpi.masterdata.aggregate, scenario: "AC", period: "YTD"};
-
     if (filter.aggregate === "avg" && filter["avg"] === undefined) {
         filter["avg"] = 14;
     }
-
     dashboard.kpi.filter = filter;
     
     // Timeline Data
