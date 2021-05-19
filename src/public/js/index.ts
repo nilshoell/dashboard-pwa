@@ -26,35 +26,15 @@ class App {
         });
 
 
-        // Register Service Workers in Prod
-        if (window.location.protocol === "https:" || window.location.host.startsWith("172")) {
+        // Register Service Workers in production
+        if (window.location.protocol === "https:") {
             this.registerSW();
             this.broadcastChannel();
         }
 
         // Purge data caches
         $(document).on("click", "#cachePurge", async () => {
-            const static_cache = [
-                "/public/manifest.json",
-                "/public/js/vendor/jquery.min.js",
-                "/public/js/vendor/bootstrap.bundle.min.js",
-                "/public/js/vendor/d3.min.js",
-                "/public/images/favicon.png",
-                "/public/images/splash-screen.png",
-                "/public/images/icon_192.png",
-                "/public/images/icon_512.png",
-                "/public/images/icon_maskable_bg.png",
-                "/offline.html"
-              ];
-            await caches.open("dashboard-pwa-cache").then( async (cache) => {
-                    const keys = await cache.keys();
-                    keys.forEach(key => {
-                        const reqPath = new URL(key.url).pathname;
-                        if (static_cache.indexOf(reqPath) === -1) {
-                            cache.delete(key);
-                        }
-                    });
-                });
+            await this.purgeCache();
             $("#purgeAlert").addClass("show");
         });
 
@@ -200,6 +180,34 @@ class App {
         const channel = new BroadcastChannel("sw-messages");
         channel.addEventListener("message", event => {
             window.location.href = event.data.redirect;
+        });
+    }
+
+    /**
+     * Purge all non-static cache assets
+     */
+    async purgeCache() {
+        const static_cache = [
+            "/public/manifest.json",
+            "/public/js/vendor/jquery.min.js",
+            "/public/js/vendor/bootstrap.bundle.min.js",
+            "/public/js/vendor/d3.min.js",
+            "/public/images/favicon.png",
+            "/public/images/splash-screen.png",
+            "/public/images/icon_192.png",
+            "/public/images/icon_512.png",
+            "/public/images/icon_maskable_bg.png",
+            "/offline.html"
+          ];
+
+        await caches.open("dashboard-pwa-cache").then( async (cache) => {
+            const keys = await cache.keys();
+            keys.forEach(key => {
+                const reqPath = new URL(key.url).pathname;
+                if (static_cache.indexOf(reqPath) === -1) {
+                    cache.delete(key);
+                }
+            });
         });
     }
 }

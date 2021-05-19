@@ -15,28 +15,29 @@ const to_cache = [
 /**
  * Initial caching of static assets
  */
-self.addEventListener("install", function(event:any) {
-    console.info("Installing Service Workers");
-    event.waitUntil(
-      caches.open(CACHE_NAME).then(function(cache) {
-        return cache.addAll(to_cache);
-      })
-    );
+self.addEventListener("install", function (event: any) {
+  console.info("Installing Service Workers");
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(function (cache) {
+      return cache.addAll(to_cache);
+    })
+  );
 });
 
 /**
  * Intercepts network requests and tries to load from cache, fallback to network
  */
-self.addEventListener("fetch", function(event:any) {
+self.addEventListener("fetch", function (event: any) {
   event.respondWith(
-    caches.open(CACHE_NAME).then(async function(cache) {
-      const response = await cache.match(event.request);
-      return response || fetch(event.request).then(function (response_1) {
-        cache.put(event.request, response_1.clone());
-        return response_1;
-      }).catch(function() {
-        return caches.match("/offline.html");
-      });
+    caches.open(CACHE_NAME).then(async function (cache) {
+      const cache_response = await cache.match(event.request);
+      return cache_response || fetch(event.request)
+        .then(function (network_response) {
+          cache.put(event.request, network_response.clone());
+          return network_response;
+        }).catch(function () {
+          return caches.match("/offline.html");
+        });
     })
   );
 });
@@ -44,7 +45,7 @@ self.addEventListener("fetch", function(event:any) {
 /**
  * Removes old caches (Disabled for now)
  */
-self.addEventListener("activate", function(event:any) {
+self.addEventListener("activate", function (event: any) {
   console.info("Activate Service Worker", event);
   // event.waitUntil(
   //   caches.keys().then(function(cacheNames) {
@@ -57,14 +58,14 @@ self.addEventListener("activate", function(event:any) {
   // );
 });
 
-self.addEventListener("push", function() {
+self.addEventListener("push", function () {
   console.log("Push Event for SW");
 });
 
 /**
  * Handle notification interaction
  */
-self.addEventListener("notificationclick", (event:any) => {
+self.addEventListener("notificationclick", (event: any) => {
   const notification = event.notification;
   const kpi_id = notification.data.kpi;
   const action = event.action;
@@ -75,7 +76,9 @@ self.addEventListener("notificationclick", (event:any) => {
     notification.close();
   } else {
     const channel = new BroadcastChannel("sw-messages");
-    channel.postMessage({redirect: url});
+    channel.postMessage({
+      redirect: url
+    });
     notification.close();
   }
 
