@@ -132,15 +132,18 @@ class Timeline extends BaseChart {
 
         const max = {
             x: this.xScale(new Date(data[data.findIndex(d => d.val == maxVal)].date)),
-            y: this.yScale(maxVal)
+            y: this.yScale(maxVal),
+            val: maxVal
         };
         const min = {
             x: this.xScale(new Date(data[data.findIndex(d => d.val == minVal)].date)),
-            y: this.yScale(minVal)
+            y: this.yScale(minVal),
+            val: minVal
         };
         const current = {
             x: this.xScale(new Date(data[data.length - 1].date)),
-            y: this.yScale(data[data.length - 1].val)
+            y: this.yScale(data[data.length - 1].val),
+            val: data[data.length - 1].val
         };
 
         d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
@@ -154,14 +157,49 @@ class Timeline extends BaseChart {
                 .attr("class", "sparkline-annotation");
         };
 
+        const drawLabel = (coords:any, format = ".2s") => {
+            const height = this.baseData.height;
+            const width = this.baseData.width;
+            let anchor = "middle";
+            const offset = {x: 0, y: 20};
+
+            if (coords.y > (height / 2)) {
+                offset.y = -20;
+            }
+
+            if (coords.x < (width * 0.1)) {
+                offset.x = 5;
+                anchor = "start";
+            } else if (coords.x > (width * 0.9)) {
+                offset.x = -5;
+                anchor = "end";
+            }
+
+            this.svg.append("text")
+                .attr("x", coords.x + offset.x)
+                .attr("y", coords.y + offset.y)
+                .attr("text-anchor", anchor)
+                .attr("fill", "black")
+                .text(d3.format(format)(coords.val))
+                .attr("class", "sparkline-annotation");
+        };
+
+        let format = ".2s";
+        if (this.chartData.masterdata.unit == "%") {
+            format = ".1%";
+        }
+
         // Draw max marker
         drawCircle(max, "green");
-
+        // drawLabel(max, format);
+        
         // Draw min marker
         drawCircle(min, "#e10000");
-
+        // drawLabel(min, format);
+        
         // Draw current marker
         drawCircle(current, "steelblue");
+        // drawLabel(current, format);
     }
 
 
