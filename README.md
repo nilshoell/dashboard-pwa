@@ -41,22 +41,21 @@ To further simplify this process you can define an alias such as `alias dashboar
 
 This application is build on top of a couple of other technologies, most notably:
 
-| Dependency | Description              | Version    | Documentation                   |
-|------------|--------------------------|------------|---------------------------------|
-| Node.js    | JavaScript Runtime       | `v14.16.0` | https://nodejs.org/en/          |
-| D3.js      | Visualization Engine     | `6.6.1`    | https://d3js.org/               |
-| pug        | Templating Engine        | `3.0.2`    | https://pugjs.org/              |
-| jQuery     | DOM Manipulation Library | `3.6.0`    | https://jquery.com/             |
-| Bootstrap  | CSS Framework            | `4.6.0`    | https://getbootstrap.com/       |
-| SQLite     | Database                 | `5.0.2`    | https://sqlite.org/index.html   |
-| TypeScript | Typed JavaScript         | `4.2.3`    | https://www.typescriptlang.org/ |
+| Dependency | Description              | Version (npm) | Documentation                   |
+|------------|--------------------------|---------------|---------------------------------|
+| Node.js    | JavaScript Runtime       | `v15.14.0`    | https://nodejs.org/en/          |
+| D3.js      | Visualization Engine     | `6.7.0`       | https://d3js.org/               |
+| pug        | Templating Engine        | `3.0.2`       | https://pugjs.org/              |
+| jQuery     | DOM Manipulation Library | `3.6.0`       | https://jquery.com/             |
+| Bootstrap  | CSS Framework            | `4.6.0`       | https://getbootstrap.com/       |
+| SQLite     | Database                 | `5.0.2`       | https://sqlite.org/index.html   |
+| TypeScript | Typed JavaScript         | `4.2.4`       | https://www.typescriptlang.org/ |
 
 
 ## Repository Structure
 
 | Path          | Description                                                       |
 |---------------|-------------------------------------------------------------------|
-| `db`          | MySQL Workbench database model; not needed to run the application |
 | `src`         | All application assets                                            |
 | `src/db`      | SQL files to set up and fill the test database                    |
 | `src/public`  | Client assets such as chart definitions, TS/JS and images         |
