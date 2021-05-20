@@ -25,7 +25,6 @@ class App {
             $(".alert").alert("close");
         });
 
-
         // Register Service Workers in production
         if (window.location.protocol === "https:") {
             this.registerSW();

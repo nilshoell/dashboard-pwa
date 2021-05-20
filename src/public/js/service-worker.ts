@@ -48,13 +48,13 @@ self.addEventListener("fetch", function (event: any) {
 self.addEventListener("activate", function (event: any) {
   console.info("Activate Service Worker", event);
   // event.waitUntil(
-  //   caches.keys().then(function(cacheNames) {
-  //     return Promise.all(cacheNames.map(function (key) {
-  //       if (cacheNames.indexOf(key) === -1) {
-  //         return caches.delete(key);
-  //       }
-  //     }));
-  //   })
+  //     caches.keys().then(function(cacheNames) {
+  //         return Promise.all(cacheNames.map(function (key) {
+  //             if (cacheNames.indexOf(key) === -1) {
+  //                 return caches.delete(key);
+  //             }
+  //         }));
+  //     })
   // );
 });
 
@@ -81,5 +81,4 @@ self.addEventListener("notificationclick", (event: any) => {
     });
     notification.close();
   }
-
 });

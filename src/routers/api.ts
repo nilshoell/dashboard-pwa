@@ -149,9 +149,18 @@ const getDaily = async (params) => {
 
     params = await getPeriod(params);
 
-    let sql = "SELECT timestamp AS date, SUM(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+    let sql = `
+    SELECT timestamp AS date, SUM(value) AS val
+    FROM measures
+    WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?)
+    GROUP BY timestamp ORDER BY timestamp ASC;`;
+
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-        sql = "SELECT timestamp AS date, AVG(value) AS val FROM measures WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY timestamp ORDER BY timestamp ASC;";
+        sql = `
+        SELECT timestamp AS date, AVG(value) AS val
+        FROM measures
+        WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?)
+        GROUP BY timestamp ORDER BY timestamp ASC;`;
     } 
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
@@ -359,9 +368,18 @@ const getLatest = async (params) => {
 
     params = await getPeriod(params);
 
-    let sql = "SELECT partner, partners.name, partners.shortname, SUM(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
+    let sql = `
+    SELECT partner, partners.name, partners.shortname, SUM(value) AS val
+    FROM measures INNER JOIN partners ON partners.id = measures.partner
+    WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?)
+    GROUP BY partner ORDER BY val DESC;`;
+
     if (params.filter.aggregate !== undefined && params.filter.aggregate === "avg") {
-        sql = "SELECT partner, partners.name, partners.shortname, AVG(value) AS val FROM measures INNER JOIN partners ON partners.id = measures.partner WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?) GROUP BY partner ORDER BY val DESC;";
+        sql = `
+        SELECT partner, partners.name, partners.shortname, AVG(value) AS val
+        FROM measures INNER JOIN partners ON partners.id = measures.partner
+        WHERE kpi = ? AND scenario = ? AND (timestamp BETWEEN ? AND ?)
+        GROUP BY partner ORDER BY val DESC;`;
     }
 
     const stmt = await db.prepare(sql, params.id, params.filter.scenario, params.startDate, params.endDate);
