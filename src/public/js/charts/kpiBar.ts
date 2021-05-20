@@ -5,12 +5,16 @@ import BaseChart from "./baseChart.js";
  */
 class KPIBar extends BaseChart {
 
-    barHeight:number;
+    barHeight: number;
 
-    constructor(canvasID:string, baseData = {}) {
+    constructor(canvasID: string, baseData = {}) {
         super(canvasID, baseData);
         // Set default margins
-        this.setMargins({bottom: 25, top: 5, right:100});
+        this.setMargins({
+            bottom: 25,
+            top: 5,
+            right: 100
+        });
     }
 
     /**
@@ -20,8 +24,6 @@ class KPIBar extends BaseChart {
     drawChart(chartData) {
         // Base setup
         this.chartData = chartData;
-        console.log(chartData);
-        
         BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs
@@ -42,14 +44,14 @@ class KPIBar extends BaseChart {
 
         bars.remove();
 
-        const drawBar = (x:number, y:number, val:number, attrs:any) => {
+        const drawBar = (x: number, y: number, val: number, attrs: any) => {
 
             // Check if negative bar might be drawn
             let barWidth = Number(this.xScale(val));
             if (barWidth <= 0) {
                 barWidth = 0;
             }
-            
+
             const bar = this.svg.append("rect")
                 .attr("x", x)
                 .attr("y", y)
@@ -59,21 +61,29 @@ class KPIBar extends BaseChart {
                 .attr("stroke-width", 1)
                 .attr("data-value", val);
 
-                attrs.forEach(attr => {
-                    bar.attr(attr[0], attr[1]);
-                });
+            attrs.forEach(attr => {
+                bar.attr(attr[0], attr[1]);
+            });
         };
 
         // Previous year (PY)
         if (this.chartData.filter.py !== false) {
-            drawBar(margin.left, 0, data[0], [["fill", "grey"], ["stroke", "grey"]]);
+            drawBar(margin.left, 0, data[0], [
+                ["fill", "grey"],
+                ["stroke", "grey"]
+            ]);
         }
 
         // Budget/Target (BUD)
-        drawBar(margin.left + .5, this.barHeight, data[2], [["fill", "none"], ["stroke-width", 2]]);
+        drawBar(margin.left + .5, this.barHeight, data[2], [
+            ["fill", "none"],
+            ["stroke-width", 2]
+        ]);
 
         // Current value (ACT)
-        drawBar(margin.left, this.barHeight/2, data[1], [["fill", "black"]]);
+        drawBar(margin.left, this.barHeight / 2, data[1], [
+            ["fill", "black"]
+        ]);
 
         // Forecast if Available
         if (!isNaN(data[3]) && data[3] > data[1] && this.chartData.filter.fc !== false) {
@@ -83,7 +93,7 @@ class KPIBar extends BaseChart {
             }
             drawBar(
                 this.xScale(data[1]) + margin.left,
-                this.barHeight/2, data[3],
+                this.barHeight / 2, data[3],
                 [
                     ["fill", "url(#diagonal-stripe) white"],
                     ["width", barWidth]
@@ -116,7 +126,7 @@ class KPIBar extends BaseChart {
         d3.selectAll("#" + this.canvasID + " svg text.numeric-label").remove();
 
         // Returns a shade of red for negative and a shade of green for positive numbers
-        const textColor = (value:number) => {
+        const textColor = (value: number) => {
             let color = "#055b0a ";
             let invertColors = false;
             if (this.chartData.masterdata.direction === "-") {
@@ -129,7 +139,7 @@ class KPIBar extends BaseChart {
         };
 
         // Wrapper to draw labels
-        const textLabel = (x:number, y:number, val:number, color = "black", format = ".2s", attrs=[]) => {
+        const textLabel = (x: number, y: number, val: number, color = "black", format = ".2s", attrs = []) => {
             const text = this.svg.append("text")
                 .attr("x", x)
                 .attr("y", y)
@@ -151,12 +161,16 @@ class KPIBar extends BaseChart {
 
         // PY deviation in %
         if (this.chartData.filter.py === undefined || this.chartData.filter.py) {
-            textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], textColor(labelData[0]), "+.1%", [["font-size", "small"]]);
+            textLabel(this.baseData.width * 0.9, margin.top + 5, labelData[0], textColor(labelData[0]), "+.1%", [
+                ["font-size", "small"]
+            ]);
         }
         // Actual value
         textLabel(this.baseData.width * 0.99, this.barHeight + margin.top, labelData[1], "black", format);
         // BUD deviation in %
-        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], textColor(labelData[2]), "+.1%", [["font-size", "small"]]);
+        textLabel(this.baseData.width * 0.9, this.baseData.height - margin.y, labelData[2], textColor(labelData[2]), "+.1%", [
+            ["font-size", "small"]
+        ]);
 
     }
 
@@ -168,10 +182,10 @@ class KPIBar extends BaseChart {
         const data = this.chartData.data;
 
         // Don't take forecast value into account for min Value
-        const minValue = d3.min([0, d3.min(data.slice(0,3), (d:number) => d)]);
+        const minValue = d3.min([0, d3.min(data.slice(0, 3), (d: number) => d)]);
 
         this.xScale = d3.scaleLinear()
-            .domain([minValue, d3.max(data, (d:number) => d)]).nice()
+            .domain([minValue, d3.max(data, (d: number) => d)]).nice()
             .range([0, this.baseData.width - margin.x]);
 
         this.yScale = d3.scaleLinear()

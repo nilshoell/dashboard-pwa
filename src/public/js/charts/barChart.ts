@@ -8,21 +8,23 @@ class BarChart extends BaseChart {
     barWidth;
     barSpace;
 
-    constructor(canvasID:string, baseData = {}) {
+    constructor(canvasID: string, baseData = {}) {
         super(canvasID, baseData);
-        this.setMargins({left: 35, bottom: 35, right:5});
+        this.setMargins({
+            left: 35,
+            bottom: 35,
+            right: 5
+        });
     }
 
     /**
      * Draws the bar chart and axes
      * @param chartData The data to draw
      */
-    drawChart(chartData):void {
-        const self = this;
-
+    drawChart(chartData) {
         // Base setup
         this.chartData = chartData;
-        
+
         BaseChart.prototype.drawChart(this);
 
         const data = chartData.data;
@@ -33,7 +35,7 @@ class BarChart extends BaseChart {
 
         this.setScales();
 
-        const color = ((date:string) => {
+        const color = ((date: string) => {
             const year = new Date().getFullYear();
             if (Number(date.split("-")[0]) < year) {
                 return "dimgrey";
@@ -47,11 +49,11 @@ class BarChart extends BaseChart {
             .data(data);
 
         bars.join("rect")
-            .attr("x", (d:any) => this.xScale(d.date))
-            .attr("y", (d:any) => this.yScale(d.val))
+            .attr("x", (d: any) => this.xScale(d.date))
+            .attr("y", (d: any) => this.yScale(d.val))
             .attr("width", this.xScale.bandwidth())
-            .attr("height", (d:any) => this.yScale(0) - this.yScale(d.val))
-            .attr("data-value", (d:number) => d)
+            .attr("height", (d: any) => this.yScale(0) - this.yScale(d.val))
+            .attr("data-value", (d: number) => d)
             .attr("fill", d => color(d.date));
 
         // bars.exit().remove();
@@ -61,11 +63,11 @@ class BarChart extends BaseChart {
     /**
      * Configure scales
      */
-    setScales():void {
+    setScales() {
         const margin = this.baseData.margin;
         const height = this.baseData.height;
 
-        const data:any[] = this.chartData.data;
+        const data: any[] = this.chartData.data;
 
         // .domain(d3.range(data.length).map(d => String(d)))
         const domain = data.map(d => d.date);
@@ -75,23 +77,23 @@ class BarChart extends BaseChart {
             .paddingInner(0.25);
 
         this.yScale = d3.scaleLinear()
-            .domain([0, d3.max(this.chartData.data, (d:any) => Number(d.val))]).nice()
+            .domain([0, d3.max(this.chartData.data, (d: any) => Number(d.val))]).nice()
             .range([height - margin.bottom, margin.top]);
     }
 
     /**
      * Draw axes (only y-axis now)
      */
-    drawAxes():void {
+    drawAxes() {
         const margin = this.baseData.margin;
         const yAxis = g => g
             .attr("transform", "translate(" + (margin.left - 2) + ",0)")
             .call(d3.axisLeft(this.yScale).ticks(4, "~s"))
             .call(g => g.select(".domain").remove());
-        
+
         const xAxis = g => g
             .attr("transform", "translate(0," + (this.baseData.height - margin.bottom) + ")")
-            .call(d3.axisBottom(this.xScale).tickValues(this.xScale.domain().filter((d:number,i:number) => !(i%4))))
+            .call(d3.axisBottom(this.xScale).tickValues(this.xScale.domain().filter((d: number, i: number) => !(i % 4))))
             .call(g => g.select(".domain").remove());
 
         d3.selectAll("#" + this.canvasID + " svg g.y-axis").remove();
@@ -104,7 +106,7 @@ class BarChart extends BaseChart {
      * Draws a label with the value of the target on top of it
      * @param target The SVG rect element (bar) to render the label for
      */
-    toggleLabel(target:EventTarget):void {
+    toggleLabel(target: EventTarget) {
 
         // Set constants
         const attributes = target["attributes"];

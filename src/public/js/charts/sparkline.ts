@@ -1,12 +1,14 @@
 import BaseChart from "./baseChart.js";
-import { toISO } from "../components/helperFunctions.js";
+import {
+    toISO
+} from "../components/helperFunctions.js";
 
 /**
  * A simple, small line graph with minimal labels
  */
 class Sparkline extends BaseChart {
 
-    constructor(canvasID:string, baseData = {}) {
+    constructor(canvasID: string, baseData = {}) {
         super(canvasID, baseData);
         const margin = {
             top: 5,
@@ -36,8 +38,8 @@ class Sparkline extends BaseChart {
         }
 
         const data = this.chartData.data;
-        const ac_data = d3.filter(data, (d:any) => d.date <= 0);
-        const fc_data = d3.filter(data, (d:any) => d.date >= 0);
+        const ac_data = d3.filter(data, (d: any) => d.date <= 0);
+        const fc_data = d3.filter(data, (d: any) => d.date >= 0);
         this.chartData.ac_data = ac_data;
         this.chartData.fc_data = fc_data;
 
@@ -46,14 +48,14 @@ class Sparkline extends BaseChart {
 
         // Create line generator
         const line = d3.line()
-            .x((d:any) => this.xScale(d.date))
-            .y((d:any) => this.yScale(d.val))
+            .x((d: any) => this.xScale(d.date))
+            .y((d: any) => this.yScale(d.val))
             .curve(d3.curveMonotoneX);
 
         const fc_line = d3.line()
-            .x((d:any) => this.xScale(d.date))
-            .y((d:any) => this.yScale(d.val));
-        
+            .x((d: any) => this.xScale(d.date))
+            .y((d: any) => this.yScale(d.val));
+
         // Setup path object
         d3.selectAll("#" + this.canvasID + " svg g.path-group").remove();
         const g = this.svg.append("g").attr("class", "path-group");
@@ -93,12 +95,17 @@ class Sparkline extends BaseChart {
         const margin = this.baseData.margin;
         const width = this.baseData.width;
         const height = this.baseData.height;
-        const data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val};});
+        const data = this.chartData.data.map(d => {
+            return {
+                date: Number(d.date),
+                val: d.val
+            };
+        });
         // const ac_data = this.chartData.data.map(d => {return {date: Number(d.date), val: d.val};});
-        const minDate = Number(d3.min(data, (d:any) => d.date));
-        let maxDate = Number(d3.max(data, (d:any) => d.date));
-        const minVal = Number(d3.min(data, (d:any) => d.val));
-        const maxVal = Number(d3.max(data, (d:any) => d.val));
+        const minDate = Number(d3.min(data, (d: any) => d.date));
+        let maxDate = Number(d3.max(data, (d: any) => d.date));
+        const minVal = Number(d3.min(data, (d: any) => d.val));
+        const maxVal = Number(d3.max(data, (d: any) => d.val));
 
         // Check how far into the future values are displayed
         if (maxDate > minDate * -0.25) {
@@ -155,8 +162,8 @@ class Sparkline extends BaseChart {
     drawAnnotations() {
         const data = this.chartData.ac_data;
         const data_total = this.chartData.data;
-        const maxVal = d3.max(data, (d:any) => d.val);
-        const minVal = d3.min(data, (d:any) => d.val);
+        const maxVal = d3.max(data, (d: any) => d.val);
+        const minVal = d3.min(data, (d: any) => d.val);
 
         const max = {
             x: this.xScale(data[data.findIndex(d => d.val == maxVal)].date),
@@ -179,7 +186,7 @@ class Sparkline extends BaseChart {
 
         const g = this.svg.append("g").attr("class", "annotation-group");
 
-        const drawCircle = (coords:any, color:string) => {
+        const drawCircle = (coords: any, color: string) => {
             g.append("circle")
                 .attr("cx", coords.x)
                 .attr("cy", coords.y)
@@ -216,7 +223,7 @@ class Sparkline extends BaseChart {
         }
 
         const margin = this.baseData.margin;
-        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
+        const backgrounds = d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
         const backgroundExists = Boolean(backgrounds.size());
         let bgWidth = this.baseData.width - margin.x + 4;
         let bgHeight = this.baseData.height - margin.y + 4;
@@ -257,12 +264,15 @@ class Sparkline extends BaseChart {
         const now = new Date();
         const today = new Date(toISO(now));
         const secondsInDay = 86400000;
-        
+
         // Calculate day differences
-        const dayDiffArr = data.map((d:any) => {
+        const dayDiffArr = data.map((d: any) => {
             const date = new Date(d.date);
             const dayDiff = (today.getTime() - date.getTime()) / secondsInDay;
-            return {date: dayDiff, val: d.val};
+            return {
+                date: dayDiff,
+                val: d.val
+            };
         });
 
         // Convert from days to weeks, months or years
@@ -275,7 +285,7 @@ class Sparkline extends BaseChart {
                 divisor = 1;
                 suffix = "D";
                 break;
-        
+
             case maxDays < 30:
                 divisor = 7;
                 suffix = "W";
@@ -289,7 +299,12 @@ class Sparkline extends BaseChart {
 
         // Set suffix and new time scale
         this.chartData["suffix"] = suffix;
-        this.chartData["data"] = dayDiffArr.map(d => {return {date: d["date"]/divisor * -1, val: d["val"]};});
+        this.chartData["data"] = dayDiffArr.map(d => {
+            return {
+                date: d["date"] / divisor * -1,
+                val: d["val"]
+            };
+        });
     }
 
 }

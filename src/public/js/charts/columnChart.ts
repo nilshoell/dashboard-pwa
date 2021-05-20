@@ -8,9 +8,13 @@ class ColumnChart extends BaseChart {
     barHeight;
     barSpace;
 
-    constructor(canvasID:string, baseData = {}) {
+    constructor(canvasID: string, baseData = {}) {
         super(canvasID, baseData);
-        this.setMargins({left: 5, right:5, top: 20});
+        this.setMargins({
+            left: 5,
+            right: 5,
+            top: 20
+        });
     }
 
     /**
@@ -21,7 +25,7 @@ class ColumnChart extends BaseChart {
         // Base setup
         this.chartData = chartData;
         BaseChart.prototype.drawChart(this);
-        
+
         const data = chartData.data;
         const margin = this.baseData.margin;
 
@@ -36,11 +40,11 @@ class ColumnChart extends BaseChart {
 
         bars.join("rect")
             .attr("x", margin.left)
-            .attr("y", (d:any, i:number) => this.yScale(i))
-            .attr("width", (d:any) => this.xScale(d.val))
+            .attr("y", (d: any, i: number) => this.yScale(i))
+            .attr("width", (d: any) => this.xScale(d.val))
             .attr("height", this.yScale.bandwidth())
-            .attr("data-value", (d:any) => d.val)
-            .attr("data-id", (d:any) => d.product ?? d.partner ?? "")
+            .attr("data-value", (d: any) => d.val)
+            .attr("data-id", (d: any) => d.product ?? d.partner ?? "")
             .attr("fill", chartData.color ?? "black");
 
         // bars.exit().remove();
@@ -56,11 +60,15 @@ class ColumnChart extends BaseChart {
         const width = this.baseData.width;
         const data = this.chartData.data.map(d => d.val);
 
-        this.yScale = (i) => {return (i * (this.barHeight + this.barSpace)) + margin.top;};
-        this.yScale.bandwidth = () => {return this.barHeight;};
+        this.yScale = (i) => {
+            return (i * (this.barHeight + this.barSpace)) + margin.top;
+        };
+        this.yScale.bandwidth = () => {
+            return this.barHeight;
+        };
 
         this.xScale = d3.scaleLinear()
-            .domain([0, d3.max(data, (d:number) => d)]).nice()
+            .domain([0, d3.max(data, (d: number) => d)]).nice()
             .range([margin.left, width - margin.x]);
     }
 
@@ -83,9 +91,9 @@ class ColumnChart extends BaseChart {
      */
     drawLabels() {
         const data = this.chartData.data;
-        const margin= this.baseData.margin;
+        const margin = this.baseData.margin;
 
-        const labelFilter = (d:any) => this.xScale(d.val) - this.xScale(0) < 50;
+        const labelFilter = (d: any) => this.xScale(d.val) - this.xScale(0) < 50;
 
         this.svg.selectAll("g.text-label").remove();
 
@@ -96,15 +104,15 @@ class ColumnChart extends BaseChart {
             .selectAll("text")
             .data(data)
             .join("text")
-              .attr("x", (d:any) => this.xScale(d.val) + margin.left)
-              .attr("y", (d:number, i:number) => this.yScale(i) + this.yScale.bandwidth() / 2)
-              .attr("dy", "0.35em")
-              .attr("dx", -4)
-              .text((d:any) => d3.format(".2s")(d.val))
+            .attr("x", (d: any) => this.xScale(d.val) + margin.left)
+            .attr("y", (d: number, i: number) => this.yScale(i) + this.yScale.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("dx", -4)
+            .text((d: any) => d3.format(".2s")(d.val))
             .call(text => text.filter(labelFilter) // Change style for short bars
-              .attr("dx", +45)
-              .attr("fill", "black")
-              .attr("text-anchor", "start"));
+                .attr("dx", +45)
+                .attr("fill", "black")
+                .attr("text-anchor", "start"));
 
         this.svg.append("g")
             .attr("fill", "white")
@@ -113,15 +121,15 @@ class ColumnChart extends BaseChart {
             .selectAll("text")
             .data(data)
             .join("text")
-              .attr("x", 12)
-              .attr("y", (d:number, i:number) => this.yScale(i) + this.yScale.bandwidth() / 2)
-              .attr("dy", "0.35em")
-              .attr("dx", -4)
-              .text((d:any) => d.shortname)
+            .attr("x", 12)
+            .attr("y", (d: number, i: number) => this.yScale(i) + this.yScale.bandwidth() / 2)
+            .attr("dy", "0.35em")
+            .attr("dx", -4)
+            .text((d: any) => d.shortname)
             .call(text => text.filter(labelFilter) // Change style for short bars
-              .attr("dx", +50)
-              .attr("fill", "black")
-              .attr("text-anchor", "start"));
+                .attr("dx", +50)
+                .attr("fill", "black")
+                .attr("text-anchor", "start"));
     }
 }
 

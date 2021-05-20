@@ -1,12 +1,14 @@
 import BaseChart from "./baseChart.js";
-import { toISO } from "../components/helperFunctions.js";
+import {
+    toISO
+} from "../components/helperFunctions.js";
 
 /**
  * A standard line graph with a time-based x-axis
  */
 class Timeline extends BaseChart {
 
-    constructor(canvasID:string, baseData = {}) {
+    constructor(canvasID: string, baseData = {}) {
         super(canvasID, baseData);
         const margin = {
             top: 5,
@@ -24,10 +26,10 @@ class Timeline extends BaseChart {
     drawChart(chartData) {
         // Base setup
         const today = toISO(new Date());
-        chartData.data = d3.filter(chartData.data, (d:any) => d.date <= today);
+        chartData.data = d3.filter(chartData.data, (d: any) => d.date <= today);
         this.chartData = chartData;
         BaseChart.prototype.drawChart(this);
-        
+
         const data = chartData.data;
 
         // Create scales with default function
@@ -38,8 +40,8 @@ class Timeline extends BaseChart {
 
         // Create line generator
         const line = d3.line()
-            .x((d:any) => this.xScale(new Date(d.date)))
-            .y((d:any) => this.yScale(d.val))
+            .x((d: any) => this.xScale(new Date(d.date)))
+            .y((d: any) => this.yScale(d.val))
             .curve(d3.curveCardinal);
 
         // Setup path object
@@ -73,10 +75,10 @@ class Timeline extends BaseChart {
         const width = this.baseData.width;
         const height = this.baseData.height;
         const data = this.chartData.data;
-        const minDate = new Date(d3.min(data, (d:any) => d.date));
-        const maxDate = new Date(d3.max(data, (d:any) => d.date));
-        const maxVal = Number(d3.max(data, (d:any) => d.val));
-        const minVal = d3.min([0, Number(d3.min(data, (d:any) => d.val))]);
+        const minDate = new Date(d3.min(data, (d: any) => d.date));
+        const maxDate = new Date(d3.max(data, (d: any) => d.date));
+        const maxVal = Number(d3.max(data, (d: any) => d.val));
+        const minVal = d3.min([0, Number(d3.min(data, (d: any) => d.val))]);
 
         this.xScale = d3.scaleTime()
             .domain([minDate, maxDate])
@@ -127,8 +129,8 @@ class Timeline extends BaseChart {
      */
     drawAnnotations() {
         const data = this.chartData.data;
-        const maxVal = d3.max(data, (d:any) => d.val);
-        const minVal = d3.min(data, (d:any) => d.val);
+        const maxVal = d3.max(data, (d: any) => d.val);
+        const minVal = d3.min(data, (d: any) => d.val);
 
         const max = {
             x: this.xScale(new Date(data[data.findIndex(d => d.val == maxVal)].date)),
@@ -148,7 +150,7 @@ class Timeline extends BaseChart {
 
         d3.selectAll("#" + this.canvasID + " svg circle.sparkline-annotation").remove();
 
-        const drawCircle = (coords:any, color:string) => {
+        const drawCircle = (coords: any, color: string) => {
             this.svg.append("circle")
                 .attr("cx", coords.x)
                 .attr("cy", coords.y)
@@ -157,11 +159,14 @@ class Timeline extends BaseChart {
                 .attr("class", "sparkline-annotation");
         };
 
-        const drawLabel = (coords:any, format = ".2s") => {
+        const drawLabel = (coords: any, format = ".2s") => {
             const height = this.baseData.height;
             const width = this.baseData.width;
             let anchor = "middle";
-            const offset = {x: 0, y: 20};
+            const offset = {
+                x: 0,
+                y: 20
+            };
 
             if (coords.y > (height / 2)) {
                 offset.y = -20;
@@ -192,11 +197,11 @@ class Timeline extends BaseChart {
         // Draw max marker
         drawCircle(max, "green");
         // drawLabel(max, format);
-        
+
         // Draw min marker
         drawCircle(min, "#e10000");
         // drawLabel(min, format);
-        
+
         // Draw current marker
         drawCircle(current, "steelblue");
         // drawLabel(current, format);
@@ -213,7 +218,7 @@ class Timeline extends BaseChart {
         }
 
         const margin = this.baseData.margin;
-        const backgrounds= d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
+        const backgrounds = d3.selectAll("#" + this.canvasID + " svg rect.sparkline-bg");
         const backgroundExists = Boolean(backgrounds.size());
 
         if (backgroundExists) {

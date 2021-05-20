@@ -6,20 +6,20 @@ import * as Helper from "./../components/helperFunctions.js";
 class BaseChart {
 
     // D3 selection of the base SVG
-    svg:any;
+    svg: any;
 
     // HTML ID of the wrapping element
     canvasID: string;
 
     // Object containing base information like sizes and margins
-    baseData:any;
+    baseData: any;
 
     // Object containing chart information like name and data
-    chartData:any;
+    chartData: any;
 
     // Scales
-    xScale:any;
-    yScale:any;
+    xScale: any;
+    yScale: any;
 
     /**
      * Initialise a new chart
@@ -54,11 +54,11 @@ class BaseChart {
      */
     setScales() {
         this.xScale = d3.scaleLinear()
-            .domain(d3.extent(this.chartData.data, (d:number, i:number) => i))
+            .domain(d3.extent(this.chartData.data, (d: number, i: number) => i))
             .range([0, this.baseData.width]);
 
         this.yScale = d3.scaleLinear()
-            .domain([0, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .domain([0, d3.max(this.chartData.data, (d: number) => d)]).nice()
             .range([this.baseData.height, 0]);
     }
 

@@ -1,5 +1,7 @@
 import BaseChart from "./baseChart.js";
-import { toISO } from "../components/helperFunctions.js";
+import {
+    toISO
+} from "../components/helperFunctions.js";
 
 /**
  * A tile containing actual, previous and target values along a sparkline
@@ -12,10 +14,15 @@ class KPITile extends BaseChart {
     tileBg;
     annotationsGroup;
 
-    constructor(canvasID:string, baseData = {}) {
+    constructor(canvasID: string, baseData = {}) {
         super(canvasID, baseData);
         // Set margins (only needed for sparkline)
-        this.setMargins({bottom: 10, top: (this.baseData.height / 2) + 40, right: 10, left: 10});
+        this.setMargins({
+            bottom: 10,
+            top: (this.baseData.height / 2) + 40,
+            right: 10,
+            left: 10
+        });
     }
 
     /**
@@ -25,7 +32,7 @@ class KPITile extends BaseChart {
     drawChart(chartData) {
 
         this.chartData = chartData;
-        
+
         BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs
@@ -39,7 +46,7 @@ class KPITile extends BaseChart {
         this.svg.selectAll("g.sparkline-bg").remove();
         this.svg.selectAll("g.path-group").remove();
         this.svg.selectAll("g.annotation-group").remove();
-        
+
         // Order Chart Elements
         this.tileBg = this.svg.append("g").attr("class", "tile-bg");
         this.labelGroup = this.svg.append("g").attr("class", "label-group");
@@ -48,7 +55,7 @@ class KPITile extends BaseChart {
         this.annotationsGroup = this.svg.append("g").attr("class", "annotation-group");
 
         const today = toISO(new Date());
-        this.chartData.data.sparkData = d3.filter(this.chartData.data.sparkData, (d:any) => d.date <= today);
+        this.chartData.data.sparkData = d3.filter(this.chartData.data.sparkData, (d: any) => d.date <= today);
 
         // Setup Scales
         this.setScales();
@@ -94,10 +101,10 @@ class KPITile extends BaseChart {
             .attr("height", this.baseData.height)
             .attr("fill", "white")
             .attr("class", "tile-bg");
-        
+
         // Format any input value for textLabel
-        const textFormat = (value:number|string, format:string) => {
-            if (typeof(value) === "number") {
+        const textFormat = (value: number | string, format: string) => {
+            if (typeof (value) === "number") {
                 return d3.format(format)(value);
             } else {
                 return value;
@@ -105,7 +112,7 @@ class KPITile extends BaseChart {
         };
 
         // Returns a shade of red for negative and a shade of green for positive numbers
-        const textColor = (value:number) => {
+        const textColor = (value: number) => {
             let color = "#055b0a ";
             let invertColors = false;
             if (this.chartData.masterdata.direction === "-") {
@@ -123,11 +130,11 @@ class KPITile extends BaseChart {
         }
 
         // Draws an easily configurable text label
-        const textLabel = (x:number, y:number, value:number|string, format = defaultFormat, attrs:any[] = []) => {
+        const textLabel = (x: number, y: number, value: number | string, format = defaultFormat, attrs: any[] = []) => {
             const text = this.labelGroup.append("text")
                 .attr("x", x)
                 .attr("y", y)
-                .text(textFormat(value,format))
+                .text(textFormat(value, format))
                 .attr("fill", "grey")
                 .attr("font-size", "large")
                 .attr("text-anchor", "start");
@@ -140,24 +147,44 @@ class KPITile extends BaseChart {
         const halfHeight = this.baseData.height / 2;
 
         // Title on Top
-        textLabel(this.baseData.width / 2, 20, this.chartData.masterdata.name, undefined, [["fill", "dimgrey"], ["font-size", "x-large"], ["text-anchor", "middle"]]);
+        textLabel(this.baseData.width / 2, 20, this.chartData.masterdata.name, undefined, [
+            ["fill", "dimgrey"],
+            ["font-size", "x-large"],
+            ["text-anchor", "middle"]
+        ]);
 
         // ACT in center
         let actFormat = ".3s";
         if (this.chartData.masterdata.unit == "%") {
             actFormat = ".2%";
         }
-        textLabel(this.baseData.width / 2, 60, d.act, actFormat, [["fill", "black"], ["font-size", "xx-large"], ["text-anchor", "middle"]]);
+        textLabel(this.baseData.width / 2, 60, d.act, actFormat, [
+            ["fill", "black"],
+            ["font-size", "xx-large"],
+            ["text-anchor", "middle"]
+        ]);
 
         // PY top left; deviation below
-        textLabel(10, halfHeight - 20, "PY", undefined, [["font-size", "small"]]);
-        textLabel(10, halfHeight , d.py);
-        textLabel(10, halfHeight + 20, d.py_dev, "+.1%",[["fill", textColor(d.py_dev)]]);
+        textLabel(10, halfHeight - 20, "PY", undefined, [
+            ["font-size", "small"]
+        ]);
+        textLabel(10, halfHeight, d.py);
+        textLabel(10, halfHeight + 20, d.py_dev, "+.1%", [
+            ["fill", textColor(d.py_dev)]
+        ]);
 
         // BUD top right; deviation below
-        textLabel(this.baseData.width - 10, halfHeight - 20, "BU", undefined, [["text-anchor", "end"], ["font-size", "small"]]);
-        textLabel(this.baseData.width - 10, halfHeight , d.bud, undefined, [["text-anchor", "end"]]);
-        textLabel(this.baseData.width - 10, halfHeight + 20, d.bud_dev, "+.1%", [["fill", textColor(d.bud_dev)], ["text-anchor", "end"]]);
+        textLabel(this.baseData.width - 10, halfHeight - 20, "BU", undefined, [
+            ["text-anchor", "end"],
+            ["font-size", "small"]
+        ]);
+        textLabel(this.baseData.width - 10, halfHeight, d.bud, undefined, [
+            ["text-anchor", "end"]
+        ]);
+        textLabel(this.baseData.width - 10, halfHeight + 20, d.bud_dev, "+.1%", [
+            ["fill", textColor(d.bud_dev)],
+            ["text-anchor", "end"]
+        ]);
 
     }
 
@@ -170,8 +197,8 @@ class KPITile extends BaseChart {
 
         // Create line generator
         const line = d3.line()
-            .x((d:any, i:any) => this.xScale(i))
-            .y((d:any) => this.yScale(d))
+            .x((d: any, i: any) => this.xScale(i))
+            .y((d: any) => this.yScale(d))
             .curve(d3.curveMonotoneX);
 
         // Setup path object
@@ -195,13 +222,13 @@ class KPITile extends BaseChart {
         const margin = this.baseData.margin;
 
         this.sparklineBg.append("rect")
-                .attr("x", margin.left - 2)
-                .attr("y", margin.top - 2)
-                .attr("rx", 2)
-                .attr("width", this.baseData.width - margin.x + 4)
-                .attr("height", this.baseData.height - margin.y + 4)
-                .attr("fill", "#b0b0b0")
-                .attr("class", "sparkline-bg");
+            .attr("x", margin.left - 2)
+            .attr("y", margin.top - 2)
+            .attr("rx", 2)
+            .attr("width", this.baseData.width - margin.x + 4)
+            .attr("height", this.baseData.height - margin.y + 4)
+            .attr("fill", "#b0b0b0")
+            .attr("class", "sparkline-bg");
     }
 
     /**
@@ -223,7 +250,7 @@ class KPITile extends BaseChart {
             y: this.yScale(data[data.length - 1])
         };
 
-        const drawCircle = (coords:any, color:string) => {
+        const drawCircle = (coords: any, color: string) => {
             this.annotationsGroup.append("circle")
                 .attr("cx", coords.x)
                 .attr("cy", coords.y)
@@ -249,11 +276,11 @@ class KPITile extends BaseChart {
         const data = this.chartData.data.sparkData.map(d => d.val);
         const margin = this.baseData.margin;
         this.xScale = d3.scaleLinear()
-            .domain(d3.extent(data, (d:number, i:number) => i))
+            .domain(d3.extent(data, (d: number, i: number) => i))
             .range([margin.left, this.baseData.width - margin.right]);
 
         this.yScale = d3.scaleLinear()
-            .domain([d3.min(data, (d:number) => d), d3.max(data, (d:number) => d)]).nice()
+            .domain([d3.min(data, (d: number) => d), d3.max(data, (d: number) => d)]).nice()
             .range([this.baseData.height - margin.bottom, margin.top]);
     }
 
