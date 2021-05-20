@@ -83,7 +83,7 @@ class KPIBar extends BaseChart {
                 this.xScale(data[1]) + margin.left,
                 this.barHeight/2, data[3],
                 [
-                    ["fill", "url(#diagonal-stripe-1) none"],
+                    ["fill", "url(#diagonal-stripe) white"],
                     ["width", barWidth]
                 ]
             );
