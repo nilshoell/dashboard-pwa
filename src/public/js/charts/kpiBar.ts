@@ -20,6 +20,8 @@ class KPIBar extends BaseChart {
     drawChart(chartData) {
         // Base setup
         this.chartData = chartData;
+        console.log(chartData);
+        
         BaseChart.prototype.drawChart(this);
 
         // Don't draw on invisible SVGs
@@ -163,11 +165,13 @@ class KPIBar extends BaseChart {
      */
     setScales() {
         const margin = this.baseData.margin;
+        const data = this.chartData.data;
 
-        const minValue = d3.min([0, d3.min(this.chartData.data, (d:number) => d)]);
+        // Don't take forecast value into account for min Value
+        const minValue = d3.min([0, d3.min(data.slice(0,3), (d:number) => d)]);
 
         this.xScale = d3.scaleLinear()
-            .domain([minValue, d3.max(this.chartData.data, (d:number) => d)]).nice()
+            .domain([minValue, d3.max(data, (d:number) => d)]).nice()
             .range([0, this.baseData.width - margin.x]);
 
         this.yScale = d3.scaleLinear()
