@@ -3,6 +3,9 @@
 # ---------------------------------------------------------------------------
 # ------------------------------ GENERATE KPIs ------------------------------
 # ---------------------------------------------------------------------------
+# Generates KPIs based on the configuration provided in kpiconf.json
+# Can either export simple CSV for further processing or complete SQL INSERT statements
+# KPI ID generation:
 # alias kpid='echo $RANDOM | md5sum | awk "{print $1}" | head -c 12'
 
 # Utilities
@@ -16,9 +19,10 @@ import json
 # ---------------------- CONFIG VARS ----------------------
 
 # Program info
-prog_version = "0.0.1"
-prog_date = "2021-05-04"
-prog_description = "Generate CSVs to import into a DB."
+prog_version = "0.1.1"
+prog_date = "2021-05-23"
+prog_description = """Generate KPIs to import into a DB.
+Usage: kpigen.py -c kpiconf.json [-o output.csv]"""
 
 # Programm config vars
 output_path = './sql.csv'
