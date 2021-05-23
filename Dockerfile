@@ -1,12 +1,12 @@
 # ----------------------------------------------------
 # ------------- Dashboard-PWA Dockerfile -------------
 # ----------------------------------------------------
-# Version: 0.9 (2021-05-18)
+# Version: 1.0 (2021-05-25)
 # Author: Nils Höll <nils.hoell@stud.uni-due.de>
 
 FROM node:lts-buster
 
-LABEL version="0.9"
+LABEL version="1.0"
 LABEL maintainer="Nils Höll <nils.hoell@stud.uni-due.de>"
 LABEL description="Creates a docker image with a production build of the Dashboard-PWA."
 
