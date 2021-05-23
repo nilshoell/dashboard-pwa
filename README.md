@@ -14,8 +14,10 @@ A Progressive Web App that explores the possibilities of mobile dashboards utili
 ## Introduction
 
 This Node application is part of my master thesis about mobile dashboards and serves as a technical demonstration and implementation of requirements derived from the research.
+The full thesis will be available [here](thesis.pdf) upon release.
 
-See the demo site here: https://dashboard.nilshoell.de
+See the demo site here: https://dashboard.nilshoell.de  
+**Note:** This site is _only_ optimized for mobile devices such as smartphones, and will probably look awful on anything bigger than 8".
 
 ## Installation
 
@@ -58,7 +60,7 @@ This application is build on top of a couple of other technologies, most notably
 |---------------|-------------------------------------------------------------------|
 | `src`         | All application assets                                            |
 | `src/db`      | SQL files to set up and fill the test database                    |
-| `src/public`  | Client assets such as chart definitions, TS/JS and images         |
+| `src/public`  | Client assets such as chart definitions, TS/CSS and images        |
 | `src/routers` | Server-site routers for the application and API                   |
 | `ts`          | TypeScript compiler setup                                         |
-| `views`       | pug template files                                                |
+| `views`       | Pug template files                                                |
