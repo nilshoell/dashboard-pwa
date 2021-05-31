@@ -14,7 +14,7 @@ A Progressive Web App that explores the possibilities of mobile dashboards utili
 ## Introduction
 
 This Node application is part of my master thesis about mobile dashboards and serves as a technical demonstration and implementation of requirements derived from the research.
-The full thesis will be available [here](thesis.pdf) upon release.
+The full thesis is available [here](thesis.pdf) under the [CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/) license.
 
 See the demo site here: https://dashboard.nilshoell.de  
 **Note:** This site is _only_ optimized for mobile devices such as smartphones, and will probably look awful on anything bigger than 8".
