@@ -16,12 +16,11 @@ A Progressive Web App that explores the possibilities of mobile dashboards utili
 This Node application is part of my master thesis about mobile dashboards and serves as a technical demonstration and implementation of requirements derived from the research.
 The full thesis is available [here](thesis.pdf) under the [CC BY-ND 4.0](https://creativecommons.org/licenses/by-nd/4.0/) license.
 
-See the demo site here: https://dashboard.nilshoell.de  
-**Note:** This site is _only_ optimized for mobile devices such as smartphones, and will probably look awful on anything bigger than 8".
+**Note:** This app is _only_ optimized for mobile devices such as smartphones, and will probably look awful on anything bigger than 8".
 
 ## Installation
 
-Make sure you have current versions of [`nodejs`](https://nodejs.org/en/) (`^14.16.0 LTS` or `^15.13.0` recommended) and `npm` (`^7.6.0`) installed.
+Make sure you have current versions of [`nodejs`](https://nodejs.org/en/) (`^16.11.0 LTS` or recommended) and `npm` (`^7.6.0`) installed.
 
 Then, clone the repository from `git@github.com:nilshoell/dashboard-pwa.git` onto your machine (or download and unpack the [zip-file](https://github.com/nilshoell/dashboard-pwa/archive/refs/heads/main.zip)), change into the directory and execute `npm install` to download the dependencies.
 
@@ -45,7 +44,7 @@ This application is build on top of a couple of other technologies, most notably
 
 | Dependency | Description              | Version (npm) | Documentation                   |
 |------------|--------------------------|---------------|---------------------------------|
-| Node.js    | JavaScript Runtime       | `v15.14.0`    | https://nodejs.org/en/          |
+| Node.js    | JavaScript Runtime       | `v16.13.0 LTS`| https://nodejs.org/en/          |
 | D3.js      | Visualization Engine     | `6.7.0`       | https://d3js.org/               |
 | pug        | Templating Engine        | `3.0.2`       | https://pugjs.org/              |
 | jQuery     | DOM Manipulation Library | `3.6.0`       | https://jquery.com/             |
