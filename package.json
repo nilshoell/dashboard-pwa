@@ -39,7 +39,7 @@
         "jquery": "^3.6.0",
         "pug": "^3.0.2",
         "sqlite": "^4.0.21",
-        "sqlite3": "^5.0.2"
+        "sqlite3": "^4.2.0"
     },
     "devDependencies": {
         "@types/bootstrap": "^4.6.0",

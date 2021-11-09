@@ -20,7 +20,7 @@ The full thesis is available [here](thesis.pdf) under the [CC BY-ND 4.0](https:/
 
 ## Installation
 
-Make sure you have current versions of [`nodejs`](https://nodejs.org/en/) (`^16.11.0 LTS` or recommended) and `npm` (`^7.6.0`) installed.
+Make sure you have current versions of [`nodejs`](https://nodejs.org/en/) (`^16.11.0 LTS` or recommended) and `npm` (`^8.1.0`) installed.
 
 Then, clone the repository from `git@github.com:nilshoell/dashboard-pwa.git` onto your machine (or download and unpack the [zip-file](https://github.com/nilshoell/dashboard-pwa/archive/refs/heads/main.zip)), change into the directory and execute `npm install` to download the dependencies.
 
