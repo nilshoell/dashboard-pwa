@@ -9,6 +9,9 @@ A Progressive Web App that explores the possibilities of mobile dashboards utili
     - [Production](#production)
   - [Dependencies](#dependencies)
   - [Repository Structure](#repository-structure)
+  - [Roadmap](#roadmap)
+    - [v1.0.1](#v101)
+    - [v1.1](#v11)
 
 
 ## Introduction
@@ -63,3 +66,15 @@ This application is build on top of a couple of other technologies, most notably
 | `src/routers` | Server-site routers for the application and API                   |
 | `ts`          | TypeScript compiler setup                                         |
 | `views`       | Pug template files                                                |
+
+## Roadmap
+
+### v1.0.1
+
+- [X] Fix `npm audit` findings
+- [ ] Extend README
+
+### v1.1
+
+- [ ] Implement api function to automatically adjust the year of the data depending on the current year
+- [ ] Generate data for the remainder of year 2
