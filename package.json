@@ -51,7 +51,7 @@
         "@types/sqlite3": "^3.1.7",
         "@typescript-eslint/eslint-plugin": "^4.22.0",
         "@typescript-eslint/parser": "^4.22.0",
-        "browser-sync": "^2.19.0",
+        "browser-sync": "^2.27.9",
         "concurrently": "^6.0.0",
         "eslint": "^7.25.0",
         "nodemon": "^2.0.7",
