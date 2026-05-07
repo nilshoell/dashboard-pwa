@@ -2,6 +2,9 @@
 
 A Progressive Web App that explores the possibilities of mobile dashboards utilizing D3.js for the visualizations.
 
+> [!WARNING]
+> **THIS REPOSITORY IS ARCHIVED - Further development moved to [Codeberg](https://codeberg.org/nilshoell/dashboard-pwa)**
+
 - [Dashboard-PWA](#dashboard-pwa)
   - [Introduction](#introduction)
   - [Installation](#installation)
